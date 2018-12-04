@@ -1,0 +1,13 @@
+php_flag display_errors on
+php_value upload_max_filesize 30M
+
+Options All -Indexes
+
+RewriteEngine On
+
+
+
+RewriteRule ^([-a-zA-Z0-9]+)$ index.php?ruta=$1
+
+# REGLAS PARA LA REST API
+# RewriteRule ^puntosv/([-a-zA-Z0-9/]+)$ api/puntosv.php?ruta=$1 [QSA,NC,L]
