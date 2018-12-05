@@ -30,10 +30,10 @@ class ControladorSobrante{
         // return count($this->file);
         // return $this->sedes;
         
-        for ($i=1; $i < count($this->file); $i++) {
+        for ($i=1; $i <count($this->file); $i++) {
             //    $res[]=$line;
                $csv=str_getcsv($this->file[$i], ";");
-               if (count($csv)<=1) {
+               if (count($csv)<=3) {
                     $csv=str_getcsv($this->file[$i], ",");
                }
                
@@ -41,7 +41,7 @@ class ControladorSobrante{
                 $this->items[]=["sede"=>$this->sedes[trim($csv[0])],
                             "item"=>trim($csv[1]),
                             "factor"=>trim($csv[4]),
-                            "ultimo_costo"=>str_replace(["$"," ","."],"",$csv[5]),
+                            "ultimo_costo"=>str_replace(["$"," ",".",","],"",$csv[5]),
                             "inventario_IO"=>trim($csv[6]),
                             "rotacion"=>trim($csv[7]),
                             "prom_6_meses"=>trim($csv[6]),

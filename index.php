@@ -38,6 +38,7 @@ if (isset($_GET['ruta'])) {
                         //se crea objeto requerir, que busca y manda los items a la base de datos
                         $controlador = new ControladorSobrante($archivo);
                         $resultado=$controlador->ctrGetData();
+                        $resultado=$controlador->ctrUploadData();
                         
                     }
 
