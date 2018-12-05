@@ -26,8 +26,33 @@ class ModeloSobrante extends Conexion {
 
     }
 
-    public function mdlUploadData()
+    public function mdlUploadData($items)
     {
+        // $columns=array_keys($items[0]);
+        $sql="INSERT INTO sobrecostos (";
+        foreach ($items[0] as $column=> $cell) {
+            $sql.="$column ";
+        }
+        $sql.=") VALUES ";
+        
+        for ($i=0; $i <count($items) ; $i++) { 
+            $sql.="(";
+            foreach ($items[$i] as $j => $cell) {
+                $sql.=":$j$i,";
+            }
+            $sql=substr($sql,-1)."),";
+        }
+        $sql=substr($sql,-1).";";
 
+        $stmt= $this->link->prepare($sql);
+
+        for ($i=0; $i <count($items) ; $i++) { 
+            foreach ($items[$i] as $j => $cell) {
+                $stmt->bindParam(":$j$i",$cell,PDO::PARAM_STR);
+            }
+        }
+        $res=$stmt->execute();
+        $stmt=null;
+        return $res;
     }
 }

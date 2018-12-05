@@ -33,6 +33,9 @@ class ControladorSobrante{
         for ($i=1; $i < count($this->file); $i++) {
             //    $res[]=$line;
                $csv=str_getcsv($this->file[$i], ";");
+               if (count($csv)<=1) {
+                    $csv=str_getcsv($this->file[$i], ",");
+               }
                
                if (is_numeric($csv[4])) {
                 $this->items[]=["sede"=>$this->sedes[trim($csv[0])],
@@ -46,6 +49,7 @@ class ControladorSobrante{
                         ]; 
                 }
         }
+        return array_keys($this->items[1]);
         $lenngth=count($this->items);
         return $lenngth;
     }

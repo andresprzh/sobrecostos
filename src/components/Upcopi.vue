@@ -295,7 +295,7 @@ export default class Home extends Vue {
   constructor() {
     super();
 
-    const path = "http://localhost/sobrecosto/puntosv";
+    const path = "http://localhost/sobrecostos/puntosv";
     this.axios
       .get(path, {
         params: {
