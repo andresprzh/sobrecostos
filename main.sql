@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `sobrantes`(
 
 LOCK TABLES `sedes` WRITE;
 
-INSERT INTO `sedes` VALUES ('001',' CENTRO',' CR 2 14 34','','',' 0','13803'),
+REPLACE INTO `sedes` VALUES ('001',' CENTRO',' CR 2 14 34','','',' 0','13803'),
 ('002',' VERSALLES',' CL 23BN 3N 100','','',' 0','13803'),
 ('003',' CAMINO REAL',' CL 9 51 05','','',' 0','13803'),
 ('004',' ALFONSO LOPEZ',' CL 70 7TBIS 59','','',' 0','13803'),
