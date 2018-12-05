@@ -27,8 +27,8 @@ if (isset($_GET['ruta'])) {
                     $tipo = finfo_file($fileInfo, $_FILES['archivo']['tmp_name']);//tipo de archivo subido
                     
                         // SI EL ARCHIVO NO ES DE TIPO TEXTO NO LO ABRE
-                        
-                    if (!in_array($tipo, $tipos_permitidos)) {
+                    if (false) {
+                    // if (!in_array($tipo, $tipos_permitidos)) {
                         $resultado["estado"]=false;
                         $resultado["contenido"]='¡Tipo de archivo no valido¡';
                     } else {
@@ -64,6 +64,10 @@ if (isset($_GET['ruta'])) {
         break;
 
         default:
+            $controlador = new ControladorSobrante();
+            $resultado=$controlador->ctrGetSedes();
+            print json_encode($resultado);
+            return 0;
             print json_encode("Restfull api sobrecosto");
                 
             return 1;

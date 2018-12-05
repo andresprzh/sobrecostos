@@ -9,7 +9,8 @@ class ModeloSobrante extends Conexion {
 
     }
 
-    public function mdlMostrarUbicaciones(){
+    public function mdlMostrarUbicaciones()
+    {
         $stmt= $this->link->prepare(
         "SELECT codigo,descripcion
         FROM sedes
@@ -22,6 +23,11 @@ class ModeloSobrante extends Conexion {
             return false;
         }
         $stmt=null;
+
+    }
+
+    public function mdlUploadData()
+    {
 
     }
 }

@@ -104,7 +104,7 @@ export default class Upfile extends Vue {
       let formData = new FormData();
         formData.append("archivo", this.file);
         // const valid: boolean = true;
-        const path = "http://localhost/sobrecosto/sobrecostos";
+        const path = "http://localhost/sobrecostos/sobrecostos";
 
         this.axios
           .post(path, formData, {
