@@ -1,8 +1,10 @@
 <?php
 include "controlador/sobrante.controlador.php";
+include "controlador/copi.controlador.php";
 
 require "modelos/conexion.php";
 require "modelos/sobrante.modelo.php";
+require "modelos/copi.modelo.php";
 
 // function cors() {
 

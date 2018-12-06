@@ -64,6 +64,38 @@ CREATE TABLE IF NOT EXISTS `sobrantes`(
   INDEX(`sobrante`)
 ) ENGINE=InnoDB DEFAULT CHARSET=LATIN1;
 
+CREATE TABLE IF NOT EXISTS `transferencias`(
+	`id_transferencia` INT(6) AUTO_INCREMENT NOT NULL,
+	`destino` CHAR(6) NOT NULL,
+	`fecha` FLOAT(5,2) NOT NULL,
+	`encargado` CHAR(40) NOT NULL,
+	
+	PRIMARY KEY(`id_transferencia`),
+	
+	
+	CONSTRAINT transferencias_destino
+	FOREIGN KEY(`destino`) 
+	REFERENCES `sedes`(`codigo`)
+	
+) ENGINE=InnoDB DEFAULT CHARSET=LATIN1;
+
+CREATE TABLE IF NOT EXISTS `transferencias_det`(
+	`item` CHAR(6) NOT NULL,
+	`sede` CHAR(6) NOT NULL,
+	`cantidad` FLOAT(4,2),
+	`id_transferencia` INT(6),
+	
+	PRIMARY KEY(`item`,`sede`),
+	
+	CONSTRAINT trans_det_item
+	FOREIGN KEY(`item`,`sede`) 
+	REFERENCES `sobrantes`(`item`,`sede`),
+	
+	CONSTRAINT trans_det_trans
+	FOREIGN KEY(`id_transferencia`) 
+	REFERENCES `transferencias`(`id_transferencia`)	
+	
+) ENGINE=InnoDB DEFAULT CHARSET=LATIN1;
 
 --
 -- Dumping data for table `sedes`

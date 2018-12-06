@@ -2,229 +2,192 @@
   <v-container grid-list-md>
     
     <h1 class="font-weight-black font-italic text-xs-center" >Titulo</h1>
-    <!-- INPUTS FORMULARIO -->
-      
-    <v-form ref="form"  :v-model="valid" v-show="!mostrart" >
+    <!-- **************************************************************************************************************** 
+                                            INPUTS FORMULARIO
+    **************************************************************************************************************** -->
+    <v-form ref="form"  :v-model="valid" v-show="!mostrartabla" >
       <v-layout row wrap>
         <v-flex 
         xs12
         v-for="(card,index) in entradas"
         :key="card.id"
         > 
-         <v-menu v-if="card.tipo==='fecha'"
-            lazy
-            ref="menu"
-            :close-on-content-click="false"
-            v-model="card.menu"
-            :nudge-right="40"
-            :return-value.sync="card.dato"
-            transition="scale-transition"
-            offset-y
-            full-width
-            max-width="290px"
-            min-width="290px"  
-          >
-            <v-text-field
-              slot="activator"
-              :v-model="card.dato"
-              :label=card.titulo
-              prepend-icon="fa-calendar-alt"
-              readonly
-              :value="card.dato"
-              :error-messages="errors.collect(card.id)"
-              v-validate="card.validacion"
-              :data-vv-name=card.id
-              @input="validar()"
-            ></v-text-field>
-            <v-date-picker
-              v-model="card.dato"
-              no-title
-              scrollable
-            >
-              <v-spacer></v-spacer>
-              <v-btn flat color="primary" @click="validar();card.menu = false">Cancel</v-btn>
-              
-              <v-btn flat color="primary" @click="fecha($refs.menu[index],card.dato)">OK</v-btn>
-              
-            </v-date-picker>
-          </v-menu>
-
-          <v-select v-else-if="card.tipo==='select'"
+        <v-select v-if="card.tipo==='select'"
             ref="menu"
             v-validate="card.validacion"
             :items="card.items"
             v-model="card.dato"
             :error-messages="errors.collect(card.id)"
             label="Sede"
-            :data-vv-name=card.id
-            @change="validar()"
+            :data-vv-name="card.id"
+            
             required
           ></v-select>
+
           <v-text-field v-else
           ref="menu"
           v-model="card.dato"
           v-validate="card.validacion"
           :error-messages="errors.collect(card.id)"
-          :label=card.titulo
-          :data-vv-name=card.id 
+          :label="card.titulo"
+          :data-vv-name="card.id "
           required
-          @change="validar()"
+          
           ></v-text-field>
         </v-flex>
       </v-layout>
-
       <v-layout row wrap>
-        <v-flex xs12 md2 v-show=true >
-             <input 
-             type="file" name="file" id="file"
-             :disabled="!valid"
+      <v-flex xs12 row wrap class="file-upload"  >
+        
+        <v-flex xs12 v-show="true" class="file-upload-main"  justify-center>
+
+             <input type="file" name="file" id="file" 
+            
+            v-validate="'required'"  data-vv-as="file" 
+
              @change="processFile($event)"
-             @click="inputclick($event)"
              />
              
-            <label for="file">
-              <v-icon style="color:white;">fa-upload</v-icon>
-               {{filename}}
+            <label for="file" >
+                <v-icon v-if="file.name==null">fa-upload</v-icon>
+               {{file.name}}
             </label>
-            
         </v-flex>
+
+        <v-flex xs12>
+          <v-alert
+            :value="!valid && !file.name"
+            type="error"
+          >
+            Seleccionar un archivo.
+          </v-alert>
+        </v-flex>
+
+      </v-flex >
+
+      <v-btn 
+      block 
+      color="secondary"
+      @click="submit"
+      >
+        submit
+      </v-btn>
+
       </v-layout>
-
     </v-form> 
-
+    <v-card row wrap v-show="mostrartabla">
+      <v-card-title class="justify-center">
+        <span class="secondary--text text-xs-center" style="font-size:200%;">Items encontrados</span><br>
+      </v-card-title>
     
-    <v-layout row wrap>
-      <v-flex xs12 v-show="mostrart" >
-      <!-- <v-flex xs12  > -->
-        <v-tabs
-          centered
-          v-model="tabla"
-          
-          color="green"
-          dark
-          icons-and-text
-        >
-          <v-tabs-slider color="black"></v-tabs-slider>
-
-          <v-tab href="#encontrados">
-            Items encontrados
-            <v-icon>fa-check-circle</v-icon>
-          </v-tab>
-
-          <v-tab href="#noencontrados">
-            Items no encontrados
-            <v-icon>fa-times-circle</v-icon>
-          </v-tab>
-
-        </v-tabs> 
+      <v-data-table
         
-         <!-- DATATABLE ITEMS ENCONTRADOS-->
-        <v-card v-if="tabla=='encontrados'" >
-          <v-card-title class="justify-center">
-            <span class="secondary--text text-xs-center" style="font-size:200%;">Items encontrados</span><br>
-          </v-card-title>
-          <v-data-table
-            :headers="headers"
-            :items="items"
-            class="elevation-1"
-          >
-            <template slot="headerCell" slot-scope="props">
-              <v-tooltip bottom>
-                <span slot="activator">
-                  {{ props.header.text }}
-                </span>
-                <span>
-                  {{ props.header.text }}
-                </span>
-              </v-tooltip>
-            </template>
-            <template slot="items" slot-scope="props">
-              <td class="text-xs-center">{{ props.item.descripcion }}</td>
-              <td class="text-xs-center">{{ props.item.precio_unidad }}</td>
-              <td class="text-xs-center">{{ props.item.unidad }}</td>
-              <td class="text-xs-center">{{ props.item.descuento1 }}</td>
-              <td class="text-xs-center">{{ props.item.iva }}</td>
-              <td class="text-xs-center">{{ props.item.transaccion }}</td>
-            </template>
-          </v-data-table>
+        :headers="headers"
+        :items="items"
+        select-all
+        item-key="name"
+        class="elevation-1"
+      >
+        <template slot="headers" slot-scope="props">
+          <tr>
+            <th>
+              <v-checkbox
+                :input-value="props.all"
+                :indeterminate="props.indeterminate"
+                primary
+                hide-details
+                
+              ></v-checkbox>
+            </th>
+            <th
+              v-for="header in props.headers"
+              :key="header.text"
+            >
+              <v-icon small>fas fa-arrows-alt-v</v-icon>
+              {{ header.text }}
+            </th>
+          </tr>
+        </template> 
+        <template slot="items" slot-scope="props">
+        <tr >
+          <td >
+            <v-checkbox 
+              v-model="props.item.selected"
+              primary
+              hide-details
+            ></v-checkbox>
+          </td>
+          <td class="text-xs-left">{{ props.item.descripcion }}</td>
+          <td class="text-xs-left">{{ props.item.precio_unidad }}</td>
+          <td class="text-xs-left">{{ props.item.cantidad }}</td>
+          <td class="text-xs-left">{{ props.item.sobrantes }}</td>
+          <td class="text-xs-right">
+            <v-edit-dialog
+              :return-value.sync="props.item.pedido"
+              large
+              lazy
+              persistent
+              @save="props.item.selected=true"
+            >
+              <div>{{ props.item.pedido }}</div>
+              <div slot="input" class="mt-3 title">Update pedido</div>
+              <v-text-field
+                slot="input"
+                v-model="props.item.pedido"
+                label="Edit"
+                single-line
+                counter
+                autofocus
+              ></v-text-field>
+            </v-edit-dialog>
+          </td>
+          <td class="text-xs-left">{{ props.item.sedesobrante }}</td>
+        </tr>
+        </template>
+      </v-data-table>
+      
 
-          <div class="text-xs-center pt-2" v-if="tabla=='encontrados'">
-            <v-btn color="primary" >
-              <v-icon>fa-file</v-icon>
-                Generar Documento
-            </v-btn>
-          </div>
+      <div class="text-xs-right pt-2">
+        <v-btn color="secondary" @click="transladar">
+          <v-icon>fa-save</v-icon>
+            <span>Guardar</span>
+        </v-btn>
+      </div>
 
-        </v-card> 
-        <!-- DATATABLE ITEMS NO ENCONTRADOS -->
-        <v-card v-else >
-          <v-card-title class="justify-center">
-            <span class="secondary--text text-xs-center" style="font-size:200%;">Items no encontrados</span><br>
-          </v-card-title>
-          <v-data-table
-            :headers="headersne"
-            :items="itemsne"
-            class="elevation-1"
-          >
-            <template slot="headerCell" slot-scope="props">
-              <v-tooltip bottom>
-                <span slot="activator">
-                  {{ props.header.text }}
-                </span>
-                <span>
-                  {{ props.header.text }}
-                </span>
-              </v-tooltip>
-            </template>
-            <template slot="items" slot-scope="props">
-              <td class="text-xs-center">{{ props.item.descripcion }}</td>
-              <td class="text-xs-center">{{ props.item.cod_barras }}</td>
-              <td class="text-xs-center">{{ props.item.refcopi }}</td>
-              <td class="text-xs-center">{{ props.item.costo_full }}</td>
-              <td class="text-xs-center">{{ props.item.unidad }}</td>
-              <td class="text-xs-center">{{ props.item.descuento }}</td>
-              <td class="text-xs-center">{{ props.item.iva }}</td>
-            </template>
-          </v-data-table>
-        </v-card> 
-      </v-flex>
-    </v-layout>
-
+    </v-card> 
+    <!-- **************************************************************************************************************** 
+                                            INPUTS FORMULARIO
+    **************************************************************************************************************** -->
   </v-container>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 
+
 @Component
-export default class Home extends Vue {
+export default class Upcopi extends Vue {
   /*===========================================================================================================
                                           ATRIBUTOS
   =============================================================================================================*/
   private file: any = {};
-  private tabla: string = "";
-  private mostrart: boolean = false;
-  // private Item: string = '';
-  private filename: string = "Subir archivo";
+  private file_valid=true;
   private valid = true;
+  protected loading:boolean=false;
+  
+  private mostrartabla: boolean = false;
+  
+  private filename: string = "Subir archivo";
   private items: object[] = [];
-  private itemsne: object[] = [];
+  private selected= [];
+  
   // private entradas: object [];
   private entradas = [
-    {
-      id: "dia",
-      titulo: "Dia",
-      dato: "",
-      tipo: "fecha",
-      menu: null,
-      validacion: "required"
-    },
     {
       id: "drog",
       titulo: "Codigo Drogueria",
       dato: "",
       tipo: "select",
-      // items: ["009VE", "015VE", "017VE", "020VE"],
       items: [],
       validacion: "required"
     },
@@ -235,34 +198,18 @@ export default class Home extends Vue {
       tipo: "texto",
       validacion: "required"
     },
-    {
-      id: "codcompra",
-      titulo: "codigo comprador",
-      dato: "",
-      tipo: "numero",
-      validacion: "required|max:4"
-    }
   ];
 
   private headers = [
-    { text: "Descripcion", align: "left", value: "desc" },
+    { text: "Descripcion", value: "desc" },
     { text: "Precio unidad", value: "precio" },
-    { text: "Unidad", value: "unidad" },
-    { text: "Descuento", value: "des" },
-    { text: "Iva", value: "iva" },
-    { text: "Transaccion", value: "tran" }
+    { text: "Cantidad ", value: "unidad" },
+    { text: "cantidad sobrante", value: "sobrante" },
+    { text: "cantidad a pedir", value: "sobrante" },
+    { text: "sede", value: "sede" },
   ];
 
-  private headersne = [
-    { text: "Descripcion", align: "left", value: "desc" },
-    { text: "Codigo de barras", value: "codbar" },
-    { text: "Referencia", value: "referencia" },
-    { text: "Precio unidad", value: "fecha" },
-    { text: "Unidad", value: "factura" },
-    { text: "Descuento", value: "ref" },
-    { text: "Iva", value: "descripcion" }
-  ];
-
+  
   // Mensajes custom error vee validate
   private dictionary = {
     custom: {
@@ -271,20 +218,23 @@ export default class Home extends Vue {
         // custom messages
       },
       drog: {
-        required: "Por favor seleccione una sede"
+        required: () => "Por favor seleccione una sede"
+      },
+      file: {
+        required: () => "Por favor seleccionar un archivo."
       },
       nombre: {
-        required: "Por favor digite el nombre"
+        required: () => "Por favor digite el nombre"
       },
       codcompra: {
-        required: "por favor digite el codigo de compra",
+        required: () => "por favor digite el codigo de compra",
         max: "Maximo 4 caracteres"
       },
       ftramite: {
-        required: "Por favor seleccione una fecha"
+        required: () => "Por favor seleccione una fecha"
       },
       nit: {
-        required: "Por favor digite el NIT"
+        required: () => "Por favor digite el NIT"
       }
     }
   };
@@ -296,6 +246,7 @@ export default class Home extends Vue {
     super();
 
     const path = "http://localhost/sobrecostos/puntosv";
+
     this.axios
       .get(path, {
         params: {
@@ -303,8 +254,8 @@ export default class Home extends Vue {
         }
       })
       .then(res => {
-          console.log(res);
-        this.entradas[1].items = res.data.map(function(
+          
+        this.entradas[0].items = res.data.map(function(
           value: any,
           index: number
         ) {
@@ -322,111 +273,64 @@ export default class Home extends Vue {
   }
 
   private processFile(event: any) {
+
+    if( event.target.files[0]){
+      this.file = event.target.files[0];
+    }
+    
+  }
+
+  private submit(event: any) {
+  
     this.$validator.validateAll().then(result => {
       if (result) {
-        this.file = event.target.files[0];
-        this.filename = this.file.name;
-        let formData = new FormData();
-        formData.append("file", this.file);
-        formData.append("fecha", this.entradas[0].dato);
-        formData.append("sede", this.entradas[1].dato);
-        formData.append("nombre", this.entradas[2].dato);
-        formData.append("codigocom", this.entradas[3].dato);
-        // const valid: boolean = true;
-        const path = "http://localhost:5000/copiupload";
+          this.valid=true;
+          let formData = new FormData();
+          formData.append("archivo", this.file);
+          formData.append("sede", this.entradas[0].dato);
+          formData.append("nombre", this.entradas[1].dato);
+  
+          const path = "http://localhost/sobrecostos/copiupload";
 
-        this.axios
-          .post(path, formData, {
-            headers: { "Content-Type": "multipart/form-data" }
-          })
-          .then(res => {
-            // this.msg = res.data;
-            console.log(res.data);
-            if (res.data) {
-              if (res.data.estado == "error") {
-                alert(res.data.contenido);
+          this.axios
+            .post(path, formData, {
+              headers: { "Content-Type": "multipart/form-data" }
+            })
+            .then(res => {
+              console.log(res.data);
+
+              if (res.data) {
+                if(res.data.estado){
+                  this.items = res.data.contenido;
+                  this.mostrartabla=true;
+                }else{
+                  alert(res.data.contenido);
+                }
               } else {
-                this.items = res.data.contenido.items;
-                this.itemsne = res.data.contenido.itemsne;
-                this.mostrart = true;
+                alert("error al subir el arcivo");
               }
-            } else {
-              alert("error al subir el arcivo");
-            }
-          })
-          .catch(error => {
-            // eslint-disable-next-linen
-            console.error(error);
-          });
+            })
+            .catch(error => {
+              console.error(error);
+            });
+      }else{
+        this.valid=false
       }
     });
   }
 
-  private inputclick(event: any) {
-    this.$validator.validateAll().then(result => {
-      if (!result) {
-        event.preventDefault();
+  private transladar(event: any){
+    // console.log(this.items);
+    let itemssend:object[]=[];
+    
+    this.items.forEach(function(element:any) {
+      
+      if(element.selected){
+        itemssend.push(element);
       }
     });
+    console.log(itemssend);
   }
 
-  private fecha(ref: any, dato: string): void {
-    this.validar();
-    ref.save(dato);
-  }
-
-  private validar(): void {
-    this.$validator.validateAll().then(result => {
-      if (result) {
-        this.valid = true;
-      }
-    });
-  }
-
-  private generardoc(): void {
-    const path = "http://localhost:5000/document";
-    this.axios
-      .get(path, {
-        params: {
-          dato: "asdñdlakdlak"
-        }
-      })
-      .then(res => {
-        // this.msg = res.data;
-        alert(res.data);
-      })
-      .catch(error => {
-        // eslint-disable-next-line
-        console.error(error);
-      });
-  }
 }
 </script>
-
-<style scoped>
-input[type="file"] {
-  width: 0.1px;
-  height: 0.1px;
-  opacity: 0;
-  overflow: hidden;
-  position: absolute;
-  z-index: -1;
-}
-
-input[type="file"] + label {
-  padding: 5px;
-  border-radius: 20px;
-  font-weight: 700;
-  color: white;
-  background-color: #1b5e20;
-  display: inline-block;
-  cursor: pointer;
-}
-
-input[type="file"]:focus + label,
-input[type="file"] + label:hover {
-  background-color: rgb(57, 148, 63);
-  outline: 1px dotted #000;
-  outline: -webkit-focus-ring-color auto 5px;
-}
-</style>

@@ -21,17 +21,9 @@ class ControladorSobrante{
         if (!$this->sedes) {
             $this->ctrGetSedes();
         }
-        // $csv = array_map('str_getcsv', $this->file);
-        
-        // for ($i=1; $i < 10; $i++) { 
-        //    
-        // }
-        // return $csv[1][0];
-        // return count($this->file);
-        // return $this->sedes;
-        
+                
         for ($i=1; $i <count($this->file); $i++) {
-            //    $res[]=$line;
+
                $csv=str_getcsv($this->file[$i], ";");
                if (count($csv)<=3) {
                     $csv=str_getcsv($this->file[$i], ",");
@@ -49,7 +41,7 @@ class ControladorSobrante{
                         ]; 
                 }
         }
-        return array_keys($this->items[1]);
+        
         $lenngth=count($this->items);
         return $lenngth;
     }
