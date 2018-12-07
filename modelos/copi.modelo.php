@@ -84,4 +84,21 @@ class ModeloCopi extends Conexion {
         return $res;
 
     }
+
+    function mdlUploadPLaRemi($items)
+    {
+        // $stmt= $this->link->prepare(
+        //     "INSERT INTO transferencias(destino,fecha,encargado) VALUES(:destino,now(),:encargado) ");
+    
+        //     $stmt->bindParam(":destino",$destino,PDO::PARAM_STR);    
+        //     $stmt->bindParam(":encargado",$encargado,PDO::PARAM_STR);   
+            
+        //     $res=$stmt->execute();
+            
+        //     if($res){
+        //         $res=$this->link->lastInsertId();
+        //     }
+        //     $stmt=null;
+        //     return $res;
+    }
 }

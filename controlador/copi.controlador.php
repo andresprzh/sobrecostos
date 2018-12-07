@@ -42,14 +42,14 @@ class ControladorCopi{
                         $this->items[]=['item'=> trim($busres['item']),
                         'cod_barras'=> trim($csv[10]),
                         'unidad'=> trim($csv[14]),
-                        'cantidad'=> intval($csv[5]),
-                        'sobrantes'=>intval($busres['sobrante']),
+                        'cantidad'=> intval(trim($csv[5])),
+                        'sobrantes'=>intval(trim($busres['sobrante'])),
                         'sede'=>trim($busres['sede']),
                         'sedesobrante'=>trim($busres['nomsede']),
-                        'precio_unidad'=> intval($csv[6]),
-                        'descuento1'=> floatval($csv[9])/100,
-                        'descuento2'=> floatval($csv[13])/100,
-                        'iva'=> floatval($csv[8]),
+                        'precio_unidad'=> intval(trim($csv[6])),
+                        'descuento1'=> floatval(trim($csv[9])/100),
+                        'descuento2'=> floatval(trim($csv[13])/100),
+                        'iva'=> floatval(trim($csv[8])),
                         'factura'=> trim($csv[2]),
                         'descripcion'=> trim($busres['descripcion']),
                         "pedido"=>1,
@@ -64,6 +64,14 @@ class ControladorCopi{
         return $this->items;
     }
 
+    public function ctrUploadPlarRemi($items=null)
+    {
+        if (!$items) {
+            $items=$this->items;
+        }
+
+        $resultado=$this->modelo->mdlUploadRemi(); 
+    }
 
     
 

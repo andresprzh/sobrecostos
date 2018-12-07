@@ -104,8 +104,9 @@ if (isset($_GET['ruta'])) {
                             
                             $controlador = new ControladorCopi($archivo);
                             $resultado["contenido"]=$controlador->ctrGetData();
-
-                            if (!$resultado["contenido"]) {
+                            if ($resultado["contenido"]) {
+                                // $resultado=$controlador->ctrUploadPlarRemi();
+                            }else{
                                 $resultado["estado"]=false;
                                 $resultado["contenido"]="Error al subir documento";
                             }

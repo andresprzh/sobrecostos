@@ -39,52 +39,40 @@
 
     <v-card row wrap v-show="mostrartabla">
 
-      <v-card-title class="justify-center">
-
-        <span class="secondary--text text-xs-center" style="font-size:200%;">Items encontrados</span><br>
-
+      <v-card-title>
+        ITEMS
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="search"
+          append-icon="search"
+          label="search"
+          single-line
+          hide-details
+          
+        ></v-text-field>
       </v-card-title>
     
       <v-data-table
         :headers="headers"
         :items="items"
+        :search="search"
         select-all
         item-key="name"
         class="elevation-1"
+        
       >
-        <template slot="headers" slot-scope="props">
-
-          <tr>
-          
-            <th>
-
-              <v-checkbox :input-value="props.all" :indeterminate="props.indeterminate" primary hide-details></v-checkbox>
-
-            </th>
-            <th v-for="header in props.headers" :key="header.text">
-
-              <v-icon small>fas fa-arrows-alt-v</v-icon>
-              {{ header.text }}
-
-            </th>
-
-          </tr>
-
-        </template> 
 
         <template slot="items" slot-scope="props">
 
-        <tr >
-
+        
           <td >
 
             <v-checkbox v-model="props.item.selected" primary hide-details ></v-checkbox>
 
           </td>
-          <td class="text-xs-left">{{ props.item.descripcion }}</td>
-          <td class="text-xs-left">{{ props.item.precio_unidad }}</td>
-          <td class="text-xs-left">{{ props.item.cantidad }}</td>
-          <td class="text-xs-left">{{ props.item.sobrantes }}</td>
+          <td class="text-xs-left">{{props.item.descripcion}}</td>
+          <td class="text-xs-left">{{props.item.cantidad}}</td>
+          <td class="text-xs-left">{{props.item.sobrantes}}</td>
           <td class="text-xs-right">
 
             <v-edit-dialog
@@ -108,9 +96,11 @@
           </td>
           <td class="text-xs-left">{{ props.item.sedesobrante }}</td>
 
-        </tr>
+        
         </template>
-
+         <v-alert slot="no-results" :value="true" color="error" icon="warning">
+          No se contraron resultador para "{{ search }}".
+        </v-alert>
       </v-data-table>
       <v-snackbar v-model="snack.show" :timeout="3000" :color="snack.color">
         {{ snack.text }}
@@ -206,9 +196,9 @@ export default class Upcopi extends Vue {
   /*===========================================================================================================
                                           ATRIBUTOS
   =============================================================================================================*/
-  private path:string="http://localhost/sobrecostos/api/";
+  private path:string="http://192.168.0.49/sobrecostos/api/";
   private file: any = {};
-  
+  private search:string=' ';
   private file_valid:boolean=true;
   private valid:boolean= true;
   protected loading:boolean=false;
@@ -248,10 +238,9 @@ export default class Upcopi extends Vue {
 
   private headers = [
     { text: "Descripcion", value: "desc" },
-    { text: "Precio unidad", value: "precio" },
     { text: "Cantidad ", value: "unidad" },
     { text: "cantidad sobrante", value: "sobrante" },
-    { text: "cantidad a pedir", value: "sobrante" },
+    { text: "cantidad a pedir", value: "pedir" },
     { text: "sede", value: "sede" },
   ];
  
@@ -316,6 +305,10 @@ export default class Upcopi extends Vue {
     this.$validator.localize("es", this.dictionary);
   }
 
+  private save_pedidos(){
+
+  }
+
   private processFile(event: any) {
 
     if( event.target.files[0]){
@@ -344,6 +337,7 @@ export default class Upcopi extends Vue {
             if (res.data) {
               if(res.data.estado){
                 this.items = res.data.contenido;
+                
                 this.mostrartabla=true;
               }else{
                 alert(res.data.contenido);
