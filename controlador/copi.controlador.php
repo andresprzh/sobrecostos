@@ -39,11 +39,12 @@ class ControladorCopi{
                    if ($busqueda->rowCount()>0) {
                        $busres=$busqueda->fetch();
                        if ($busres['sobrante']>0){
-                        $this->items[]=['id_item'=> trim($busres['item']),
+                        $this->items[]=['item'=> trim($busres['item']),
                         'cod_barras'=> trim($csv[10]),
                         'unidad'=> trim($csv[14]),
                         'cantidad'=> intval($csv[5]),
                         'sobrantes'=>intval($busres['sobrante']),
+                        'sede'=>trim($busres['sede']),
                         'sedesobrante'=>trim($busres['nomsede']),
                         'precio_unidad'=> intval($csv[6]),
                         'descuento1'=> floatval($csv[9])/100,

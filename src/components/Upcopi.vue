@@ -217,7 +217,7 @@ export default class Upcopi extends Vue {
   
   private filename: string = "Subir archivo";
   private items: object[] = [];
-  private itemssend=[];
+  private itemssend=new Array;
   private selected= [];
   
   private snack={
@@ -362,37 +362,34 @@ export default class Upcopi extends Vue {
 
   private transladar(event: any){
     // console.log(this.items);
-    let itemssend=[];
+    let itemssend=new Array;
     
-    for(let i=0;i<this.items.length;i++){
-      if(this.items[i].selected){
+    // for(let i=0;i<this.items.length;i++){
+    //   if(this.items[i].selected){
 
-        const items={
-                        'iditem': this.items[i].id_item,
-                        'pedido': this.items[i].pedido,
-                        'sede':this.items[i].sedesobrante,
-        };
-        itemssend.push(Object.values(items));
+    //     const items={
+    //                     'iditem': this.items[i].id_item,
+    //                     'pedido': this.items[i].pedido,
+    //                     'sede':this.items[i].sedesobrante,
+    //     };
+    //     itemssend.push(Object.values(items));
         
         
-      }
-    }
-    
-    // this.items.forEach(function(element:any) {
-      
-    //   if(element.selected){
-    //     itemssend[cont]=({
-    //                     'iditem': element.id_item,
-    //                     'pedido': element.pedido,
-    //                     'sede':element.sedesobrante,
-    //                 });
-        
-    //     cont++;
     //   }
-      
-    // });
-    console.log(itemssend);
+    // }
     
+    this.items.forEach(function(element:any) {
+      
+      if(element.selected){
+        itemssend.push({
+          'item': element.item,
+          'pedido': element.pedido,
+          'sede':element.sede,
+        });
+      }
+      
+    });
+   
     if (itemssend.length>0){
       this.itemssend=itemssend;
       this.modal=true;
@@ -410,7 +407,8 @@ export default class Upcopi extends Vue {
       if(result){
         
         let formData = new FormData();
-        formData.append("items", this.itemssend);
+        let itemssend:string=JSON.stringify(this.itemssend);
+        formData.append("items", itemssend);
         formData.append("sede", this.entradas[0].dato);
         formData.append("encargado", this.entradas[1].dato);
 

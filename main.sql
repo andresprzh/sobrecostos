@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `sobrantes`(
 CREATE TABLE IF NOT EXISTS `transferencias`(
 	`id_transferencia` INT(6) AUTO_INCREMENT NOT NULL,
 	`destino` CHAR(6) NOT NULL,
-	`fecha` FLOAT(5,2) NOT NULL,
+	`fecha` DATETIME,
 	`encargado` CHAR(40) NOT NULL,
 	
 	PRIMARY KEY(`id_transferencia`),

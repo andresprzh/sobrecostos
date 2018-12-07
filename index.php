@@ -131,11 +131,12 @@ if (isset($_GET['ruta'])) {
 
                 if (isset($_POST["items"]) && isset($_POST["sede"]) && isset($_POST["encargado"])) {
 
-                    $items=$_POST["items"];
+                    $items=json_decode($_POST["items"]);
                     $sede=$_POST["sede"];
                     $encargado=$_POST["encargado"];
-                    print json_encode($items);
-                    return 0;
+                    // $items=json_decode($items);
+                    // print json_encode($items);
+                    // return
                     $modelo = new ModeloCopi();
 
                     $transferencia=$modelo->mdlCrearTransferencia($sede,$encargado);
