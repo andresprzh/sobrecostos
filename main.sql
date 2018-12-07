@@ -82,10 +82,11 @@ CREATE TABLE IF NOT EXISTS `transferencias`(
 CREATE TABLE IF NOT EXISTS `transferencias_det`(
 	`item` CHAR(6) NOT NULL,
 	`sede` CHAR(6) NOT NULL,
+	`id_transferencia` INT(6) NOT NULL,
 	`pedido` FLOAT(4,2),
-	`id_transferencia` INT(6),
+
 	
-	PRIMARY KEY(`item`,`sede`),
+	PRIMARY KEY(`item`,`sede`,`id_transferencia`),
 	
 	CONSTRAINT trans_det_item
 	FOREIGN KEY(`item`,`sede`) 
@@ -101,7 +102,9 @@ CREATE TABLE IF NOT EXISTS `transferencias_det`(
 -- Dumping data for table `sedes`
 --
 
-LOCK TABLES `sedes` WRITE;
+/*******************************************************************************************************************************
+											INICIALIZA REGISTROS BASE DE DATOS 
+********************************************************************************************************************************/
 
 REPLACE INTO `sedes` VALUES ('001',' CENTRO',' CR 2 14 34','','',' 0','13803'),
 ('002',' VERSALLES',' CL 23BN 3N 100','','',' 0','13803'),
@@ -138,4 +141,21 @@ REPLACE INTO `sedes` VALUES ('001',' CENTRO',' CR 2 14 34','','',' 0','13803'),
 ('900',' LABORATORIO SAN JORGE LTDA',' CR 2 14 26','','','\r','13803'),
 ('XXX',' C.O PARA CIERRE','','','','\r','13803');
 
-UNLOCK TABLES;
+/*******************************************************************************************************************************
+											PROCEDIMIENTOS FUNCIONES Y TRIGGERS BASE DE DATOS
+********************************************************************************************************************************/
+DROP TRIGGER IF EXISTS CambiarSobrantes;
+-- trigger que modifica la cantidad sobrante al crear ransferencia
+DELIMITER $$
+	CREATE TRIGGER CambiarSobrantes
+	AFTER INSERT ON transferencias_det
+	FOR EACH ROW 
+	BEGIN
+
+		UPDATE sobrantes
+		SET sobrante=sobrante-1
+		WHERE sobrantes.item=new.item
+    AND sobrantes.sede=new.sede;
+				
+	END 
+$$

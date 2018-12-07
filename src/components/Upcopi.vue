@@ -361,22 +361,7 @@ export default class Upcopi extends Vue {
   }
 
   private transladar(event: any){
-    // console.log(this.items);
     let itemssend=new Array;
-    
-    // for(let i=0;i<this.items.length;i++){
-    //   if(this.items[i].selected){
-
-    //     const items={
-    //                     'iditem': this.items[i].id_item,
-    //                     'pedido': this.items[i].pedido,
-    //                     'sede':this.items[i].sedesobrante,
-    //     };
-    //     itemssend.push(Object.values(items));
-        
-        
-    //   }
-    // }
     
     this.items.forEach(function(element:any) {
       
@@ -419,12 +404,12 @@ export default class Upcopi extends Vue {
             headers: { "Content-Type": "multipart/form-data" }
           })
           .then(res => {
-            console.log(res.data);
 
             if (res.data) {
               
               alert("Transferencia creada exitosamente");
-              
+              // this.modal=false;
+              location.reload();
             } else {
 
               alert("error al crear la transferencia");
@@ -435,13 +420,12 @@ export default class Upcopi extends Vue {
             console.error(error);
           });
 
-        this.modal=false;
+        
 
       }
      });
      
   }
   
-
 }
 </script>
