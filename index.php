@@ -10,15 +10,15 @@ if (isset($_GET['ruta'])) {
         ============================================================================================================================*/
         case 'puntosv':
 
-        if ($_SERVER['REQUEST_METHOD']==='GET') {
-            $modelo=new ModeloSobrante();
-            $busqueda=$modelo->mdlMostrarUbicaciones();
-            $resultado=$busqueda->fetchAll();
-            print json_encode($resultado);
-            return 1;
-        }
+            if ($_SERVER['REQUEST_METHOD']==='GET') {
+                $modelo=new ModeloSobrante();
+                $busqueda=$modelo->mdlMostrarUbicaciones();
+                $resultado=$busqueda->fetchAll();
+                print json_encode($resultado);
+                return 1;
+            }
 
-        break;
+            break;
 
         /* ============================================================================================================================
                                                 SUBE ARCHIVO DE SOBRECOSTOS
@@ -122,6 +122,39 @@ if (isset($_GET['ruta'])) {
                 
             }
             break;
+        /* ============================================================================================================================
+                                                MUESTRA PUNTOS DE VENTA
+        ============================================================================================================================*/
+        case 'transladar':
+
+            if ($_SERVER['REQUEST_METHOD']==='POST') {
+
+                if (isset($_POST["items"]) && isset($_POST["sede"]) && isset($_POST["encargado"])) {
+
+                    $items=$_POST["items"];
+                    $sede=$_POST["sede"];
+                    $encargado=$_POST["encargado"];
+                    print json_encode($items);
+                    return 0;
+                    $modelo = new ModeloCopi();
+
+                    $transferencia=$modelo->mdlCrearTransferencia($sede,$encargado);
+                    
+                    if ($transferencia) {
+                        $resultado=$modelo->mdlAddItemsTransferencia($items,$transferencia);
+                    }else {
+                        $resultado=false;
+                    }
+
+                    print json_encode($resultado);
+
+                    return 1;
+                }
+               
+            }
+
+            break;
+
         default:
             $controlador = new ControladorSobrante();
             $resultado=$controlador->ctrGetSedes();

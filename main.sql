@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `transferencias`(
 CREATE TABLE IF NOT EXISTS `transferencias_det`(
 	`item` CHAR(6) NOT NULL,
 	`sede` CHAR(6) NOT NULL,
-	`cantidad` FLOAT(4,2),
+	`pedido` FLOAT(4,2),
 	`id_transferencia` INT(6),
 	
 	PRIMARY KEY(`item`,`sede`),

@@ -33,4 +33,53 @@ class ModeloCopi extends Conexion {
         $stmt=null;
 
     }
+
+    function mdlCrearTransferencia($destino,$encargado){
+
+        $stmt= $this->link->prepare(
+        "INSERT INTO transferencias(destino,fecha,encargado) VALUES(:destino,now(),:encargado) ");
+
+        $stmt->bindParam(":destino",$destino,PDO::PARAM_STR);    
+        $stmt->bindParam(":encargado",$encargado,PDO::PARAM_STR);   
+        
+        $res=$stmt->execute();
+        
+        if($res){
+            $res=$this->link->lastInsertId();
+        }
+        $stmt=null;
+        return $res;
+
+    }
+
+    function mdlAddItemsTransferencia($items,$transferencia){
+
+        $sql="INSERT INTO transferencia_det(";
+        foreach ($items[0] as $column=> $cell) {
+            $sql.="$column,";
+        }
+        $sql=substr($sql,0,-1).") VALUES ";
+
+        for ($i=0; $i <count($items) ; $i++) { 
+            $sql.="(";
+            foreach ($items[$i] as $j => $cell) {
+                $sql.=":$j$i,";
+            }
+            $sql=substr($sql,0,-1)."),";
+        }
+        
+        $sql=substr($sql,0,-1).";";
+        
+        $stmt= $this->link->prepare($sql);
+        
+        foreach ($items as $i => $row) {
+            $stmt->bindParam(":sede$i",$row['sede'],PDO::PARAM_STR);
+            $stmt->bindParam(":item$i",$row['item'],PDO::PARAM_STR);
+            $stmt->bindParam(":pedido$i",$row['pedido'],PDO::PARAM_STR);    
+        }
+        $res=$stmt->execute();
+        $stmt=null;
+        return $res;
+
+    }
 }
