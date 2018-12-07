@@ -289,7 +289,7 @@ export default class Upcopi extends Vue {
   constructor() {
     super();
 
-    const path = "http://localhost/sobrecostos/puntosv";
+    const path = "http://localhost/sobrecostos/api/puntosv";
 
     this.axios
       .get(path, {
@@ -331,7 +331,7 @@ export default class Upcopi extends Vue {
         let formData = new FormData();
         formData.append("archivo", this.file);
 
-        const path = "http://localhost/sobrecostos/copiupload";
+        const path = "http://localhost/sobrecostos/api/copiupload";
 
         this.axios
           .post(path, formData, {
@@ -397,7 +397,7 @@ export default class Upcopi extends Vue {
         formData.append("sede", this.entradas[0].dato);
         formData.append("encargado", this.entradas[1].dato);
 
-        const path = "http://localhost/sobrecostos/transladar";
+        const path = "http://localhost/sobrecostos/api/transladar";
 
         this.axios
           .post(path, formData, {

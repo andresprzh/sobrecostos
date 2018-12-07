@@ -7,7 +7,7 @@ RewriteEngine On
 
 
 
-RewriteRule ^([-a-zA-Z0-9]+)$ index.php?ruta=$1
+# RewriteRule ^([-a-zA-Z0-9]+)$ index.php?ruta=$1
 
 # REGLAS PARA LA REST API
-# RewriteRule ^puntosv/([-a-zA-Z0-9/]+)$ api/puntosv.php?ruta=$1 [QSA,NC,L]
+RewriteRule ^api/([-a-zA-Z0-9/]+)$ api.php?ruta=$1 [QSA,NC,L]
