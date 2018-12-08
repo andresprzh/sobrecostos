@@ -87,18 +87,50 @@ class ModeloCopi extends Conexion {
 
     function mdlUploadPLaRemi($items)
     {
-        // $stmt= $this->link->prepare(
-        //     "INSERT INTO transferencias(destino,fecha,encargado) VALUES(:destino,now(),:encargado) ");
-    
-        //     $stmt->bindParam(":destino",$destino,PDO::PARAM_STR);    
-        //     $stmt->bindParam(":encargado",$encargado,PDO::PARAM_STR);   
+        $stmt= $this->link->prepare(
+        "INSERT INTO plaremi(factura,fecha) VALUES(:factura,now()) ");
+        
+        $stmt->bindParam(":factura",$items[0]['factura'],PDO::PARAM_STR);     
+        
+        $res=$stmt->execute();
+        
+        if($res){
             
-        //     $res=$stmt->execute();
+            $stmt=null;
+
+            $sql="INSERT INTO plaremi_det(item,factura,pedido) VALUES";
+
+            for ($i=0; $i <count($items) ; $i++) { 
+                $sql.="(:item$i,:factura$i,:pedido$i),";
+            }
             
-        //     if($res){
-        //         $res=$this->link->lastInsertId();
-        //     }
-        //     $stmt=null;
-        //     return $res;
+            $sql=substr($sql,0,-1).";";
+            // return $sql;
+            $stmt= $this->link->prepare($sql);
+            
+            foreach ($items as $i => $row) {
+                $stmt->bindParam(":item$i",$row['item'],PDO::PARAM_STR);
+                $stmt->bindParam(":factura$i",$row['factura'],PDO::PARAM_STR);
+                $stmt->bindParam(":pedido$i",$row['pedido'],PDO::PARAM_STR);  
+            }
+            $res=$stmt->execute();
+
+            $stmt=null;
+
+            // elimina registro de  plaremi si no se pueden subir los items
+            if (!$res) {
+                $stmt= $this->link->prepare("DELETE FROM plaremi WHERE factura=:factura");
+                $stmt->bindParam(":factura",$items[0]['factura'],PDO::PARAM_STR);
+                $stmt->execute();
+            }
+
+        }
+        if($res==false) {
+            $res=$stmt->errorCode();
+        }
+        
+        $stmt=null;
+        return $res;
     }
+
 }

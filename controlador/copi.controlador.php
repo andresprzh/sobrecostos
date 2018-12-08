@@ -70,7 +70,16 @@ class ControladorCopi{
             $items=$this->items;
         }
 
-        $resultado=$this->modelo->mdlUploadRemi(); 
+        $res=$this->modelo->mdlUploadPLaRemi($items); 
+        
+        if ($res===true) {
+            $resultado["estado"]=true;
+            $resultado["contenido"]=$items;
+        }else{
+            $resultado["estado"]=false;
+            $resultado["contenido"]="Documento ya subido";
+        }   
+        return $resultado;
     }
 
     

@@ -64,6 +64,7 @@ CREATE TABLE IF NOT EXISTS `sobrantes`(
   INDEX(`sobrante`)
 ) ENGINE=InnoDB DEFAULT CHARSET=LATIN1;
 
+
 CREATE TABLE IF NOT EXISTS `transferencias`(
 	`id_transferencia` INT(6) AUTO_INCREMENT NOT NULL,
 	`destino` CHAR(6) NOT NULL,
@@ -95,6 +96,33 @@ CREATE TABLE IF NOT EXISTS `transferencias_det`(
 	CONSTRAINT trans_det_trans
 	FOREIGN KEY(`id_transferencia`) 
 	REFERENCES `transferencias`(`id_transferencia`)	
+	
+) ENGINE=InnoDB DEFAULT CHARSET=LATIN1;
+
+
+CREATE TABLE IF NOT EXISTS `plaremi`(
+	`factura` CHAR(20) NOT NULL,
+	`fecha` DATETIME,
+	
+	PRIMARY KEY(`factura`)
+
+) ENGINE=InnoDB DEFAULT CHARSET=LATIN1;
+
+CREATE TABLE IF NOT EXISTS `plaremi_det`(
+	`item` CHAR(6) NOT NULL,
+  `factura` CHAR(20) NOT NULL,
+	`pedido` FLOAT(4,2) NOT NULL,
+
+	
+	PRIMARY KEY(`item`,`factura`),
+	
+	CONSTRAINT plaremi_det_plaremi
+	FOREIGN KEY(`factura`) 
+	REFERENCES `plaremi`(`factura`),
+	
+	CONSTRAINT plaremi_det_item
+	FOREIGN KEY(`item`) 
+	REFERENCES `items`(`ID_ITEM`)	
 	
 ) ENGINE=InnoDB DEFAULT CHARSET=LATIN1;
 

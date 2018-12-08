@@ -196,7 +196,7 @@ export default class Upcopi extends Vue {
   /*===========================================================================================================
                                           ATRIBUTOS
   =============================================================================================================*/
-  private path:string="http://192.168.0.49/sobrecostos/api/";
+  private path:string="http://192.168.0.10/sobrecostos/api/";
   private file: any = {};
   private search:string=' ';
   private file_valid:boolean=true;
@@ -290,7 +290,7 @@ export default class Upcopi extends Vue {
       .then(res => {
 
         if(res){
-          
+          console.log(res.data);
           this.entradas[0].items=res.data;
         }
 

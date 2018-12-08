@@ -42,59 +42,50 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class Upfile extends Vue {
-  
   /*===========================================================================================================
                                           ATRIBUTOS
   =============================================================================================================*/
-  protected valid:boolean = true;
-  protected loading:boolean=false;
+  protected valid: boolean = true;
+  protected loading: boolean = false;
   protected file: any = {};
-  
-
   private processFile(event: any) {
-    // alert("change");
-    if( event.target.files[0]){
+    if ( event.target.files[0]) {
       this.file = event.target.files[0];
-      this.valid=true;
-    }else{
-      if(!this.file.name){
-        this.valid=false;
+      this.valid = true;
+    } else {
+      if (!this.file.name) {
+        this.valid = false;
       }
-      
     }
-    
   }
 
-  private submit(event:any){
-    
-    if(this.file.name){
-      this.loading=true;
-      let formData = new FormData();
-      formData.append("archivo", this.file);
+  private submit(event: any) {
+    if (this.file.name) {
+      this.loading = true;
+      const formData = new FormData();
+      formData.append('archivo', this.file);
       // const valid: boolean = true;
-      const path = "http://192.168.0.49/sobrecostos/api/sobrecostos";
-      
+      const path = 'http://192.168.0.49/sobrecostos/api/sobrecostos';
       this.axios
         .post(path, formData, {
-          headers: { "Content-Type": "multipart/form-data" }
+          headers: { 'Content-Type': 'multipart/form-data' },
         })
-        .then(res => {
-          this.loading=false;
-          console.log(res);
-          if(res.data){
+        .then((res) => {
+          this.loading = false;
+          if (res.data) {
             alert(res.data.contenido);
           }
         })
-        .catch(error => {
-          this.loading=false;
+        .catch((error) => {
+          this.loading = false;
           console.error(error);
         });
-    }else{
-      this.valid=false;
+    } else {
+      this.valid = false;
     }
   }
 
