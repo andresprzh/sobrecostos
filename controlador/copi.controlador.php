@@ -82,6 +82,31 @@ class ControladorCopi{
         return $resultado;
     }
 
+    public function ctrBsucarSobrantes($factura)
+    {
+        $busqueda=$this->modelo->mdlBuscarPlaremiItems($factura);
+        $resultado["estado"]=false;
+        if($busqueda){
+            if ($busqueda->rowCount() > 0) {
+                $resultado["estado"]=true;
+                while($row = $busqueda->fetch()){
+                    $resultado['contenido'][]=[
+                    'item'=> trim($row['item']),
+                    'descripcion'=> trim($row['descripcion']),
+                    'pedido'=> trim($row['pedido']),
+                    'solicitado'=> 1,
+                    'sobrante'=>intval(trim($row['sobrante'])),
+                    'sede'=>trim($row['sede']),
+                    'sedesobrante'=>trim($row['sedesobrante']),
+                    "selected"=>false
+                    ];
+                    
+                }
+            }
+        }
+        return $resultado;
+    }
+
     
 
 }

@@ -61,11 +61,21 @@ if (isset($_GET['ruta'])) {
         case 'plaremi':
 
             if ($_SERVER['REQUEST_METHOD']==='GET') {
-                $modelo=new ModeloCopi();
-                $busqueda=$modelo->buscaritem('plaremi');
-                $resultado=$busqueda->fetchAll();
-                print json_encode($resultado);
-                return 1;
+                if (!isset($_GET['factura'])) {
+
+                    $modelo=new ModeloCopi();
+                    $busqueda=$modelo->buscaritem('plaremi');
+                    $resultado=$busqueda->fetchAll();
+                    print json_encode($resultado);
+                    return 1;
+
+                }else {
+                    $controlador=new ControladorCopi();
+                    $resultado=$controlador->ctrBsucarSobrantes($_GET["factura"]);
+                   
+                    print json_encode($resultado);
+                    return 1;
+                }
             }
 
             break;

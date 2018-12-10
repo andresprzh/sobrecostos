@@ -131,6 +131,34 @@ class ModeloCopi extends Conexion {
         
         $stmt=null;
         return $res;
+    
     }
 
+    function mdlBuscarPlaremiItems($factura)
+    {
+        $stmt= $this->link->prepare(
+        "SELECT ID_ITEM AS item,items.DESCRIPCION AS descripcion,1 AS solicitado,
+        true AS selected,pedido,sobrante,sede,sedes.descripcion AS sedesobrante
+        FROM plaremi_det
+        INNER JOIN sobrantes ON sobrantes.item=plaremi_det.item
+        INNER JOIN items ON items.ID_ITEM=plaremi_det.item
+        INNER JOIN sedes ON sedes.codigo=sobrantes.sede
+        WHERE factura=:factura
+        AND sobrante>0;");
+
+        $stmt->bindParam(":factura",$factura,PDO::PARAM_STR);     
+
+        
+        if($stmt->execute()){
+            return $stmt;
+        }else{
+            
+            $stmt=null;
+            return false;
+        }
+        $stmt=null;
+
+        
+
+    }
 }

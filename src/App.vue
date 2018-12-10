@@ -83,6 +83,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class App extends Vue {
+  // protected path:string="http://192.168.0.49/sobrecostos/api/";
   public sideNav: boolean = false;
   public menuItems = [
     { icono: "fa-home", titulo: "Home", ruta: "/" },
@@ -91,7 +92,11 @@ export default class App extends Vue {
     { icono: "fa-clipboard-list", titulo: "Transferencias", ruta: "/transferencias" },
   ];
   public fondoNav = require("@/assets/fondos/logo2.svg");
+  
+
+  
 }
+
 </script>
 
 <style>
