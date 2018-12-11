@@ -172,7 +172,7 @@ export default class Tabla extends Vue {
             if(res.data.estado){
             this.items = res.data.contenido;
             
-            this.mostrartabla=true;
+            
             }else{
             alert(res.data);
             }

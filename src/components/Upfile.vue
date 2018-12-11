@@ -82,7 +82,6 @@ export default class Upfile extends Vue {
         })
         .catch((error) => {
           this.loading = false;
-          console.error(error);
         });
     } else {
       this.valid = false;

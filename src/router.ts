@@ -6,10 +6,17 @@ import Upcopi from './components/Upcopi.vue';
 import Transferencias from './components/Transferencias.vue';
 import Tabla from './components/Tabla.vue';
 
+
 Vue.use(Router);
 
-export default new Router({
+export const router = new Router({
+  // export default algo = new Router({
   routes: [
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import(/* webpackChunkName: "about" */ './components/Login.vue'),
+    },
     {
       path: '/',
       name: 'home',
@@ -24,6 +31,7 @@ export default new Router({
       path: '/upcopi',
       name: 'Upcopi',
       component: Upcopi,
+      
     },
     {
       path: '/transferencias',
@@ -37,5 +45,19 @@ export default new Router({
         },
       ]
     },
+    { path: '*', redirect: '/' },
   ],
+  
 });
+
+router.beforeEach((to, from, next) => {
+  const publicPages = ['/login'];
+  const authRequired = !publicPages.includes(to.path);
+  const loggedIn = localStorage.getItem('session');
+
+  if (authRequired && !loggedIn) {
+    return next('/login');
+  }
+
+  next();
+})

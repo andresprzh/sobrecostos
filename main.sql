@@ -30,16 +30,16 @@ CREATE TABLE IF NOT EXISTS `cod_barras` (
 ) ENGINE=InnoDB DEFAULT CHARSET=LATIN1;
 
 CREATE TABLE IF NOT EXISTS `sedes` (
-  `codigo` CHAR(6) NOT NULL,
-  `descripcion` CHAR(40) DEFAULT NULL,
-  `direccion1` CHAR(40) DEFAULT NULL,
-  `direccion2` CHAR(40) DEFAULT NULL,
-  `direccion3` CHAR(40) DEFAULT NULL,
-  `grupo_co` CHAR(2) DEFAULT NULL,
-  `codigo_drog` CHAR(5) DEFAULT '13803',
+  `codigo`        CHAR(6) NOT NULL,
+  `descripcion`   CHAR(40) DEFAULT NULL,
+  `direccion1`    CHAR(40) DEFAULT NULL,
+  `direccion2`    CHAR(40) DEFAULT NULL,
+  `direccion3`    CHAR(40) DEFAULT NULL,
+  `grupo_co`      CHAR(2) DEFAULT NULL,
+  `codigo_drog`   CHAR(5) DEFAULT '13803',
+
   PRIMARY KEY (`codigo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=LATIN1;
-
 
 CREATE TABLE IF NOT EXISTS `sobrantes`(
   `item` CHAR(6) NOT NULL,
@@ -64,19 +64,53 @@ CREATE TABLE IF NOT EXISTS `sobrantes`(
   INDEX(`sobrante`)
 ) ENGINE=InnoDB DEFAULT CHARSET=LATIN1;
 
+CREATE TABLE IF NOT EXISTS perfiles(
+	`id_perfil` 		INT(1) NOT NULL AUTO_INCREMENT,
+	`des_perfil` 		CHAR(20),
+
+	PRIMARY KEY(`id_perfil`)
+)ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `usuarios`(
+  `id_usuario` 		INT(10) NOT NULL AUTO_INCREMENT,	
+	`nombre` 				VARCHAR(40) COLLATE ucs2_spanish_ci,
+	`cedula` 				CHAR(12),
+	`usuario` 			CHAR(20),
+	`password` 			VARCHAR(60) NOT NULL,
+	`perfil` 				INT(1),
+  `sede`          CHAR(6) NOT NULL,
+
+	PRIMARY KEY(`id_usuario`),
+	UNIQUE(`cedula`),
+	UNIQUE(`usuario`),
+	
+	CONSTRAINT usuario_perfil
+	FOREIGN KEY(`perfil`)
+	REFERENCES `perfiles`(`id_perfil`),
+	
+	CONSTRAINT usuario_sedes
+	FOREIGN KEY(`sede`)
+	REFERENCES `sedes`(`codigo`),	
+	
+	INDEX (`id_usuario`)
+) ENGINE=InnoDB DEFAULT CHARSET=LATIN1;
 
 CREATE TABLE IF NOT EXISTS `transferencias`(
 	`id_transferencia` INT(6) AUTO_INCREMENT NOT NULL,
 	`destino` CHAR(6) NOT NULL,
 	`fecha` DATETIME,
-	`encargado` CHAR(40) NOT NULL,
+	`encargado` INT(10) NOT NULL,
 	
 	PRIMARY KEY(`id_transferencia`),
 	
 	
 	CONSTRAINT transferencias_destino
 	FOREIGN KEY(`destino`) 
-	REFERENCES `sedes`(`codigo`)
+	REFERENCES `sedes`(`codigo`),
+
+  CONSTRAINT transferencias_usuario
+	FOREIGN KEY(`encargado`) 
+	REFERENCES `usuarios`(`id_usuario`)
 	
 ) ENGINE=InnoDB DEFAULT CHARSET=LATIN1;
 
@@ -98,7 +132,6 @@ CREATE TABLE IF NOT EXISTS `transferencias_det`(
 	REFERENCES `transferencias`(`id_transferencia`)	
 	
 ) ENGINE=InnoDB DEFAULT CHARSET=LATIN1;
-
 
 CREATE TABLE IF NOT EXISTS `plaremi`(
 	`factura` CHAR(20) NOT NULL,
@@ -133,42 +166,44 @@ CREATE TABLE IF NOT EXISTS `plaremi_det`(
 /*******************************************************************************************************************************
 											INICIALIZA REGISTROS BASE DE DATOS 
 ********************************************************************************************************************************/
-
-REPLACE INTO `sedes` VALUES ('001',' CENTRO',' CR 2 14 34','','',' 0','13803'),
-('002',' VERSALLES',' CL 23BN 3N 100','','',' 0','13803'),
-('003',' CAMINO REAL',' CL 9 51 05','','',' 0','13803'),
-('004',' ALFONSO LOPEZ',' CL 70 7TBIS 59','','',' 0','13803'),
-('005',' INGENIO',' CR 85C 15 119','','',' 0','13803'),
-('006',' VILLA DEL SUR',' CR 42A 26E 41','','',' 0','13803'),
-('007',' PORTADA',' AV 4OESTE 7 47','','',' 0','13803'),
-('008',' SAN FERNANDO',' CL 5 37 A 65/67','','',' 0','13803'),
-('009',' CALIMA LA 14',' CL 70 1 245 L CENTRO COMERCIAL CALIMA','','',' 0','13803'),
-('010',' PLAZA CAICEDO',' CR 5 12 16 LOCAL 1','','',' 0','13803'),
-('011',' VALLE LILI',' CR 98B 25 130','','',' 0','13803'),
-('012',' COSMOCENTRO',' CL 5 50 106 LC 282','','',' 0','13803'),
-('013',' CALLE 7A',' CL 7 No.30A 12','','',' 0','13803'),
-('014',' CENTRO SAN JORGE',' CR 2 14 34','','',' 0','13803'),
-('015',' LA FLORA',' CL 52 N NRO 5B88','','',' 0','13803'),
-('016',' UNICENTRO LOCAL 362',' CR 100 5 169','','',' 0','13803'),
-('017',' ALFAGUARA LOCAL 1 66',' CL 2#22175 CENTRO COMERCIAL ALFAGUARA',' A LOCAL 166','','\r','13803'),
-('018',' ELITE',' CR 7 1452 LOCAL 156 PRIMER PISO',' EDIFICIO COMERCIAL CENTRO ELITE','','\r','13803'),
-('019',' VILLA COLOMBIA',' CLL 50 12 09 L 102A','','','\r','13803'),
-('020',' GASTOS ADMINISTRATIVOS POR REPARTIR',' CLL 23BN 3N 100','','','\r','13803'),
-('021',' VINCULADAS',' CL 23 B N 3 N 100','','','\r','13803'),
-('022',' CALL CENTER',' CL 23BN 3N 100','','','\r','13803'),
-('023',' JARDIN PLAZA',' CL 16 98 155','','','\r','13803'),
-('090',' MEDICAMENTOS',' CR 2 14 26','','','\r','13803'),
-('091',' COSMETICOS',' CR 2 14 26','','','\r','13803'),
-('092',' VARIOS',' CR 2 14 26','','','\r','13803'),
-('093',' REEMPAQUE',' CR 2 14 26','','','\r','13803'),
-('099',' VENTAS AL POR MAYOR (CREDITOS)',' CR 2 14 34','','','\r','13803'),
-('100',' CALLE 7A',' CL 7 30A 12','','','\r','13803'),
-('101',' BOGOTA CHAPINERO',' CLL 53 13 64',' CLL 53 13 52','','\r','13803'),
-('102',' BOGOTA AUTONORTE',' LOCAL #1 AV CR 45 #97 80','','','\r','13803'),
-('110',' GASTOS ADMINISTRATIVOS POR DISTRIBUIR',' CLL 7 30A12','','','\r','13803'),
-('900',' LABORATORIO SAN JORGE LTDA',' CR 2 14 26','','','\r','13803'),
-('XXX',' C.O PARA CIERRE','','','','\r','13803');
-
+/*
+REPLACE INTO `sedes` VALUES 
+  ('001',' CENTRO',' CR 2 14 34','','',' 0','13803'),
+  ('002',' VERSALLES',' CL 23BN 3N 100','','',' 0','13803'),
+  ('003',' CAMINO REAL',' CL 9 51 05','','',' 0','13803'),
+  ('004',' ALFONSO LOPEZ',' CL 70 7TBIS 59','','',' 0','13803'),
+  ('005',' INGENIO',' CR 85C 15 119','','',' 0','13803'),
+  ('006',' VILLA DEL SUR',' CR 42A 26E 41','','',' 0','13803'),
+  ('007',' PORTADA',' AV 4OESTE 7 47','','',' 0','13803'),
+  ('008',' SAN FERNANDO',' CL 5 37 A 65/67','','',' 0','13803'),
+  ('009',' CALIMA LA 14',' CL 70 1 245 L CENTRO COMERCIAL CALIMA','','',' 0','13803'),
+  ('010',' PLAZA CAICEDO',' CR 5 12 16 LOCAL 1','','',' 0','13803'),
+  ('011',' VALLE LILI',' CR 98B 25 130','','',' 0','13803'),
+  ('012',' COSMOCENTRO',' CL 5 50 106 LC 282','','',' 0','13803'),
+  ('013',' CALLE 7A',' CL 7 No.30A 12','','',' 0','13803'),
+  ('014',' CENTRO SAN JORGE',' CR 2 14 34','','',' 0','13803'),
+  ('015',' LA FLORA',' CL 52 N NRO 5B88','','',' 0','13803'),
+  ('016',' UNICENTRO LOCAL 362',' CR 100 5 169','','',' 0','13803'),
+  ('017',' ALFAGUARA LOCAL 1 66',' CL 2#22175 CENTRO COMERCIAL ALFAGUARA',' A LOCAL 166','','\r','13803'),
+  ('018',' ELITE',' CR 7 1452 LOCAL 156 PRIMER PISO',' EDIFICIO COMERCIAL CENTRO ELITE','','\r','13803'),
+  ('019',' VILLA COLOMBIA',' CLL 50 12 09 L 102A','','','\r','13803'),
+  ('020',' GASTOS ADMINISTRATIVOS POR REPARTIR',' CLL 23BN 3N 100','','','\r','13803'),
+  ('021',' VINCULADAS',' CL 23 B N 3 N 100','','','\r','13803'),
+  ('022',' CALL CENTER',' CL 23BN 3N 100','','','\r','13803'),
+  ('023',' JARDIN PLAZA',' CL 16 98 155','','','\r','13803'),
+  ('090',' MEDICAMENTOS',' CR 2 14 26','','','\r','13803'),
+  ('091',' COSMETICOS',' CR 2 14 26','','','\r','13803'),
+  ('092',' VARIOS',' CR 2 14 26','','','\r','13803'),
+  ('093',' REEMPAQUE',' CR 2 14 26','','','\r','13803'),
+  ('099',' VENTAS AL POR MAYOR (CREDITOS)',' CR 2 14 34','','','\r','13803'),
+  ('100',' CALLE 7A',' CL 7 30A 12','','','\r','13803'),
+  ('101',' BOGOTA CHAPINERO',' CLL 53 13 64',' CLL 53 13 52','','\r','13803'),
+  ('102',' BOGOTA AUTONORTE',' LOCAL #1 AV CR 45 #97 80','','','\r','13803'),
+  ('110',' GASTOS ADMINISTRATIVOS POR DISTRIBUIR',' CLL 7 30A12','','','\r','13803'),
+  ('900',' LABORATORIO SAN JORGE LTDA',' CR 2 14 26','','','\r','13803'),
+  ('XXX',' C.O PARA CIERRE','','','','\r','13803'
+);
+*/
 /*******************************************************************************************************************************
 											PROCEDIMIENTOS FUNCIONES Y TRIGGERS BASE DE DATOS
 ********************************************************************************************************************************/

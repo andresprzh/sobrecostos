@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import App from '@/App.vue';
+// import App from '@/App.vue';
 
 @Component
 export default class Transferencia extends Vue {

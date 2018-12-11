@@ -1,78 +1,82 @@
 <template>
-   <v-app >
-    <v-navigation-drawer class="hidden-md-and-up"
-      fixed
-      app
-      left
-      v-model="sideNav"
-    >
-    <v-card>
-      
-      <v-img
-          :src="fondoNav"
-          height="300px"
-      >
-      </v-img>
-      <v-divider></v-divider>
-    </v-card>
-    
-     <v-list dense >
-      
-      <v-list-tile 
-        v-for="(item) in menuItems" 
-        :key="item.titulo"
-        :to="item.ruta">
+  <v-app >
+    <div v-if="session">
+      <v-navigation-drawer class="hidden-md-and-up" fixed app left v-model="sideNav">
+        <v-card>
+          
+          <v-img
+              :src="fondoNav"
+              height="300px"
+          >
+          </v-img>
+          <v-divider></v-divider>
+        </v-card>
 
-        <v-list-tile-action>
-          <v-icon left>{{item.icono}}</v-icon>
-        </v-list-tile-action>
+        <v-list dense >
+        
+        <v-list-tile 
+          v-for="(item) in menuItems" 
+          :key="item.titulo"
+          :to="item.ruta">
 
-        <v-list-tile-content>
-          <v-list-tile-title>{{item.titulo}}</v-list-tile-title>
-        </v-list-tile-content>
+          <v-list-tile-action>
+            <v-icon left>{{item.icono}}</v-icon>
+          </v-list-tile-action>
 
-      </v-list-tile>
+          <v-list-tile-content>
+            <v-list-tile-title>{{item.titulo}}</v-list-tile-title>
+          </v-list-tile-content>
 
-     </v-list>
-    
+        </v-list-tile>
 
-    </v-navigation-drawer>
+        </v-list>
 
 
-    <v-toolbar dark class="primary">
+      </v-navigation-drawer>
 
-      <v-toolbar-side-icon class="hidden-md-and-up " @click.stop="sideNav=!sideNav"></v-toolbar-side-icon>
-      
-      <v-toolbar-title  >
-        <router-link class="title  " to="/" tag="span" style="cursor:pointer">Nombre pagina</router-link>
-      </v-toolbar-title>
-      
-      
-      <v-spacer></v-spacer>
+      <v-toolbar dark class="primary">
 
-      <v-toolbar-items  class="hidden-sm-and-down" >
+        <v-toolbar-side-icon class="hidden-md-and-up " @click.stop="sideNav=!sideNav"></v-toolbar-side-icon>
+        
+        <v-toolbar-title  >
+          <router-link class="title  " to="/" tag="span" style="cursor:pointer">Nombre pagina</router-link>
+        </v-toolbar-title>
+        
+        
+        <v-spacer></v-spacer>
 
-        <v-btn flat 
-          v-for="item in menuItems" 
-          :key="item.title"
-          :to=item.ruta 
-          style="cursor:pointer"
-        >
-          <v-icon left>{{item.icono}}</v-icon>
-          {{item.titulo}}
-        </v-btn>
+        <v-toolbar-items  class="hidden-sm-and-down" >
 
-      </v-toolbar-items>
+          <v-btn flat 
+            v-for="item in menuItems" 
+            :key="item.title"
+            :to=item.ruta 
+            style="cursor:pointer"
+          >
+            <v-icon left>{{item.icono}}</v-icon>
+            {{item.titulo}}
+          </v-btn>
+          <v-btn flat 
+            key="Salir"
+            style="cursor:pointer"
+            @click="salir"
+          >
+            <v-icon left>fa-sign-out-alt</v-icon>
+            Salir
+          </v-btn>
 
-    </v-toolbar>
+        </v-toolbar-items>
 
+      </v-toolbar>
+    </div>
 
     <main class="blue-grey lighten-5">
       
       <router-view/> 
 
     </main>
-    <v-footer color="primary" app inset>
+
+    <v-footer v-if="session" color="primary" app inset>
       <span class="white--text">Farmacia drogueria San Jorge &copy; 2018</span>
     </v-footer>
   </v-app>
@@ -83,17 +87,53 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class App extends Vue {
+  
+  // public mockAccount = {
+  //   username: 'admin',
+  //   password: 'admin',
+  // };
+  // private authenticated: boolean = false;
+
+  // public setAuthenticated(status: boolean) {
+  //   this.authenticated = status;
+  // }
+
+  // public logout() {
+  //   this.authenticated = false;
+  // }
+
+  protected mounted() {
+    if (localStorage.session) {
+      this.session=true;
+      console.log(this.session)
+    }
+  }
+
   // protected path:string="http://192.168.0.49/sobrecostos/api/";
   public sideNav: boolean = false;
   public menuItems = [
-    { icono: "fa-home", titulo: "Home", ruta: "/" },
     { icono: "fa-file-upload", titulo: "Subir Acrhivo", ruta: "/upfile" },
-    { icono: "fa-file-invoice", titulo: "archivo copi", ruta: "/upcopi" },
-    { icono: "fa-clipboard-list", titulo: "Transferencias", ruta: "/transferencias" },
+    { icono: "fa-file-invoice", titulo: "archivo copi", ruta: "/upcopi"},
+    { icono: "fa-clipboard-list", titulo: "Transferencias", ruta: "/transferencias"},
   ];
   public fondoNav = require("@/assets/fondos/logo2.svg");
-  
+  private session:boolean= false;
 
+  public salir(){
+    localStorage.removeItem('session');
+    localStorage.removeItem('nombre');
+    localStorage.removeItem('usuario');
+    // this.$router.replace({ name: 'home' });
+    location.reload();
+  }
+
+  constructor(){
+    super();
+    if (localStorage.session) {
+      this.session=true;
+      console.log(this.session)
+    }
+  }
   
 }
 
