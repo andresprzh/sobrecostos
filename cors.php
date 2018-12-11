@@ -1,5 +1,5 @@
 <?php
-include "controladores/loginusuario.controlador.php";
+include "controlador/loginusuario.controlador.php";
 include "controlador/sobrante.controlador.php";
 include "controlador/copi.controlador.php";
 

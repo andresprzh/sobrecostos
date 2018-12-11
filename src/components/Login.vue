@@ -51,11 +51,12 @@ export default class Login extends App {
   };
 
   private imagenrc: any = require("@/assets/fondos/logo2.svg");
+  // private path:string='http://192.168.0.10/sobrecostos/api/';
 
   // metodo que valida el usurio
   private login() {
     if (this.input.username !== '' && this.input.password !== '') {
-      const path = 'http://localhost/BodegaDrogueria/api/usuarios/login';
+      const path = 'http://localhost/sobrecostos/api/login';
       const formData = new FormData();
       formData.append('username', this.input.username);
       formData.append('password', this.input.password);
@@ -64,15 +65,16 @@ export default class Login extends App {
           headers: { 'Content-Type': 'multipart/form-data' },
         })
         .then((res) => {
-          
+          console.log(res.data);
           if (res.data) {
             // this.$emit('authenticated', true);
-            // localStorage.setItem('user', JSON.stringify(res.data));
             localStorage.session=true;
+            localStorage.id=res.data.id;
             localStorage.nombre=res.data.nombre;
             localStorage.usuario=res.data.usuario;
+            localStorage.perfil=res.data.perfil;
+            localStorage.sede=res.data.sede;
 
-            
             location.reload();
             this.$router.replace({ name: 'home' });
           } else {
@@ -80,21 +82,8 @@ export default class Login extends App {
           }
         })
         .catch((error) => {
-          // eslint-disable-next-line
           // console.error(error);
         });
-
-      //   if (
-      //     this.input.username == this.mockAccount.username &&
-      //     this.input.password == this.mockAccount.password
-      //   ) {
-      //     this.$emit("authenticated", true);
-      //     this.$router.replace({ name: "secure" });
-      //   } else {
-      //     console.log("The username and / or password is incorrect");
-      //   }
-    } else {
-      // console.log('A username and password must be present');
     }
   }
 }

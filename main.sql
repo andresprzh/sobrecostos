@@ -166,6 +166,11 @@ CREATE TABLE IF NOT EXISTS `plaremi_det`(
 /*******************************************************************************************************************************
 											INICIALIZA REGISTROS BASE DE DATOS 
 ********************************************************************************************************************************/
+
+REPLACE INTO perfiles VALUES(-1,"Inactivo"),(1,"Administrador"),(2,"Autorizado"),(3,"Punto de Venta");
+UPDATE perfiles SET id_perfil=0 WHERE id_perfil=-1;
+
+REPLACE INTO usuarios(nombre,cedula,usuario,password,perfil,sede) VALUES("Administrador","0","admin","$2y$10$bpNOdujEVRMWB7JtWJX7Y.HPBjVCMSLS/r2YeafW5Mu.wfmyi/iLy",1,"001");
 /*
 REPLACE INTO `sedes` VALUES 
   ('001',' CENTRO',' CR 2 14 34','','',' 0','13803'),

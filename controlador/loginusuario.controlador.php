@@ -80,14 +80,14 @@ class ControladorLoginUsuario {
         
         if ($busqueda->rowCount() > 0) {
 
-            $usuarios["estado"]="encontrado";
+            $usuarios["estado"]=true;
             $usuarios["contenido"]=$busqueda->fetchAll();
             return $usuarios;
 
         //si no encuentra resultados devuelve "error"
         }else{
 
-            return ['estado'=>"error",
+            return ['estado'=>false,
                     'contenido'=>"Usuario no encontrado en la base de datos!"];
 
         }

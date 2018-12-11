@@ -56,7 +56,7 @@
             <v-icon left>{{item.icono}}</v-icon>
             {{item.titulo}}
           </v-btn>
-          <v-btn flat 
+          <!--<v-btn flat 
             key="Salir"
             style="cursor:pointer"
             @click="salir"
@@ -64,7 +64,7 @@
             <v-icon left>fa-sign-out-alt</v-icon>
             Salir
           </v-btn>
-
+          -->
         </v-toolbar-items>
 
       </v-toolbar>
@@ -88,28 +88,9 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component
 export default class App extends Vue {
   
-  // public mockAccount = {
-  //   username: 'admin',
-  //   password: 'admin',
-  // };
-  // private authenticated: boolean = false;
+  
 
-  // public setAuthenticated(status: boolean) {
-  //   this.authenticated = status;
-  // }
-
-  // public logout() {
-  //   this.authenticated = false;
-  // }
-
-  protected mounted() {
-    if (localStorage.session) {
-      this.session=true;
-      console.log(this.session)
-    }
-  }
-
-  // protected path:string="http://192.168.0.49/sobrecostos/api/";
+  
   public sideNav: boolean = false;
   public menuItems = [
     { icono: "fa-file-upload", titulo: "Subir Acrhivo", ruta: "/upfile" },
@@ -119,21 +100,50 @@ export default class App extends Vue {
   public fondoNav = require("@/assets/fondos/logo2.svg");
   private session:boolean= false;
 
+  protected mounted() {
+    if (localStorage.session) {
+      this.session=true;
+    }
+    if(localStorage.perfil==1){
+      this.menuItems.push(
+        {icono: "fa-users", titulo: "Usuarios", ruta: "/usuarios"}
+        );
+    }
+
+  }
+
   public salir(){
+      const path:string="http://192.168.0.10/sobrecostos/api/";
+      this.axios
+      .post(path+"salir", {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      .then((res) => {
+        
+        if (res.data) {
+          localStorage.removeItem('session');
+          localStorage.removeItem('id');
+          localStorage.removeItem('nombre');
+          localStorage.removeItem('usuario');
+          localStorage.removeItem('perfil');
+          localStorage.removeItem('sede ');
+
+          location.reload();
+        } else {
+          alert('Error');
+        }
+      })
+      .catch((error) => {
+        // console.error(error);
+      });
+
     localStorage.removeItem('session');
     localStorage.removeItem('nombre');
     localStorage.removeItem('usuario');
-    // this.$router.replace({ name: 'home' });
     location.reload();
+
   }
 
-  constructor(){
-    super();
-    if (localStorage.session) {
-      this.session=true;
-      console.log(this.session)
-    }
-  }
   
 }
 

@@ -5,6 +5,7 @@ import Upfile from './components/Upfile.vue';
 import Upcopi from './components/Upcopi.vue';
 import Transferencias from './components/Transferencias.vue';
 import Tabla from './components/Tabla.vue';
+import Usuarios from './components/Usuarios.vue';
 
 
 Vue.use(Router);
@@ -44,6 +45,12 @@ export const router = new Router({
           component: Tabla,
         },
       ]
+    },
+    {
+      path: '/usuarios',
+      name: 'Usuarios',
+      component: Usuarios,
+      
     },
     { path: '*', redirect: '/' },
   ],
