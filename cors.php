@@ -1,10 +1,12 @@
 <?php
 include "controlador/loginusuario.controlador.php";
+include "controlador/usuarios.controlador.php";
 include "controlador/sobrante.controlador.php";
 include "controlador/copi.controlador.php";
 
 require "modelos/conexion.php";
 require "modelos/loginusuario.modelo.php";
+require "modelos/usuarios.modelo.php";
 require "modelos/sobrante.modelo.php";
 require "modelos/copi.modelo.php";
 

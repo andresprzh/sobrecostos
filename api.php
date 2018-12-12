@@ -56,7 +56,7 @@ if (isset($_GET['ruta'])) {
             }
             break;
         /* ============================================================================================================================
-                                                        REALIZA EL LOGIN EN LA PAGINA
+                                                REALIZA EL LOGIN EN LA PAGINA
         ============================================================================================================================*/
         case "login":
             $username=$_POST["username"];
@@ -64,6 +64,41 @@ if (isset($_GET['ruta'])) {
 
             $controlador = new ControladorLoginUsuario();
             $resultado=$controlador->ctrIngresoUsuario($username,$password);
+            print json_encode($resultado);
+            break;
+        /* ============================================================================================================================
+                                                MODIFICA UN USUARIO
+        ============================================================================================================================*/
+        case "modusuario":
+            if ($_SERVER['REQUEST_METHOD']==='POST') {
+
+                $datosusuario=$_POST["datosusuario"];
+                $button=$_POST["button"];
+
+                $controlador=new ControladorUsuarios();
+
+                //encripta la contraseña
+                $datosusuario["password"]=password_hash($datosusuario["password"], PASSWORD_BCRYPT);
+                if ($button=="nuevo") {
+                    $resultado=$controlador->ctrCrearUsuario($datosusuario);
+                }else {
+                    $resultado=$controlador->ctrModificarUsuario($datosusuario);
+                }
+
+                print json_encode($resultado);
+                
+            }
+            break;
+        /* ============================================================================================================================
+                                            BUSCA PERFILES DE USUARIOS
+        ============================================================================================================================*/
+        case "perfiles":
+            // $perfil=$_SESSION["usuario"]["perfil"];
+            $perfil=$_REQUEST["perfil"];
+            $controlador=new ControladorUsuarios();
+            
+            $resultado=$controlador->ctrBuscarPerfiles($perfil);
+            
             print json_encode($resultado);
             break;
         /* ============================================================================================================================
@@ -167,6 +202,30 @@ if (isset($_GET['ruta'])) {
             print json_encode($res);
             break;
         /* ============================================================================================================================
+                                                    MUESTRA SEDES
+        ============================================================================================================================*/   
+        case 'sedes':
+
+            // $perfil=$_SESSION["usuario"]["perfil"];
+            // $perfil=$_REQUEST["perfil"];
+            $resultado["estado"]=false;
+            $modelo=new ModeloUsuarios();
+            
+            $busqueda=$modelo->mdlMostrarSedes();
+            if ($busqueda) {
+                if($busqueda->rowCount()>0){
+                    $resultado["estado"]=true;
+                    $resultado["contenido"]=$busqueda->fetchAll();
+                }else {
+                    $resultado["contenido"]="Datos no encontrados";
+                }
+            }
+            echo json_encode($resultado);
+            
+            
+            
+            break;
+        /* ============================================================================================================================
                                                 MUESTRA PUNTOS DE VENTA
         ============================================================================================================================*/
         case 'transladar':
@@ -200,22 +259,25 @@ if (isset($_GET['ruta'])) {
 
             break;
         /* ============================================================================================================================
-                                                MUESTRA USUARIOS
+                                                    MUESTRA USUARIOS
         ============================================================================================================================*/   
         case 'usuarios':
 
-            if (isset($_REQUEST["perfil"])) {
-                $perfil=$_REQUEST["perfil"];
-                $controlador=new ControladorLoginUsuario();
-                
-                $resultado=$controlador->ctrBuscarUsuarios($perfil);
-                
-                echo json_encode($resultado);
-            }
+            // $perfil=$_SESSION["usuario"]["perfil"];
+            $perfil=$_REQUEST["perfil"];
+            $controlador=new ControladorLoginUsuario();
+            
+            $resultado=$controlador->ctrBuscarUsuarios($perfil);
+            
+            echo json_encode($resultado);
+            
             
             
             break;
 
+        /* ============================================================================================================================
+                                                     DEFAULT
+        ============================================================================================================================*/
         default:
             $controlador = new ControladorSobrante();
             $resultado=$controlador->ctrGetSedes();

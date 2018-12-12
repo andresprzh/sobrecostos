@@ -32,9 +32,10 @@ class ModeloLoginUsuario extends Conexion {
       }elseif($perfil==1) {
         
         $stmt= $this->link->prepare(
-        "SELECT id_usuario AS id,usuario,nombre,cedula,perfil
+        "SELECT id_usuario AS id,usuario,nombre,cedula,perfil,des_perfil,sede,descripcion AS des_sede
         FROM usuarios
         INNER JOIN perfiles ON id_perfil=perfil
+        INNER JOIN sedes ON sede=sedes.codigo
         ORDER BY des_perfil ASC;");
       }else {
 

@@ -10,37 +10,50 @@
         <v-dialog v-model="dialog" max-width="500px">
           <v-btn slot="activator" color="primary" dark class="mb-2"><v-icon>fas fa-user-plus</v-icon></v-btn>
           <v-card>
-            <v-card-title>
-              <span class="headline">{{ formTitle }}</span>
-            </v-card-title>
+            <v-form ref="form_modal"  :v-model="valid_dialog" @submit="save">
+              <v-card-title>
+                <span class="headline">{{ formTitle }}</span>
+              </v-card-title>
 
-            <v-card-text>
-              <v-container grid-list-md>
-                <v-layout wrap>
-                  <v-flex xs12>
-                    <v-text-field v-model="editedItem.name" label="Nombre"></v-text-field>
-                  </v-flex>
-                  <v-flex xs12>
-                    <v-text-field v-model="editedItem.calories" label="Cedual"></v-text-field>
-                  </v-flex>
-                  <v-flex xs12>
-                    <v-text-field v-model="editedItem.fat" label="Usuario"></v-text-field>
-                  </v-flex>
-                  <v-flex xs12>
-                    <v-text-field v-model="editedItem.carbs" label="Perfil"></v-text-field>
-                  </v-flex>
-                  <v-flex xs12>
-                    <v-text-field v-model="editedItem.protein" type="password" label="Contraseña"></v-text-field>
-                  </v-flex>
-                </v-layout>
-              </v-container>
-            </v-card-text>
+              <v-card-text>
+                <v-container grid-list-md>
+                  <v-layout wrap>
+                    <v-flex xs12 v-for="(card,index) in editUser" :key="card.id"> 
+                      <v-select v-if="card.tipo==='select'"
+                        ref="menu"
+                        v-validate="card.validacion"
+                        :items="card.items"
+                        item-text="valor"
+                        item-value="id"
+                        v-model="card.dato"
+                        :error-messages="errors.collect(card.id)"
+                        :label="card.titulo"
+                        :data-vv-name="card.id"
+                        required
+                      ></v-select>
 
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="accent darken-1" flat @click="close">Cancelar</v-btn>
-              <v-btn color="accent darken-1" flat @click="save">Guardar</v-btn>
-            </v-card-actions>
+                      <v-text-field v-else
+                      ref="menu"
+                      v-model="card.dato"
+                      v-validate="card.validacion"
+                      :type="card.tipo"
+                      :error-messages="errors.collect(card.id)"
+                      :label="card.titulo"
+                      :data-vv-name="card.id "
+                      required
+                      ></v-text-field>
+                    </v-flex>
+
+                  </v-layout>
+                </v-container>
+              </v-card-text>
+
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="accent darken-1" flat @click="dialog=false">Cancelar</v-btn>
+                <v-btn color="accent darken-1" flat type="submit">Guardar</v-btn>
+              </v-card-actions>
+            </v-form>
           </v-card>
         </v-dialog>
       </v-card-title>
@@ -59,7 +72,7 @@
 
       <v-data-table
         :headers="headers"
-        :items="items"
+        :items="usuarios"
         :search="search"
         item-key="name"
         class="elevation-1"
@@ -70,7 +83,8 @@
           <td class="text-xs-left">{{props.item.nombre}}</td>
           <td class="text-xs-left">{{props.item.usuario}}</td>
           <td class="text-xs-left">{{props.item.cedula}}</td>
-          <td class="text-xs-left">{{ props.item.perfil }}</td>
+          <td class="text-xs-left">{{props.item.des_perfil}}</td>
+          <td class="text-xs-left">{{props.item.des_sede}}</td>
           <td class="text-xs-left">
             <v-icon
               small
@@ -118,7 +132,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue ,Watch} from 'vue-property-decorator';
 
 
 @Component
@@ -129,7 +143,8 @@ export default class Tabla extends Vue {
   =============================================================================================================*/
   private path:string='http://192.168.0.10/sobrecostos/api/';
   private search:string=' ';
-  private items: object[] = [];
+  private valid_dialog:boolean=true;
+  private usuarios: object[] = [];
   
   private editedIndex: number= -1;
 
@@ -140,29 +155,117 @@ export default class Tabla extends Vue {
     text:'',
     show:false,
   };
-  private  editedItem= {
-    name: '',
-    calories: 0,
-    fat: 0,
-    carbs: 0,
-    protein: 0
-  };
+
+  private editUser:any = [
+    {
+      id: "nombre",
+      titulo: "Nombre",
+      dato: "",
+      tipo: "text",
+      validacion: "required"
+    },
+    {
+      id: "cedula",
+      titulo: "Cedula",
+      dato: "",
+      tipo: "text",
+      validacion: "required"
+    },
+    {
+      id: "usuario",
+      titulo: "Usuario",
+      dato: "",
+      tipo: "text",
+      validacion: "required"
+    },
+    {
+      id: "sede",
+      titulo: "Sede",
+      dato: "",
+      tipo: "select",
+      items: [],
+      validacion: "required"
+    },
+    {
+      id: "perfil",
+      titulo: "Perfil Usuario",
+      dato: "",
+      tipo: "select",
+      items: [],
+      validacion: "required"
+    },
+    {
+      id: "password",
+      titulo: "Contraseña",
+      dato: "",
+      tipo: "password",
+      validacion: "required"
+    },
+  ];
+
+  
+  private  id_usuario: number =0;
+  
   private headers = [
     { text: 'Nombre', value: 'nom' },
     { text: 'Usuario ', value: 'user' },
     { text: 'Cedula', value: 'cc' },
     { text: 'Perfil', value: 'perfil' },
+    { text: 'Sede', value: 'sede' },
     { text: 'modificar', value: 'mod' },
   ];
+
+  private dictionary = {
+    custom: {
+      nombre: {
+        required: () => "El nombre es requerido"
+        // custom messages
+      },
+      cedula: {
+        required: () => "La cedula es requerida"
+      },
+      usuario: {
+        required: () => "El usuario es requerido"
+      },
+      sede: {
+        required: () => "Seleccionar una sede"
+      },
+      perfil: {
+        required: () => "Seleccionar un perfil",
+      },
+      password: {
+        required: () => "La contraseña es requerida"
+      },
+    }
+  };
   /*===========================================================================================================
                                           METODOS
   =============================================================================================================*/
-  created() {
+  private created() {
     this.loadUsers();
+    this.loadProfiles();
+    this.loadSedes();
   }
+
+  @Watch('dialog')
+  onPropertyChanged(val: boolean, oldValue: string) {
+    if(!val){
+      this.id_usuario = 0;
+      this.$validator.reset();
+      this.editUser.forEach(function(part:string, index:string, theArray:any) {
+        theArray[index].dato = "";
+      });
+    }
+  }
+
+  private mounted() {
+    this.$validator.localize("es", this.dictionary);
+  }
+
   get formTitle () {
-    return this.editedIndex === -1 ? 'Nuevo Usuario' : 'Editar Usuario'
+    return this.id_usuario === 0 ? 'Nuevo Usuario' : 'Editar Usuario'
   }
+
   private loadUsers(){
     const path = "http://localhost/sobrecostos/api/usuarios";
     this.axios
@@ -175,8 +278,7 @@ export default class Tabla extends Vue {
         
         if(res.data) {
           if(res.data.estado) {
-            this.items=res.data.contenido;
-            console.log(this.items);
+            this.usuarios=res.data.contenido;
           }
         }
 
@@ -187,32 +289,88 @@ export default class Tabla extends Vue {
       });
   }
 
+  private loadProfiles(){
+    const path = "http://localhost/sobrecostos/api/perfiles";
+    this.axios.get(path, {
+      params: {
+        perfil: localStorage.perfil
+      }
+    })
+    .then(res => {
+      
+      if(res.data) {
+        if(res.data.estado) {
+          let items=new Array;
+          res.data.contenido.forEach(function(x:any) {
+            items.push({'id':x.id,'valor':x.perfil});
+          });
+          this.editUser[4].items=items;
+        }
+      }
+
+    })
+    .catch(error => {
+      // eslint-disable-next-line
+      console.error(error);
+    });
+  }
+
+  private loadSedes(){
+    const path = "http://localhost/sobrecostos/api/sedes";
+    this.axios.get(path, {
+      params: {
+        perfil: localStorage.perfil
+      }
+    })
+    .then(res => {
+      
+      if(res.data) {
+        if(res.data.estado) {
+          let items=new Array;
+          res.data.contenido.forEach(function(x:any) {
+            items.push({'id':x.codigo,'valor':x.descripcion});
+          });
+          this.editUser[3].items=items;
+        }
+      }
+
+    })
+    .catch(error => {
+      // eslint-disable-next-line
+      console.error(error);
+    });
+  }
+
   private editItem (item:any) {
-    // this.editedIndex = this.desserts.indexOf(item)
-    // this.editedItem = Object.assign({}, item)
-    // this.dialog = true
-  }
-
-  private deleteItem (item:any) {
-    // const index = this.desserts.indexOf(item)
-    // confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
-  }
-
-  private close () {
-    this.dialog = false
-    // setTimeout(() => {
-    //   this.editedItem = Object.assign({}, this.defaultItem)
-    //   this.editedIndex = -1
-    // }, 300)
+    this.id_usuario=item.id;
+    this.editUser[0].dato=item.nombre;
+    this.editUser[1].dato=item.cedula;
+    this.editUser[2].dato=item.usuario;
+    this.editUser[3].dato=item.sede;
+    this.editUser[4].dato=item.perfil;
+    
+    // this.editUser = Object.assign({}, item)
+    this.dialog = true
   }
 
   private save () {
-    // if (this.editedIndex > -1) {
-    //   Object.assign(this.desserts[this.editedIndex], this.editedItem)
-    // } else {
-    //   this.desserts.push(this.editedItem)
-    // }
-    this.close()
+
+    const accion=(this.editedIndex === -1 ? 'nuevo' : 'editar');
+    
+    this.$validator.validateAll().then(result => {
+      
+      if(result){
+        let newusuario:any=new Array;
+        this.editUser.map(function(x:any) {
+          newusuario[x.id]=x.dato;
+        });
+        newusuario["id_usuario"]=this.id_usuario;
+        this.dialog=false;
+        console.log(newusuario);
+      }
+
+    });
   }
+
 }
 </script>
