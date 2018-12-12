@@ -71,16 +71,17 @@ if (isset($_GET['ruta'])) {
         ============================================================================================================================*/
         case "modusuario":
             if ($_SERVER['REQUEST_METHOD']==='POST') {
-
-                $datosusuario=$_POST["datosusuario"];
-                $button=$_POST["button"];
-
+                
+                $datosusuario=json_decode($_POST["datosusuario"]);
+                // $button=$_POST["button"];
+               
                 $controlador=new ControladorUsuarios();
 
                 //encripta la contraseña
-                $datosusuario["password"]=password_hash($datosusuario["password"], PASSWORD_BCRYPT);
-                if ($button=="nuevo") {
+                $datosusuario->password=password_hash($datosusuario->password, PASSWORD_BCRYPT);
+                if ( $datosusuario->id_usuario<1) {
                     $resultado=$controlador->ctrCrearUsuario($datosusuario);
+                    
                 }else {
                     $resultado=$controlador->ctrModificarUsuario($datosusuario);
                 }

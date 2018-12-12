@@ -60,7 +60,7 @@ class ControladorUsuarios extends ControladorLoginUsuario{
     public function ctrCrearUsuario($datosusario){
         // busca si el usuario ya existe
         $item = ['usuario','cedula'];
-        $valor = [$datosusario['usuario'],$datosusario['cedula']];
+        $valor = [$datosusario->usuario,$datosusario->cedula];
         $busqueda = $this->modelo->buscaritem('usuario',$item,$valor);
         $resultado['estado']='encontrado';
         if ($busqueda->rowCount() > 0) {
@@ -78,7 +78,7 @@ class ControladorUsuarios extends ControladorLoginUsuario{
     public function ctrModificarUsuario($datosusario){
         // busca si la cedula o usuario estan disponibles
         $item = ['usuario','cedula'];
-        $valor = [$datosusario['usuario'],$datosusario['cedula']];
+        $valor = [$datosusario->usuario,$datosusario->cedula];
         $busqueda = $this->modelo->buscaritem('usuario',$item,$valor);
         $resultado['estado']='encontrado';
         if ($busqueda->rowCount() > 1) {

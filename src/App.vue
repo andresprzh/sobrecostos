@@ -28,6 +28,21 @@
           </v-list-tile-content>
 
         </v-list-tile>
+         <v-divider></v-divider>
+         <v-list-tile 
+          key="Salir"
+          style="cursor:pointer"
+          @click="salir">
+
+          <v-list-tile-action>
+            <v-icon left>fa-sign-out-alt</v-icon>
+          </v-list-tile-action>
+
+          <v-list-tile-content>
+            <v-list-tile-title>Salir</v-list-tile-title>
+          </v-list-tile-content>
+
+        </v-list-tile>
 
         </v-list>
 
@@ -50,13 +65,13 @@
           <v-btn flat 
             v-for="item in menuItems" 
             :key="item.title"
-            :to=item.ruta 
+            :to="item.ruta" 
             style="cursor:pointer"
           >
             <v-icon left>{{item.icono}}</v-icon>
             {{item.titulo}}
           </v-btn>
-          <!--<v-btn flat 
+          <v-btn flat 
             key="Salir"
             style="cursor:pointer"
             @click="salir"
@@ -64,7 +79,6 @@
             <v-icon left>fa-sign-out-alt</v-icon>
             Salir
           </v-btn>
-          -->
         </v-toolbar-items>
 
       </v-toolbar>
@@ -93,7 +107,7 @@ export default class App extends Vue {
   
   public sideNav: boolean = false;
   public menuItems = [
-    { icono: "fa-file-upload", titulo: "Subir Acrhivo", ruta: "/upfile" },
+    { icono: "fa-file-upload", titulo: "Subir Acrhivo", ruta: "/upfile"},
     { icono: "fa-file-invoice", titulo: "archivo copi", ruta: "/upcopi"},
     { icono: "fa-clipboard-list", titulo: "Transferencias", ruta: "/transferencias"},
   ];

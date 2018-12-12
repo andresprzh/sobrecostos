@@ -74,7 +74,6 @@
         :headers="headers"
         :items="usuarios"
         :search="search"
-        item-key="name"
         class="elevation-1"
         
       >
@@ -110,20 +109,6 @@
         {{ snack.text }}
         <v-btn flat @click="snack.show = false">Close</v-btn>
       </v-snackbar>
-
-      <div class="text-xs-right pt-2">
-
-        <!--
-        <v-btn color="secondary" @click="transladar">
-        -->
-        <v-btn color="secondary">
-
-          <v-icon>fa-save</v-icon>
-          <span>Guardar</span>
-
-        </v-btn>
-
-      </div>
       
     </v-card> 
     
@@ -141,7 +126,7 @@ export default class Tabla extends Vue {
   /*===========================================================================================================
                                           ATRIBUTOS
   =============================================================================================================*/
-  private path:string='http://192.168.0.10/sobrecostos/api/';
+  private path:string='http://localhost/sobrecostos/api/';
   private search:string=' ';
   private valid_dialog:boolean=true;
   private usuarios: object[] = [];
@@ -267,9 +252,9 @@ export default class Tabla extends Vue {
   }
 
   private loadUsers(){
-    const path = "http://localhost/sobrecostos/api/usuarios";
+   
     this.axios
-      .get(path, {
+      .get(this.path+'usuarios', {
         params: {
           perfil: localStorage.perfil
         }
@@ -290,8 +275,8 @@ export default class Tabla extends Vue {
   }
 
   private loadProfiles(){
-    const path = "http://localhost/sobrecostos/api/perfiles";
-    this.axios.get(path, {
+    
+    this.axios.get(this.path+'perfiles', {
       params: {
         perfil: localStorage.perfil
       }
@@ -316,8 +301,8 @@ export default class Tabla extends Vue {
   }
 
   private loadSedes(){
-    const path = "http://localhost/sobrecostos/api/sedes";
-    this.axios.get(path, {
+    
+    this.axios.get(this.path+'sedes', {
       params: {
         perfil: localStorage.perfil
       }
@@ -355,18 +340,37 @@ export default class Tabla extends Vue {
 
   private save () {
 
-    const accion=(this.editedIndex === -1 ? 'nuevo' : 'editar');
+    // const accion=(this.editedIndex === -1 ? 'nuevo' : 'editar');
     
     this.$validator.validateAll().then(result => {
       
       if(result){
-        let newusuario:any=new Array;
+        
+        let newusuario:any={};
         this.editUser.map(function(x:any) {
           newusuario[x.id]=x.dato;
         });
         newusuario["id_usuario"]=this.id_usuario;
-        this.dialog=false;
-        console.log(newusuario);
+               
+        
+        let formData = new FormData();
+        formData.append("datosusuario", JSON.stringify(newusuario));
+        
+        this.axios
+        .post(this.path+'modusuario',formData, {
+            headers: { "Content-Type": "multipart/form-data" }
+        })
+        .then(res => {
+          
+         console.log(res.data);
+          // this.dialog=false;
+          this.loadUsers();
+        })
+        .catch(error => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
+
       }
 
     });

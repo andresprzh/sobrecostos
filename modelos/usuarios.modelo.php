@@ -14,17 +14,17 @@ class ModeloUsuarios extends ModeloLoginUsuario {
           REGISTRAR USUARIO
     ========================================*/
     public function mdlRegistrarUsuario($datos){
-      $tabla='usuario';
+      $tabla='usuarios';
       $stmt= $this->link->prepare(
-      "INSERT INTO $tabla(nombre,cedula,usuario,password,perfil,franquicia) 
-      VALUES(:nombre,:cedula,:usuario,:password,:perfil,:franquicia);");
+      "INSERT INTO $tabla(nombre,cedula,usuario,password,perfil,sede) 
+      VALUES(:nombre,:cedula,:usuario,:password,:perfil,:sede);");
       
-      $stmt->bindParam(":nombre",$datos["nombre"],PDO::PARAM_STR);
-      $stmt->bindParam(":cedula",$datos["cedula"],PDO::PARAM_STR);
-      $stmt->bindParam(":usuario",$datos["usuario"],PDO::PARAM_STR);
-      $stmt->bindParam(":password",$datos["password"],PDO::PARAM_STR);
-      $stmt->bindParam(":perfil",$datos["perfil"],PDO::PARAM_STR);
-      $stmt->bindParam(":franquicia",$datos["franquicia"],PDO::PARAM_STR);
+      $stmt->bindParam(":nombre",$datos->nombre,PDO::PARAM_STR);
+      $stmt->bindParam(":cedula",$datos->cedula,PDO::PARAM_STR);
+      $stmt->bindParam(":usuario",$datos->usuario,PDO::PARAM_STR);
+      $stmt->bindParam(":password",$datos->password,PDO::PARAM_STR);
+      $stmt->bindParam(":perfil",$datos->perfil,PDO::PARAM_STR);
+      $stmt->bindParam(":sede",$datos->sede,PDO::PARAM_STR);
       
 
       $res=$stmt->execute();
@@ -61,7 +61,7 @@ class ModeloUsuarios extends ModeloLoginUsuario {
       
     }  
     /*==========================================
-          MOSTRAR FRANQUICIAS
+          MOSTRAR SEDES
     ========================================*/
     public function mdlMostrarSedes(){
 
@@ -84,25 +84,25 @@ class ModeloUsuarios extends ModeloLoginUsuario {
           MODIFICA USUARIO
     ========================================*/
     public function mdlCambiarUsuario($datos){
-      $tabla ='usuario';
+      $tabla ='usuarios';
       $stmt = $this->link->prepare(
       "UPDATE $tabla 
       SET nombre=:nombre, cedula=:cedula,usuario=:usuario,
-      password=:password,perfil=:perfil,franquicia=:franquicia 
+      password=:password,perfil=:perfil,sede=:sede 
       WHERE id_usuario=:id_usuario;");
       
-      $stmt->bindParam(":id_usuario",$datos["id"],PDO::PARAM_INT);
-      $stmt->bindParam(":nombre",$datos["nombre"],PDO::PARAM_STR);
-      $stmt->bindParam(":cedula",$datos["cedula"],PDO::PARAM_STR);
-      $stmt->bindParam(":usuario",$datos["usuario"],PDO::PARAM_STR);
-      $stmt->bindParam(":password",$datos["password"],PDO::PARAM_STR);
-      $stmt->bindParam(":perfil",$datos["perfil"],PDO::PARAM_INT);
-      $stmt->bindParam(":franquicia",$datos["franquicia"],PDO::PARAM_STR);
+      $stmt->bindParam(":id_usuario",$datos->id_usuario,PDO::PARAM_INT);
+      $stmt->bindParam(":nombre",$datos->nombre,PDO::PARAM_STR);
+      $stmt->bindParam(":cedula",$datos->cedula,PDO::PARAM_STR);
+      $stmt->bindParam(":usuario",$datos->usuario,PDO::PARAM_STR);
+      $stmt->bindParam(":password",$datos->password,PDO::PARAM_STR);
+      $stmt->bindParam(":perfil",$datos->perfil,PDO::PARAM_INT);
+      $stmt->bindParam(":sede",$datos->sede,PDO::PARAM_STR);
       
 
       $res = $stmt->execute();
       if($res){
-        $res = $datos["id"];
+        $res = $datos->id_usuario;
       }
         // else{
         //   $res = $stmt->errorInfo();
