@@ -95,44 +95,6 @@ CREATE TABLE IF NOT EXISTS `usuarios`(
 	INDEX (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=LATIN1;
 
-CREATE TABLE IF NOT EXISTS `transferencias`(
-	`id_transferencia` INT(6) AUTO_INCREMENT NOT NULL,
-	`destino` CHAR(6) NOT NULL,
-	`fecha` DATETIME,
-	`encargado` INT(10) NOT NULL,
-	
-	PRIMARY KEY(`id_transferencia`),
-	
-	
-	CONSTRAINT transferencias_destino
-	FOREIGN KEY(`destino`) 
-	REFERENCES `sedes`(`codigo`),
-
-  CONSTRAINT transferencias_usuario
-	FOREIGN KEY(`encargado`) 
-	REFERENCES `usuarios`(`id_usuario`)
-	
-) ENGINE=InnoDB DEFAULT CHARSET=LATIN1;
-
-CREATE TABLE IF NOT EXISTS `transferencias_det`(
-	`item` CHAR(6) NOT NULL,
-	`sede` CHAR(6) NOT NULL,
-	`id_transferencia` INT(6) NOT NULL,
-	`pedido` FLOAT(4,2),
-
-	
-	PRIMARY KEY(`item`,`sede`,`id_transferencia`),
-	
-	CONSTRAINT trans_det_item
-	FOREIGN KEY(`item`,`sede`) 
-	REFERENCES `sobrantes`(`item`,`sede`),
-	
-	CONSTRAINT trans_det_trans
-	FOREIGN KEY(`id_transferencia`) 
-	REFERENCES `transferencias`(`id_transferencia`)	
-	
-) ENGINE=InnoDB DEFAULT CHARSET=LATIN1;
-
 CREATE TABLE IF NOT EXISTS `plaremi`(
 	`factura` CHAR(20) NOT NULL,
 	`fecha` DATETIME,
@@ -143,7 +105,7 @@ CREATE TABLE IF NOT EXISTS `plaremi`(
 
 CREATE TABLE IF NOT EXISTS `plaremi_det`(
 	`item` CHAR(6) NOT NULL,
-  `factura` CHAR(20) NOT NULL,
+   `factura` CHAR(20) NOT NULL,
 	`pedido` FLOAT(4,2) NOT NULL,
 
 	
@@ -159,6 +121,54 @@ CREATE TABLE IF NOT EXISTS `plaremi_det`(
 	
 ) ENGINE=InnoDB DEFAULT CHARSET=LATIN1;
 
+CREATE TABLE IF NOT EXISTS `transferencias`(
+	`id_transferencia` INT(6) AUTO_INCREMENT NOT NULL,
+	`no_transferencia` CHAR(10),
+	`origen` CHAR(6) NOT NULL,
+	`destino` CHAR(6) NOT NULL,
+	`fecha` DATETIME,
+	`encargado` INT(10) NOT NULL,
+	`estado` INT(1) DEFAULT 0,
+	
+	
+	PRIMARY KEY(`id_transferencia`),
+	UNIQUE(no_transferencia),
+	
+	CONSTRAINT transferencias_origen
+	FOREIGN KEY(`origen`) 
+	REFERENCES `sedes`(`codigo`),
+	
+	CONSTRAINT transferencias_destino
+	FOREIGN KEY(`destino`) 
+	REFERENCES `sedes`(`codigo`),
+
+	CONSTRAINT transferencias_usuario
+	FOREIGN KEY(`encargado`) 
+	REFERENCES `usuarios`(`id_usuario`),
+	
+	INDEX(`estado`)
+	
+) ENGINE=InnoDB DEFAULT CHARSET=LATIN1;
+
+CREATE TABLE IF NOT EXISTS `transferencias_det`(
+	`item` CHAR(6) NOT NULL,
+	`id_transferencia` INT(6) NOT NULL,
+	`plaremi` CHAR(20),
+	`pedido` FLOAT(4,2),
+
+	
+	PRIMARY KEY(`item`,`id_transferencia`),
+	
+	CONSTRAINT trans_det_plaremi
+	FOREIGN KEY(`item`,`plaremi`) 
+	REFERENCES `plaremi_det`(`item`,`factura`),
+	
+	CONSTRAINT trans_det_trans
+	FOREIGN KEY(`id_transferencia`) 
+	REFERENCES `transferencias`(`id_transferencia`)	
+	
+) ENGINE=InnoDB DEFAULT CHARSET=LATIN1;
+
 --
 -- Dumping data for table `sedes`
 --
@@ -166,12 +176,12 @@ CREATE TABLE IF NOT EXISTS `plaremi_det`(
 /*******************************************************************************************************************************
 											INICIALIZA REGISTROS BASE DE DATOS 
 ********************************************************************************************************************************/
-
+/*
 REPLACE INTO perfiles VALUES(-1,"Inactivo"),(1,"Administrador"),(2,"Autorizado"),(3,"Punto de Venta");
 UPDATE perfiles SET id_perfil=0 WHERE id_perfil=-1;
 
 REPLACE INTO usuarios(nombre,cedula,usuario,password,perfil,sede) VALUES("Administrador","0","admin","$2y$10$bpNOdujEVRMWB7JtWJX7Y.HPBjVCMSLS/r2YeafW5Mu.wfmyi/iLy",1,"001");
-/*
+
 REPLACE INTO `sedes` VALUES 
   ('001',' CENTRO',' CR 2 14 34','','',' 0','13803'),
   ('002',' VERSALLES',' CL 23BN 3N 100','','',' 0','13803'),
@@ -212,18 +222,35 @@ REPLACE INTO `sedes` VALUES
 /*******************************************************************************************************************************
 											PROCEDIMIENTOS FUNCIONES Y TRIGGERS BASE DE DATOS
 ********************************************************************************************************************************/
+DROP TRIGGER IF EXISTS CambiarEstadpPlaremi;
 DROP TRIGGER IF EXISTS CambiarSobrantes;
+
+DELIMITER $$
+	CREATE TRIGGER CambiarEstadpPlaremi
+	AFTER INSERT ON transferencias_det
+	FOR EACH ROW 
+	BEGIN
+
+		UPDATE plaremi_det
+		SET estado=1
+		WHERE plaremi_det.item=new.item
+    	AND plaremi_det.factura=new.plaremi;
+				
+	END 
+$$
+
 -- trigger que modifica la cantidad sobrante al crear ransferencia
 DELIMITER $$
 	CREATE TRIGGER CambiarSobrantes
-	AFTER INSERT ON transferencias_det
+	AFTER UPDATE ON transferencias_det
 	FOR EACH ROW 
 	BEGIN
 
 		UPDATE sobrantes
 		SET sobrante=sobrante-1
 		WHERE sobrantes.item=new.item
-    AND sobrantes.sede=new.sede;
+    	AND sobrantes.sede=(SELECT origen FROM transferencias WHERE id_transferencia=new.id_transferencia LIMIT 1);
 				
 	END 
 $$
+

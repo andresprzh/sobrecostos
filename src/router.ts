@@ -3,7 +3,7 @@ import Router from 'vue-router';
 import Home from './components/Home.vue';
 import Upfile from './components/Upfile.vue';
 import Upcopi from './components/Upcopi.vue';
-import Transferencias from './components/Transferencias.vue';
+import Remisiones from './components/Remisiones.vue';
 import Tabla from './components/Tabla.vue';
 import Usuarios from './components/Usuarios.vue';
 
@@ -34,9 +34,9 @@ export const router = new Router({
       component: Upcopi,
     },
     {
-      path: '/transferencias',
-      name: 'Transferencias',
-      component: Transferencias,
+      path: '/remisiones',
+      name: 'Remisiones',
+      component: Remisiones,
       children: [
         {
           path: 'tabla/:id',

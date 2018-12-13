@@ -73,10 +73,10 @@
 
       <div class="text-xs-right pt-2">
 
-        <!--
+        
         <v-btn color="secondary" @click="transladar">
-        -->
-        <v-btn color="secondary">
+        
+        
 
           <v-icon>fa-save</v-icon>
           <span>Guardar</span>
@@ -87,7 +87,6 @@
       
     </v-card> 
     
-    <!-- INPUTS FORMULARIO -->
   </v-container>
 </template>
 
@@ -105,6 +104,8 @@ export default class Tabla extends App {
   private search:string=' ';
   private id:string='';
   private items: object[] = [];
+  
+  private itemssend=new Array;
   
   private snack={
     color: '',
@@ -144,14 +145,12 @@ export default class Tabla extends App {
     .then(res => {
         if (res.data) {
             if(res.data.estado){
-            this.items = res.data.contenido;
-            
-            
+              this.items = res.data.contenido;       
             }else{
-            alert(res.data);
+              alert(res.data);
             }
         } else {
-            alert("error al subir el arcivo");
+            // alert("error al subir el arcivo");
         }
     })
     .catch(error => {
@@ -159,5 +158,67 @@ export default class Tabla extends App {
     console.error(error);
     });
   }
+
+
+  private transladar(event: any){
+    let itemssend=new Array;
+    
+    this.items.forEach(function(element:any) {
+      
+      if(element.selected){
+        itemssend.push({
+          'item': element.item,
+          'pedido': element.pedido,
+          'sede':element.sede,
+        });
+      }
+      
+    });
+   
+    if (itemssend.length>0){
+
+      this.itemssend=itemssend;
+      this.submit_items();
+
+    }else{
+
+      this.snack.show=true;
+      this.snack.color="error";
+      this.snack.text="Seleccionar al menos 1 item";
+
+    }
+  }
+
+
+  private submit_items(){
+        
+    let formData = new FormData();
+    let itemssend:string=JSON.stringify(this.itemssend);
+    formData.append('items', itemssend);
+    formData.append('plaremi', this.id);
+    formData.append('sede', localStorage.sede);
+    formData.append('encargado', localStorage.id);
+
+    const path = this.path+'transladar';
+    this.axios
+      .post(path, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+      .then(res => {
+        if (res.data) {
+          console.log(res.data)
+          // alert('Transferencia creada exitosamente');
+          // location.reload();
+        } else {
+          alert('error al crear la transferencia');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+    });
+        
+     
+  }
+
 }
 </script>

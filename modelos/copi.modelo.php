@@ -34,11 +34,13 @@ class ModeloCopi extends Conexion {
 
     }
 
-    function mdlCrearTransferencia($destino,$encargado){
+    function mdlCrearTransferencia($origen,$destino,$encargado)
+    {
 
         $stmt= $this->link->prepare(
-        "INSERT INTO transferencias(destino,fecha,encargado) VALUES(:destino,now(),:encargado) ");
+        "INSERT INTO transferencias(origen,destino,fecha,encargado) VALUES(:origen,:destino,now(),:encargado) ");
 
+        $stmt->bindParam(":origen",$origen,PDO::PARAM_STR);    
         $stmt->bindParam(":destino",$destino,PDO::PARAM_STR);    
         $stmt->bindParam(":encargado",$encargado,PDO::PARAM_STR);   
         
@@ -52,31 +54,25 @@ class ModeloCopi extends Conexion {
 
     }
 
-    function mdlAddItemsTransferencia($items,$transferencia){
+    function mdlAddItemsTransferencia($items,$transferencia,$plaremi)
+    {
 
-        $sql="INSERT INTO transferencias_det(";
-        foreach ($items[0] as $column=> $cell) {
-            $sql.="$column,";
-        }
-        $sql.="id_transferencia) VALUES ";
+        $sql="INSERT INTO transferencias_det(item,id_transferencia,plaremi,pedido) VALUES ";
 
         for ($i=0; $i <count($items) ; $i++) { 
-            $sql.="(";
-            foreach ($items[$i] as $j => $cell) {
-                $sql.=":$j$i,";
-            }
-            $sql.=":id_transferencia),";
+            $sql.="(:item$i,:id_transferencia,:plaremi,:pedido$i),";
         }
-        
         $sql=substr($sql,0,-1).";";
         // return $sql;
         $stmt= $this->link->prepare($sql);
         
         foreach ($items as $i => $row) {
-            $stmt->bindParam(":sede$i",$row->sede,PDO::PARAM_STR);
+            
             $stmt->bindParam(":item$i",$row->item,PDO::PARAM_STR);
+            $stmt->bindParam(":id_transferencia",$transferencia,PDO::PARAM_INT); 
+            $stmt->bindParam(":plaremi",$plaremi,PDO::PARAM_INT);
             $stmt->bindParam(":pedido$i",$row->pedido,PDO::PARAM_STR);    
-            $stmt->bindParam(":id_transferencia",$transferencia,PDO::PARAM_INT);  
+             
         }
         $res=$stmt->execute();
         // return $stmt->errorInfo();
@@ -144,7 +140,8 @@ class ModeloCopi extends Conexion {
         INNER JOIN items ON items.ID_ITEM=plaremi_det.item
         INNER JOIN sedes ON sedes.codigo=sobrantes.sede
         WHERE factura=:factura
-        AND sobrante>0;");
+        AND sobrante>0
+        ORDER BY DESCRIPCION ASC;");
 
         $stmt->bindParam(":factura",$factura,PDO::PARAM_STR);     
 

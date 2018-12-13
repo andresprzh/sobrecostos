@@ -69,7 +69,6 @@ export default class Upfile extends App {
       this.loading = true;
       const formData = new FormData();
       formData.append('archivo', this.file);
-      // const valid: boolean = true;
       const path = this.path+'sobrecostos';
       this.axios
         .post(path, formData, {

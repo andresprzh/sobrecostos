@@ -101,12 +101,12 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class App extends Vue {
-  protected path:string='http://192.168.0.10/sobrecostos/api/';
+  protected path:string='http://localhost/sobrecostos/api/';
   public sideNav: boolean = false;
   public menuItems = [
     { icono: 'fa-file-upload', titulo: 'Subir Acrhivo', ruta: '/upfile'},
     { icono: 'fa-file-invoice', titulo: 'archivo copi', ruta: '/upcopi'},
-    { icono: 'fa-clipboard-list', titulo: 'Transferencias', ruta: '/transferencias'},
+    { icono: 'fa-clipboard-list', titulo: 'Remisiones', ruta: '/remisiones'},
   ];
   public fondoNav = require('@/assets/fondos/logo2.svg');
   private session:boolean= false;

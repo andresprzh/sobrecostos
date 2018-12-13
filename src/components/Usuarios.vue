@@ -8,9 +8,12 @@
         <v-spacer></v-spacer>
 
         <v-dialog v-model="dialog" max-width="500px">
+
           <v-btn slot="activator" color="primary" dark class="mb-2"><v-icon>fas fa-user-plus</v-icon></v-btn>
           <v-card>
+
             <v-form ref="form_modal"  :v-model="valid_dialog" @submit="save">
+
               <v-card-title>
                 <span class="headline">{{ formTitle }}</span>
               </v-card-title>
@@ -19,6 +22,7 @@
                 <v-container grid-list-md>
                   <v-layout wrap>
                     <v-flex xs12 v-for="(card,index) in editUser" :key="card.id"> 
+                      
                       <v-select v-if="card.tipo==='select'"
                         ref="menu"
                         v-validate="card.validacion"
@@ -33,15 +37,16 @@
                       ></v-select>
 
                       <v-text-field v-else
-                      ref="menu"
-                      v-model="card.dato"
-                      v-validate="card.validacion"
-                      :type="card.tipo"
-                      :error-messages="errors.collect(card.id)"
-                      :label="card.titulo"
-                      :data-vv-name="card.id "
-                      required
-                      ></v-text-field>
+                        ref="menu"
+                        v-model="card.dato"
+                        v-validate="card.validacion"
+                        :type="card.tipo"
+                        :error-messages="errors.collect(card.id)"
+                        :label="card.titulo"
+                        :data-vv-name="card.id "
+                        required>
+                      </v-text-field>
+
                     </v-flex>
 
                   </v-layout>
@@ -53,10 +58,15 @@
                 <v-btn color="accent darken-1" flat @click="dialog=false">Cancelar</v-btn>
                 <v-btn color="accent darken-1" flat type="submit">Guardar</v-btn>
               </v-card-actions>
+
             </v-form>
+            
           </v-card>
+
         </v-dialog>
+
       </v-card-title>
+
       <v-card-title>
         
         <v-text-field
@@ -74,9 +84,7 @@
         :headers="headers"
         :items="usuarios"
         :search="search"
-        class="elevation-1"
-        
-      >
+        class="elevation-1">
         
         <template slot="items" slot-scope="props">
           <td class="text-xs-left">{{props.item.nombre}}</td>
@@ -105,6 +113,7 @@
           No se contraron resultador para "{{ search }}".
         </v-alert>
       </v-data-table>
+
       <v-snackbar v-model="snack.show" :timeout="3000" :color="snack.color">
         {{ snack.text }}
         <v-btn flat @click="snack.show = false">Close</v-btn>
@@ -112,8 +121,8 @@
       
     </v-card> 
     
-    <!-- INPUTS FORMULARIO -->
   </v-container>
+
 </template>
 
 <script lang="ts">

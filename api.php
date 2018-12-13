@@ -236,14 +236,18 @@ if (isset($_GET['ruta'])) {
                 if (isset($_POST["items"]) && isset($_POST["sede"]) && isset($_POST["encargado"])) {
 
                     $items=json_decode($_POST["items"]);
+
+                    // $perfil=$_SESSION["usuario"]["sede"];
+                    // $encargado=$_SESSION["usuario"]["id"];
                     $sede=$_POST["sede"];
                     $encargado=$_POST["encargado"];
-                    // $items=json_decode($items);
-                    // print json_encode($items);
-                    // return
-                    $modelo = new ModeloCopi();
-
-                    $transferencia=$modelo->mdlCrearTransferencia($sede,$encargado);
+                    $plaremi=$_POST["plaremi"];
+                    
+                    $controlador = new ControladorCopi();
+                    $transferencias=$controlador->ctrCrearTransferencia($items,$encargado,$sede,$plaremi);
+                    print json_encode($transferencias);
+                    return 0;
+                    $transferencia=$controlador->mdlCrearTransferencia($sede,$encargado);
                     
                     if ($transferencia) {
                         $resultado=$modelo->mdlAddItemsTransferencia($items,$transferencia);

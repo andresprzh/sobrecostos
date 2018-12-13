@@ -32,6 +32,7 @@ class ControladorCopi{
                }
                $fecha = $csv[1];
                $fecha = substr($fecha,0,4).'-'.substr($fecha,4,6).'-'.substr($fecha,6);
+      
                
                $busqueda=$this->modelo->mdlBuscarItem(trim($csv[10]));
                
@@ -79,6 +80,30 @@ class ControladorCopi{
             $resultado["estado"]=false;
             $resultado["contenido"]="Documento ya subido";
         }   
+        return $resultado;
+    }
+
+    public function ctrCrearTransferencia($items,$encargado,$sede,$plaremi)
+    {   
+        $transferencias;
+        foreach ($items as $row) {
+            $transferencias[$row->sede][]=$row;
+        }
+        
+        foreach ($transferencias as $i => $tranfsede) {
+            // return $tranfsede[0]->item;
+            $transferencia=$this->modelo->mdlCrearTransferencia($i,$sede,$encargado);
+            if ($transferencia) {
+                $res=$this->modelo->mdlAddItemsTransferencia($tranfsede,$transferencia,$plaremi);
+                if($res){
+                    $resultado[$transferencia]=$tranfsede;       
+                }
+            }else {
+                $resultado[$transferencia]=false;
+            }
+            
+        }
+
         return $resultado;
     }
 
