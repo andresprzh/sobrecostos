@@ -51,12 +51,11 @@ export default class Login extends App {
   };
 
   private imagenrc: any = require("@/assets/fondos/logo2.svg");
-  // private path:string='http://192.168.0.10/sobrecostos/api/';
 
   // metodo que valida el usurio
   private login() {
     if (this.input.username !== '' && this.input.password !== '') {
-      const path = 'http://localhost/sobrecostos/api/login';
+      const path:string = this.path+'login';
       const formData = new FormData();
       formData.append('username', this.input.username);
       formData.append('password', this.input.password);

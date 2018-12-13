@@ -64,7 +64,7 @@ class ControladorCopi{
         return $this->items;
     }
 
-    public function ctrUploadPlarRemi($items=null)
+    public function ctrUploadPlaRemi($items=null)
     {
         if (!$items) {
             $items=$this->items;
@@ -74,7 +74,7 @@ class ControladorCopi{
         
         if ($res===true) {
             $resultado["estado"]=true;
-            $resultado["contenido"]=$items;
+            $resultado["contenido"]=$items[0]['factura'];
         }else{
             $resultado["estado"]=false;
             $resultado["contenido"]="Documento ya subido";

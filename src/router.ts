@@ -32,29 +32,26 @@ export const router = new Router({
       path: '/upcopi',
       name: 'Upcopi',
       component: Upcopi,
-      
     },
     {
       path: '/transferencias',
       name: 'Transferencias',
       component: Transferencias,
-      children:[
+      children: [
         {
           path: 'tabla/:id',
           name: 'Tabla',
           component: Tabla,
         },
-      ]
+      ],
     },
     {
       path: '/usuarios',
       name: 'Usuarios',
       component: Usuarios,
-      
     },
     { path: '*', redirect: '/' },
   ],
-  
 });
 
 router.beforeEach((to, from, next) => {
@@ -65,6 +62,5 @@ router.beforeEach((to, from, next) => {
   if (authRequired && !loggedIn) {
     return next('/login');
   }
-
   next();
-})
+});

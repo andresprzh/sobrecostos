@@ -43,9 +43,10 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import App from '@/App.vue';
 
 @Component
-export default class Upfile extends Vue {
+export default class Upfile extends App {
   /*===========================================================================================================
                                           ATRIBUTOS
   =============================================================================================================*/
@@ -69,7 +70,7 @@ export default class Upfile extends Vue {
       const formData = new FormData();
       formData.append('archivo', this.file);
       // const valid: boolean = true;
-      const path = 'http://192.168.0.49/sobrecostos/api/sobrecostos';
+      const path = this.path+'sobrecostos';
       this.axios
         .post(path, formData, {
           headers: { 'Content-Type': 'multipart/form-data' },

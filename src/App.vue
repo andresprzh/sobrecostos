@@ -97,39 +97,38 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class App extends Vue {
-  
-  
-
-  
+  protected path:string='http://192.168.0.10/sobrecostos/api/';
   public sideNav: boolean = false;
   public menuItems = [
-    { icono: "fa-file-upload", titulo: "Subir Acrhivo", ruta: "/upfile"},
-    { icono: "fa-file-invoice", titulo: "archivo copi", ruta: "/upcopi"},
-    { icono: "fa-clipboard-list", titulo: "Transferencias", ruta: "/transferencias"},
+    { icono: 'fa-file-upload', titulo: 'Subir Acrhivo', ruta: '/upfile'},
+    { icono: 'fa-file-invoice', titulo: 'archivo copi', ruta: '/upcopi'},
+    { icono: 'fa-clipboard-list', titulo: 'Transferencias', ruta: '/transferencias'},
   ];
-  public fondoNav = require("@/assets/fondos/logo2.svg");
+  public fondoNav = require('@/assets/fondos/logo2.svg');
   private session:boolean= false;
 
-  protected mounted() {
+  private mounted() {
+
     if (localStorage.session) {
       this.session=true;
     }
+    
     if(localStorage.perfil==1){
       this.menuItems.push(
-        {icono: "fa-users", titulo: "Usuarios", ruta: "/usuarios"}
+        {icono: 'fa-users', titulo: 'Usuarios', ruta: '/usuarios'}
         );
     }
 
   }
 
-  public salir(){
-      const path:string="http://192.168.0.10/sobrecostos/api/";
+  private salir(){
+      const path:string=this.path+'api/';
       this.axios
-      .post(path+"salir", {
+      .post(path+'salir', {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       .then((res) => {

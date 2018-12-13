@@ -33,16 +33,14 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-// import App from '@/App.vue';
+import App from '@/App.vue';
 
 @Component
-export default class Transferencia extends Vue {
+export default class Transferencia extends App {
   
   /*===========================================================================================================
                                           ATRIBUTOS
   =============================================================================================================*/
-  private path:string="http://192.168.0.49/sobrecostos/api/";
-  
   
   private plaremi={
     id: 'plaremi',
@@ -54,8 +52,7 @@ export default class Transferencia extends Vue {
   /*===========================================================================================================
                                           METODOS
   =============================================================================================================*/
-  constructor() {
-    super();
+  private created() {
 
     const path = this.path+'plaremi';
     this.axios
@@ -74,7 +71,7 @@ export default class Transferencia extends Vue {
       .catch(error => {
         // eslint-disable-next-line
         console.error(error);
-      });
+    });
   }
 
 

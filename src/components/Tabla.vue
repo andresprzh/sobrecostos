@@ -93,15 +93,15 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-
+import App from '@/App.vue';
 
 @Component
-export default class Tabla extends Vue {
+export default class Tabla extends App {
   
   /*===========================================================================================================
                                           ATRIBUTOS
   =============================================================================================================*/
-  private path:string='http://192.168.0.49/sobrecostos/api/';
+
   private search:string=' ';
   private id:string='';
   private items: object[] = [];
@@ -129,33 +129,8 @@ export default class Tabla extends Vue {
   /*===========================================================================================================
                                           METODOS
   =============================================================================================================*/
-  constructor() {
-    super();
-    // this.id = this.$route.params.id;
-    this.id='ITEMS';
-    const path = this.path+'plaremi';
 
-    this.axios
-      .get(path, {
-        params: {
-          dato: 'all'
-        }
-      })
-      .then(res => {
-        console.log(res.data);
-        if(res){
-          
-          this.plaremi.items=res.data;
-        }
-
-      })
-      .catch(error => {
-        // eslint-disable-next-line
-        console.error(error);
-      });
-  }
-
-  created(){
+  private created(){
     this.id = this.$route.params.id; 
 
     const path = this.path+'plaremi';
@@ -167,7 +142,6 @@ export default class Tabla extends Vue {
     }
     })
     .then(res => {
-        console.log(res.data)
         if (res.data) {
             if(res.data.estado){
             this.items = res.data.contenido;

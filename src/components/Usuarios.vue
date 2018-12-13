@@ -259,7 +259,7 @@ export default class Tabla extends Vue {
           perfil: localStorage.perfil
         }
       })
-      .then(res => {
+      .then((res) => {
         
         if(res.data) {
           if(res.data.estado) {
@@ -268,7 +268,7 @@ export default class Tabla extends Vue {
         }
 
       })
-      .catch(error => {
+      .catch((error) => {
         // eslint-disable-next-line
         console.error(error);
       });
@@ -281,7 +281,7 @@ export default class Tabla extends Vue {
         perfil: localStorage.perfil
       }
     })
-    .then(res => {
+    .then((res) => {
       
       if(res.data) {
         if(res.data.estado) {
@@ -294,7 +294,7 @@ export default class Tabla extends Vue {
       }
 
     })
-    .catch(error => {
+    .catch((error) => {
       // eslint-disable-next-line
       console.error(error);
     });
@@ -307,7 +307,7 @@ export default class Tabla extends Vue {
         perfil: localStorage.perfil
       }
     })
-    .then(res => {
+    .then((res) => {
       
       if(res.data) {
         if(res.data.estado) {
@@ -320,7 +320,7 @@ export default class Tabla extends Vue {
       }
 
     })
-    .catch(error => {
+    .catch((error) => {
       // eslint-disable-next-line
       console.error(error);
     });
@@ -346,27 +346,25 @@ export default class Tabla extends Vue {
       
       if(result){
         
-        let newusuario:any={};
+        let newusuario:any = {};
         this.editUser.map(function(x:any) {
           newusuario[x.id]=x.dato;
         });
-        newusuario["id_usuario"]=this.id_usuario;
+        newusuario['id_usuario'] = this.id_usuario;
                
         
         let formData = new FormData();
-        formData.append("datosusuario", JSON.stringify(newusuario));
+        formData.append('datosusuario', JSON.stringify(newusuario));
         
         this.axios
-        .post(this.path+'modusuario',formData, {
-            headers: { "Content-Type": "multipart/form-data" }
+        .post(this.path + 'modusuario', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
         })
-        .then(res => {
-          
-         console.log(res.data);
-          // this.dialog=false;
+        .then((res) => {
+          this.dialog = false;
           this.loadUsers();
         })
-        .catch(error => {
+        .catch((error) => {
           // eslint-disable-next-line
           console.error(error);
         });
