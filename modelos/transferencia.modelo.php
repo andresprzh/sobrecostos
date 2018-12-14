@@ -56,6 +56,45 @@ class ModeloTransferencia extends Conexion {
 
     }
 
+    function mdlCerrarTransferencia($id_transferencia,$no_transferencia)
+    {
+
+        $stmt= $this->link->prepare(
+        "UPDATE transferencias 
+        SET no_transferencia=:no_transferencia,estado=1
+        WHERE id_transferencia=:id_transferencia;");
+
+        $stmt->bindParam(":no_transferencia",$no_transferencia,PDO::PARAM_STR);    
+        $stmt->bindParam(":id_transferencia",$id_transferencia,PDO::PARAM_INT); 
+        
+        $res=$stmt->execute();
+        
+        $stmt=null;
+        return $res;
+
+    }
+
+    function mdlCerrarItemTransferencia($item)
+    {
+
+        
+        $stmt= $this->link->prepare("UPDATE transferencias_det
+        SET pedido=:pedido
+        WHERE item=:item
+        AND id_transferencia=:id_transferencia");
+
+        $stmt->bindParam(":pedido",$item->pedido,PDO::PARAM_STR); 
+        $stmt->bindParam(":item",$item->item,PDO::PARAM_STR);
+        $stmt->bindParam(":id_transferencia",$item->id_transferencia,PDO::PARAM_INT); 
+           
+
+        $res=$stmt->execute();
+        
+        $stmt=null;
+        return $res;
+
+    }
+
     function mdlMostrarItemsTransferencia($plaremi,$encargado){
 
         $stmt= $this->link->prepare("CALL BuscarItemsTransferencia(:plaremi,:encargado);");

@@ -147,6 +147,7 @@ export default class Transferencia extends App {
       let formData = new FormData();
       let items:string=JSON.stringify(this.items);
       formData.append('items', items);
+      formData.append('encargado', localStorage.id);
       formData.append('update', 'true');
 
       const path = this.path+'transferencia';

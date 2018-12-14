@@ -243,7 +243,8 @@ DELIMITER $$
 		INNER JOIN sedes ON sedes.codigo=transferencias.origen
 		INNER JOIN sobrantes ON (sobrantes.item=transferencias_det.item AND transferencias.origen=sobrantes.sede)
 		WHERE plaremi=plaremi
-		AND transferencias.encargado=encargado;
+		AND transferencias.encargado=encargado
+		AND transferencias.estado=0;
 		
 	END 
 $$
@@ -272,7 +273,7 @@ DELIMITER $$
 	BEGIN
 
 		UPDATE sobrantes
-		SET sobrante=sobrante-1
+		SET sobrante=sobrante-new.pedido
 		WHERE sobrantes.item=new.item
     	AND sobrantes.sede=(SELECT origen FROM transferencias WHERE id_transferencia=new.id_transferencia LIMIT 1);
 				

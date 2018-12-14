@@ -248,8 +248,11 @@ if (isset($_GET['ruta'])) {
                     return 1;
                 }else {
                     $items=json_decode($_POST["items"]);
-                    print json_encode($items);
-                    return 0;
+                    // $perfil=$_SESSION["usuario"]["sede"];
+                    // $encargado=$_SESSION["usuario"]["id"];
+                    $encargado=$_POST["encargado"];
+                    // print json_encode($items);
+                    // return 0;
                     $controlador = new ControladorTransferencia();
                     $transferencias=$controlador->ctrCerrarTransferencia($items,$encargado);
                     print json_encode($transferencias);

@@ -47,15 +47,17 @@ class ControladorTransferencia{
     {   
         
         
-        foreach ($transferencias as $i => $transferencia) {
+        foreach ($transferencias as $transferencia) {
 
-            $transferencia=$this->modelo->mdlCrearTransferencia($i,$sede,$encargado);
+            $res=$this->modelo->mdlCerrarTransferencia($transferencia->id_transferencia,$transferencia->no_transferencia);
             $resultado=false;
 
-            if ($transferencia) {
+            if ($res) {
                 
-                $res=$this->modelo->mdlAddItemsTransferencia($item,$transferencia,$plaremi);
-                
+                foreach ($transferencia->items as $item) {
+                    $res=$this->modelo->mdlCerrarItemTransferencia($item);
+                }
+               
                 if($res){
                     // $resultado[$transferencia]=$tranfsede;       
                     $resultado=true;
