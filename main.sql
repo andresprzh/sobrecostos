@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS `sobrantes`(
   `rotacion`  INT(4),
   `prom_6_meses` FLOAT(8,2),
   `sobrante` FLOAT(4,2),
+  `estado` INT(1) DEFAULT 0,
 
   PRIMARY KEY(`item`,`sede`),
 
@@ -261,6 +262,11 @@ DELIMITER $$
 		SET estado=1
 		WHERE plaremi_det.item=new.item
     	AND plaremi_det.factura=new.plaremi;
+    	
+    	UPDATE sobrantes
+		SET estado=1
+		WHERE sobrantes.item=new.item
+    	AND sobrantes.sede=(SELECT origen FROM transferencias WHERE id_transferencia=new.id_transferencia LIMIT 1);
 				
 	END 
 $$
@@ -273,7 +279,7 @@ DELIMITER $$
 	BEGIN
 
 		UPDATE sobrantes
-		SET sobrante=sobrante-new.pedido
+		SET sobrante=sobrante-new.pedido,estado=0
 		WHERE sobrantes.item=new.item
     	AND sobrantes.sede=(SELECT origen FROM transferencias WHERE id_transferencia=new.id_transferencia LIMIT 1);
 				
