@@ -1,20 +1,22 @@
 <template>
   <v-container grid-list-md>
 
-      <v-form v-if="show_form">
-        <v-card row wrap  v-for="(itemsede,index) in items" :key="itemsede.id">
+      <v-form v-if="show_form" @submit="submit" class="form" ref="form" v-model="valid" lazy-validation>
+        <v-card row wrap  v-for="(itemsede,index) in items" :key="index">
 
           <v-card-title>
-            Transferencia {{itemsede[0].origensede}}
+            Transferencia {{itemsede.items[0].origensede}}
             <v-spacer></v-spacer>
             <v-text-field
               label="Numero de Transferencia"
+              v-model="itemsede.no_transferencia"
+              :rules="[(v) => !!v || 'Por favor digite el número de transferencia',(v) => ValNoTrans(itemsede.no_transferencia,index) || 'Numero de transferencia Repetido']"
+              required
             ></v-text-field>
           </v-card-title>
-          
           <v-data-table
             :headers="headers"
-            :items="itemsede"
+            :items="itemsede.items"
             class="elevation-1">
             
             <template slot="items" slot-scope="props">
@@ -25,6 +27,7 @@
                 <v-text-field
                   v-model="props.item.pedido"
                   label="Pedidos"
+                  :rules="[(v) => !!v || 'Por favor digite el una cantidad',v => (v && v <=props.item.sobrante ) || 'Cantidad maxima = '+props.item.sobrante]"
                   required
                 ></v-text-field>
               </td>
@@ -36,7 +39,7 @@
 
         <div class="text-xs-right pt-2" >
 
-          <v-btn color="secondary"  >
+          <v-btn type="submit" color="secondary"  >
           
             <v-icon>fa-save</v-icon>
             <span>Guardar</span>
@@ -63,6 +66,7 @@ export default class Transferencia extends App {
   private items: object[] = []; 
   private id:string='';
   private show_form:boolean=false;
+  private valid:boolean=true;
   private plaremi={
     id: 'plaremi',
     titulo: 'Remision',
@@ -70,12 +74,17 @@ export default class Transferencia extends App {
     items: [],
   };
   
-  private headers = [
+  private headers = [ 
     { text: 'Item', value: 'item' },
     { text: 'Sobrantes ', value: 'sob' },
     { text: 'Solicitados', value: 'col' },
     { text: 'Pedido', value: 'perfil' },
   ];
+
+  private transfRules= [
+          (v:any) => !!v || 'por favor digite el número de transferencia',
+  ];
+
 
   /*===========================================================================================================
                                           METODOS
@@ -91,10 +100,12 @@ export default class Transferencia extends App {
         }
       })
       .then(res => {
+        
         if(res.data){
           
           this.items=res.data;
           this.show_form=true;
+
         }
 
       })
@@ -104,10 +115,52 @@ export default class Transferencia extends App {
     });
   }
 
+  get computedForm ():any {
+    return this.$refs.form as Vue
+  }
 
-  private selplaremi(){
+  get computedNoTrans () {
+    let key:string;
+    let newArray = new Array;;
+    let items:any = this.items;
+    for (key in items) {
+      newArray.push(items[key]['no_transferencia']);
+    }
+    return newArray;
+  }
 
-    this.$router.push({ name: 'Tabla', params: { id: this.plaremi.dato }})
+  // verifica si el numero de transferencia es unico en todas las entradas
+  private ValNoTrans(val:string,index:string):boolean{
+    let key:string;
+    let items:any = this.items;
+    for (key in items) {
+      if(key!=index && items[key]['no_transferencia']==val){
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private submit(){
+    
+    if (this.computedForm.validate()) {
+      let formData = new FormData();
+      let items:string=JSON.stringify(this.items);
+      formData.append('items', items);
+      formData.append('update', 'true');
+
+      const path = this.path+'transferencia';
+      this.axios
+        .post(path, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        })
+        .then(res => {
+          console.log(res.data);
+        })
+        .catch(error => {
+          console.error(error);
+      });
+    }
 
   }
   

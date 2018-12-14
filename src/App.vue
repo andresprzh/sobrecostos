@@ -203,8 +203,14 @@ h1 {
   cursor: pointer;
 }
 .file-upload .file-upload-res{
-    width: 100%;
-    text-align: center;
-    color:gray;
+  width: 100%;
+  text-align: center;
+  color:gray;
 }
+
+.form{
+  max-height:55vh;
+  overflow-y:scroll;
+}
+
 </style>

@@ -107,6 +107,7 @@ CREATE TABLE IF NOT EXISTS `plaremi_det`(
 	`item` CHAR(6) NOT NULL,
    `factura` CHAR(20) NOT NULL,
 	`pedido` FLOAT(4,2) NOT NULL,
+	`estado` INT(1)	 DEFAULT 0,
 
 	
 	PRIMARY KEY(`item`,`factura`),

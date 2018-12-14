@@ -36,13 +36,13 @@ import { Component, Vue } from 'vue-property-decorator';
 import App from '@/App.vue';
 
 @Component
-export default class Transferencia extends App {
+export default class Remisiones extends App {
   
   /*===========================================================================================================
                                           ATRIBUTOS
   =============================================================================================================*/
   
-  private plaremi={
+  protected plaremi={
     id: 'plaremi',
     titulo: 'Remision',
     dato: '',
@@ -62,7 +62,7 @@ export default class Transferencia extends App {
         }
       })
       .then(res => {
-        if(res){
+        if(res.data){
           
           this.plaremi.items=res.data;
         }
@@ -75,7 +75,7 @@ export default class Transferencia extends App {
   }
 
 
-  private selplaremi(){
+  protected selplaremi(){
 
     const path = this.path+'transferencia';
     this.axios

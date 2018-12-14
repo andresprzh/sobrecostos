@@ -205,6 +205,7 @@ export default class Tabla extends App {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
       .then(res => {
+        
         if (res.data) {
           this.$router.push({ name: 'Transferencias', params: { id: this.id }});
         } else {

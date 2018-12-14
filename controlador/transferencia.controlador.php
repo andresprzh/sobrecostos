@@ -20,10 +20,12 @@ class ControladorTransferencia{
         foreach ($transferencias as $i => $tranfsede) {
 
             $transferencia=$this->modelo->mdlCrearTransferencia($i,$sede,$encargado);
+            $resultado=false;
 
             if ($transferencia) {
                 
                 $res=$this->modelo->mdlAddItemsTransferencia($tranfsede,$transferencia,$plaremi);
+                
                 if($res){
                     // $resultado[$transferencia]=$tranfsede;       
                     $resultado=true;
@@ -41,6 +43,37 @@ class ControladorTransferencia{
         return $resultado;
     }
 
+    public function ctrCerrarTransferencia($transferencias,$encargado)
+    {   
+        
+        
+        foreach ($transferencias as $i => $transferencia) {
+
+            $transferencia=$this->modelo->mdlCrearTransferencia($i,$sede,$encargado);
+            $resultado=false;
+
+            if ($transferencia) {
+                
+                $res=$this->modelo->mdlAddItemsTransferencia($item,$transferencia,$plaremi);
+                
+                if($res){
+                    // $resultado[$transferencia]=$tranfsede;       
+                    $resultado=true;
+                }
+
+            }else {
+
+                // $resultado[$transferencia]=false;
+                $resultado=false;
+
+            }
+            
+        }
+
+        return $resultado;
+    }
+
+    
     public function ctrBuscarItemsTransferencia($plaremi,$encargado)
     {
         $busqueda=$this->modelo->mdlMostrarItemsTransferencia($plaremi,$encargado);
@@ -48,7 +81,12 @@ class ControladorTransferencia{
         if ($busqueda) {
             if ($busqueda->rowCount()>0) {
                 while($row = $busqueda->fetch()){
-                    $resultado[$row['origen']][]=$row;
+
+                    $resultado[$row["origen"]]["id_transferencia"]=$row["id_transferencia"];
+                    $resultado[$row["origen"]]["no_transferencia"]="";
+                    $resultado[$row["origen"]]["plaremi"]=$row["plaremi"];
+                    $resultado[$row["origen"]]["items"][]=$row;
+
                 }
             }else {
                 $resultado=false;

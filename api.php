@@ -103,7 +103,7 @@ if (isset($_GET['ruta'])) {
             print json_encode($resultado);
             break;
         /* ============================================================================================================================
-                                                MUESTRA PUNTOS DE VENTA
+                                                MUESTRA ITEMS REMISION
         ============================================================================================================================*/
         case 'plaremi':
 
@@ -234,18 +234,27 @@ if (isset($_GET['ruta'])) {
             // crea transferencia
             if ($_SERVER['REQUEST_METHOD']==='POST') {
 
-                $items=json_decode($_POST["items"]);
-
-                // $perfil=$_SESSION["usuario"]["sede"];
-                // $encargado=$_SESSION["usuario"]["id"];
-                $sede=$_POST["sede"];
-                $encargado=$_POST["encargado"];
-                $plaremi=$_POST["plaremi"];
+                if (!isset($_POST["update"])) {
+                    $items=json_decode($_POST["items"]);
+                    // $perfil=$_SESSION["usuario"]["sede"];
+                    // $encargado=$_SESSION["usuario"]["id"];
+                    $sede=$_POST["sede"];
+                    $encargado=$_POST["encargado"];
+                    $plaremi=$_POST["plaremi"];
+                    
+                    $controlador = new ControladorTransferencia();
+                    $transferencias=$controlador->ctrCrearTransferencia($items,$encargado,$sede,$plaremi);
+                    print json_encode($transferencias);
+                    return 1;
+                }else {
+                    $items=json_decode($_POST["items"]);
+                    print json_encode($items);
+                    return 0;
+                    $controlador = new ControladorTransferencia();
+                    $transferencias=$controlador->ctrCerrarTransferencia($items,$encargado);
+                    print json_encode($transferencias);
+                }
                 
-                $controlador = new ControladorTransferencia();
-                $transferencias=$controlador->ctrCrearTransferencia($items,$encargado,$sede,$plaremi);
-                print json_encode($transferencias);
-                return 1;
 
             // muestra transferencias
             }elseif ($_SERVER['REQUEST_METHOD']==='GET') {
@@ -262,6 +271,7 @@ if (isset($_GET['ruta'])) {
             }
 
             break;
+       
         /* ============================================================================================================================
                                                     MUESTRA USUARIOS
         ============================================================================================================================*/   

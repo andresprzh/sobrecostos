@@ -50,7 +50,7 @@ class ModeloTransferencia extends Conexion {
              
         }
         $res=$stmt->execute();
-        // return $stmt->errorInfo();
+        
         $stmt=null;
         return $res;
 
