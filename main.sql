@@ -222,8 +222,32 @@ REPLACE INTO `sedes` VALUES
 /*******************************************************************************************************************************
 											PROCEDIMIENTOS FUNCIONES Y TRIGGERS BASE DE DATOS
 ********************************************************************************************************************************/
+DROP PROCEDURE IF EXISTS BuscarItemsTransferencia;
 DROP TRIGGER IF EXISTS CambiarEstadpPlaremi;
 DROP TRIGGER IF EXISTS CambiarSobrantes;
+
+
+
+DELIMITER $$
+	CREATE PROCEDURE BuscarItemsTransferencia(IN plaremi CHAR(20),IN user_new INT(10))
+	BEGIN
+	
+		SELECT 
+		transferencias_det.item,transferencias.id_transferencia,plaremi,transferencias.origen,sedes.descripcion AS origensede,
+		plaremi_det.pedido AS solicitado, transferencias_det.pedido,sobrantes.sobrante
+		FROM transferencias_det
+		INNER JOIN plaremi_det ON (plaremi_det.item=transferencias_det.item AND plaremi_det.factura=transferencias_det.plaremi)
+		INNER JOIN transferencias ON transferencias.id_transferencia=transferencias_det.id_transferencia
+		INNER JOIN items ON items.ID_ITEM=plaremi_det.item
+		INNER JOIN sedes ON sedes.codigo=transferencias.origen
+		INNER JOIN sobrantes ON (sobrantes.item=transferencias_det.item AND transferencias.origen=sobrantes.sede)
+		WHERE plaremi=plaremi
+		AND transferencias.encargado=user_new;
+		
+	END 
+$$
+
+
 
 DELIMITER $$
 	CREATE TRIGGER CambiarEstadpPlaremi

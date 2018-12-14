@@ -83,30 +83,6 @@ class ControladorCopi{
         return $resultado;
     }
 
-    public function ctrCrearTransferencia($items,$encargado,$sede,$plaremi)
-    {   
-        $transferencias;
-        foreach ($items as $row) {
-            $transferencias[$row->sede][]=$row;
-        }
-        
-        foreach ($transferencias as $i => $tranfsede) {
-            // return $tranfsede[0]->item;
-            $transferencia=$this->modelo->mdlCrearTransferencia($i,$sede,$encargado);
-            if ($transferencia) {
-                $res=$this->modelo->mdlAddItemsTransferencia($tranfsede,$transferencia,$plaremi);
-                if($res){
-                    $resultado[$transferencia]=$tranfsede;       
-                }
-            }else {
-                $resultado[$transferencia]=false;
-            }
-            
-        }
-
-        return $resultado;
-    }
-
     public function ctrBsucarSobrantes($factura)
     {
         $busqueda=$this->modelo->mdlBuscarPlaremiItems($factura);

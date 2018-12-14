@@ -199,7 +199,7 @@ export default class Tabla extends App {
     formData.append('sede', localStorage.sede);
     formData.append('encargado', localStorage.id);
 
-    const path = this.path+'transladar';
+    const path = this.path+'transferencia';
     this.axios
       .post(path, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }

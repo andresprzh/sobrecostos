@@ -229,37 +229,36 @@ if (isset($_GET['ruta'])) {
         /* ============================================================================================================================
                                                 MUESTRA PUNTOS DE VENTA
         ============================================================================================================================*/
-        case 'transladar':
+        case 'transferencia':
 
+            // crea transferencia
             if ($_SERVER['REQUEST_METHOD']==='POST') {
 
-                if (isset($_POST["items"]) && isset($_POST["sede"]) && isset($_POST["encargado"])) {
+                $items=json_decode($_POST["items"]);
 
-                    $items=json_decode($_POST["items"]);
+                // $perfil=$_SESSION["usuario"]["sede"];
+                // $encargado=$_SESSION["usuario"]["id"];
+                $sede=$_POST["sede"];
+                $encargado=$_POST["encargado"];
+                $plaremi=$_POST["plaremi"];
+                
+                $controlador = new ControladorTransferencia();
+                $transferencias=$controlador->ctrCrearTransferencia($items,$encargado,$sede,$plaremi);
+                print json_encode($transferencias);
+                return 1;
 
-                    // $perfil=$_SESSION["usuario"]["sede"];
-                    // $encargado=$_SESSION["usuario"]["id"];
-                    $sede=$_POST["sede"];
-                    $encargado=$_POST["encargado"];
-                    $plaremi=$_POST["plaremi"];
-                    
-                    $controlador = new ControladorCopi();
-                    $transferencias=$controlador->ctrCrearTransferencia($items,$encargado,$sede,$plaremi);
-                    print json_encode($transferencias);
-                    return 0;
-                    $transferencia=$controlador->mdlCrearTransferencia($sede,$encargado);
-                    
-                    if ($transferencia) {
-                        $resultado=$modelo->mdlAddItemsTransferencia($items,$transferencia);
-                    }else {
-                        $resultado=false;
-                    }
+            // muestra transferencias
+            }elseif ($_SERVER['REQUEST_METHOD']==='GET') {
+                // $perfil=$_SESSION["usuario"]["sede"];
+                // $encargado=$_SESSION["usuario"]["id"];
+                // $sede=$_POST["sede"];
+                $encargado=$_GET["encargado"];
+                $plaremi=$_GET["plaremi"];
 
-                    print json_encode($resultado);
-
-                    return 1;
-                }
-               
+                $controlador = new ControladorTransferencia();
+                $resultado = $controlador->ctrBuscarItemsTransferencia($plaremi,$encargado);
+                print json_encode($resultado);
+                return 1;
             }
 
             break;

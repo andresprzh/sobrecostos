@@ -5,6 +5,7 @@ import Upfile from './components/Upfile.vue';
 import Upcopi from './components/Upcopi.vue';
 import Remisiones from './components/Remisiones.vue';
 import Tabla from './components/Tabla.vue';
+import Transferencias from './components/Transferencias.vue';
 import Usuarios from './components/Usuarios.vue';
 
 
@@ -42,6 +43,11 @@ export const router = new Router({
           path: 'tabla/:id',
           name: 'Tabla',
           component: Tabla,
+        },
+        {
+          path: 'transferencias/:id',
+          name: 'Transferencias',
+          component: Transferencias,
         },
       ],
     },
