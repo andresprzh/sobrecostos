@@ -229,7 +229,7 @@ DROP TRIGGER IF EXISTS CambiarSobrantes;
 
 
 DELIMITER $$
-	CREATE PROCEDURE BuscarItemsTransferencia(IN plaremi CHAR(20),IN user_new INT(10))
+	CREATE PROCEDURE BuscarItemsTransferencia(IN plaremi CHAR(20),IN encargado INT(10))
 	BEGIN
 	
 		SELECT 
@@ -242,7 +242,7 @@ DELIMITER $$
 		INNER JOIN sedes ON sedes.codigo=transferencias.origen
 		INNER JOIN sobrantes ON (sobrantes.item=transferencias_det.item AND transferencias.origen=sobrantes.sede)
 		WHERE plaremi=plaremi
-		AND transferencias.encargado=user_new;
+		AND transferencias.encargado=encargado;
 		
 	END 
 $$

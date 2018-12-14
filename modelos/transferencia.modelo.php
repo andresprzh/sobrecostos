@@ -56,7 +56,6 @@ class ModeloTransferencia extends Conexion {
 
     }
 
-    
     function mdlMostrarItemsTransferencia($plaremi,$encargado){
 
         $stmt= $this->link->prepare("CALL BuscarItemsTransferencia(:plaremi,:encargado);");

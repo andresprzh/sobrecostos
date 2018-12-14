@@ -50,6 +50,8 @@ class ControladorTransferencia{
                 while($row = $busqueda->fetch()){
                     $resultado[$row['origen']][]=$row;
                 }
+            }else {
+                $resultado=false;
             }
         }else {
             $resultado=false;

@@ -77,7 +77,27 @@ export default class Transferencia extends App {
 
   private selplaremi(){
 
-    this.$router.push({ name: 'Tabla', params: { id: this.plaremi.dato }})
+    const path = this.path+'transferencia';
+    this.axios
+      .get(path, {
+        params: {
+          encargado: localStorage.id,
+          plaremi:this.plaremi.dato,
+        }
+      })
+      .then(res => {
+        if(res.data){
+          this.$router.push({ name: 'Transferencias', params: { id: this.plaremi.dato }});
+        }else{
+          this.$router.push({ name: 'Tabla', params: { id: this.plaremi.dato }});
+        }
+
+      })
+      .catch(error => {
+        // eslint-disable-next-line
+        console.error(error);
+    });
+   
 
   }
   

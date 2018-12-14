@@ -1,7 +1,7 @@
 <template>
   <v-container grid-list-md>
 
-      <v-form>
+      <v-form v-if="show_form">
         <v-card row wrap  v-for="(itemsede,index) in items" :key="itemsede.id">
 
           <v-card-title>
@@ -34,7 +34,7 @@
           
         </v-card >
 
-        <div class="text-xs-right pt-2">
+        <div class="text-xs-right pt-2" >
 
           <v-btn color="secondary"  >
           
@@ -60,10 +60,9 @@ export default class Transferencia extends App {
   /*===========================================================================================================
                                           ATRIBUTOS
   =============================================================================================================*/
-  private items: object[] = [];
-
+  private items: object[] = []; 
   private id:string='';
-
+  private show_form:boolean=false;
   private plaremi={
     id: 'plaremi',
     titulo: 'Remision',
@@ -93,8 +92,9 @@ export default class Transferencia extends App {
       })
       .then(res => {
         if(res.data){
-          console.log(res.data);
+          
           this.items=res.data;
+          this.show_form=true;
         }
 
       })

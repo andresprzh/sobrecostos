@@ -206,9 +206,7 @@ export default class Tabla extends App {
       })
       .then(res => {
         if (res.data) {
-          console.log(res.data)
-          // alert('Transferencia creada exitosamente');
-          // location.reload();
+          this.$router.push({ name: 'Transferencias', params: { id: this.id }});
         } else {
           alert('error al crear la transferencia');
         }
