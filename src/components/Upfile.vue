@@ -15,7 +15,10 @@
              
             <label for="file" >
                 <v-icon v-if="!file.name">fa-upload</v-icon>
-                <span v-else-if="loading">Cargando...</span>
+                <v-progress-circular v-else-if="loading"
+                  indeterminate
+                  color="primary"
+                ></v-progress-circular>
                 <span v-else>{{file.name}}</span>
                
             </label>

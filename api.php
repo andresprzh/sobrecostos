@@ -1,30 +1,30 @@
 <?php
 
 require "cors.php";
-if (isset($_GET['ruta'])) {
-    switch ($_GET['ruta']) {
+if (isset($_GET["ruta"])) {
+    switch ($_GET["ruta"]) {
 
         
         /* ============================================================================================================================
                                                 SUBE ARCHIVO DE COPI
         ============================================================================================================================*/
         case "copiupload":
-            if ($_SERVER['REQUEST_METHOD']==='POST') {
+            if ($_SERVER["REQUEST_METHOD"]==="POST") {
                 $resultado["estado"]=true;
                 if (isset($_FILES["archivo"]["tmp_name"])) {
                     
-                    if (0 != $_FILES['archivo']['error']) {
+                    if (0 != $_FILES["archivo"]["error"]) {
                         
                         $resultado["estado"]=false;
-                        $resultado["contenido"]='¡Error al subir el acrhivo¡';
+                        $resultado["contenido"]="¡Error al subir el acrhivo¡";
                         
                     }
                     //abre el archivo si no hay errores
                     else {
                         
-                        $tipos_permitidos = array('text/plain','text/x-Algol68');//tipos permitidos de archivos
+                        $tipos_permitidos = array("text/plain","text/x-Algol68");//tipos permitidos de archivos
                         $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
-                        $tipo = finfo_file($fileInfo, $_FILES['archivo']['tmp_name']);//tipo de archivo subido
+                        $tipo = finfo_file($fileInfo, $_FILES["archivo"]["tmp_name"]);//tipo de archivo subido
                         
                         // SI EL ARCHIVO NO ES DE TIPO TEXTO NO LO ABRE
                         if (!in_array($tipo, $tipos_permitidos)) {
@@ -32,12 +32,14 @@ if (isset($_GET['ruta'])) {
                             $resultado["contenido"]='¡Tipo de archivo no valido¡';
                         } else {
                             
-                            $archivo = file($_FILES['archivo']['tmp_name']); 
-                            
+                            $archivo = file($_FILES['archivo']['tmp_name']);
+                            // $perfil=$_SESSION["usuario"]["sede"];
+                            $sede=$_POST["sede"];
+
                             $controlador = new ControladorCopi($archivo);
                             $resultado["contenido"]=$controlador->ctrGetData();
                             if ($resultado["contenido"]) {
-                                $resultado=$controlador->ctrUploadPlaRemi();
+                                $resultado=$controlador->ctrUploadPlaRemi($sede);
                             }else{
                                 $resultado["estado"]=false;
                                 $resultado["contenido"]="Error al subir documento";
@@ -105,13 +107,16 @@ if (isset($_GET['ruta'])) {
         /* ============================================================================================================================
                                                 MUESTRA ITEMS REMISION
         ============================================================================================================================*/
-        case 'plaremi':
+        case "plaremi":
 
-            if ($_SERVER['REQUEST_METHOD']==='GET') {
-                if (!isset($_GET['factura'])) {
+            if ($_SERVER["REQUEST_METHOD"]==="GET") {
+                
 
+                if (!isset($_GET["factura"])) {
+                    // $perfil=$_SESSION["usuario"]["sede"];
+                    $sede=$_GET["sede"];
                     $modelo=new ModeloCopi();
-                    $busqueda=$modelo->buscaritem('plaremi');
+                    $busqueda=$modelo->buscaritem("plaremi","sede",$sede);
                     $resultado=$busqueda->fetchAll();
                     print json_encode($resultado);
                     return 1;
@@ -129,9 +134,9 @@ if (isset($_GET['ruta'])) {
         /* ============================================================================================================================
                                                 MUESTRA PUNTOS DE VENTA
         ============================================================================================================================*/
-        case 'puntosv':
+        case "puntosv":
 
-            if ($_SERVER['REQUEST_METHOD']==='GET') {
+            if ($_SERVER["REQUEST_METHOD"]==="GET") {
                 $modelo=new ModeloSobrante();
                 $busqueda=$modelo->mdlMostrarUbicaciones();
                 $resultado=$busqueda->fetchAll();
@@ -144,32 +149,32 @@ if (isset($_GET['ruta'])) {
         /* ============================================================================================================================
                                                 SUBE ARCHIVO DE SOBRECOSTOS
         ============================================================================================================================*/
-        case 'sobrecostos':
-            if ($_SERVER['REQUEST_METHOD']==='POST') {
+        case "sobrecostos":
+            if ($_SERVER["REQUEST_METHOD"]==="POST") {
 
                 if (isset($_FILES["archivo"]["tmp_name"])) {
                     
-                    if (0 != $_FILES['archivo']['error']) {
+                    if (0 != $_FILES["archivo"]["error"]) {
                         
                         $resultado["estado"]=false;
-                        $resultado["contenido"]='¡Error al subir el acrhivo¡';
+                        $resultado["contenido"]="¡Error al subir el acrhivo¡";
                         
                     }
                         //abre el archivo si no hay errores
                     else {
 
-                        $tipos_permitidos = array('text/plain','text/x-Algol68');//tipos permitidos de archivos
+                        $tipos_permitidos = array("text/plain","text/x-Algol68");//tipos permitidos de archivos
                         $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
-                        $tipo = finfo_file($fileInfo, $_FILES['archivo']['tmp_name']);//tipo de archivo subido
+                        $tipo = finfo_file($fileInfo, $_FILES["archivo"]["tmp_name"]);//tipo de archivo subido
                         
                         // SI EL ARCHIVO NO ES DE TIPO TEXTO NO LO ABRE
                         // if (false) {
                         if (!in_array($tipo, $tipos_permitidos)) {
                             $resultado["estado"]=false;
-                            $resultado["contenido"]='¡Tipo de archivo no valido¡';
+                            $resultado["contenido"]="¡Tipo de archivo no valido¡";
                         } else {
                             
-                            $archivo = file($_FILES['archivo']['tmp_name']); 
+                            $archivo = file($_FILES["archivo"]["tmp_name"]); 
                             
                             $controlador = new ControladorSobrante($archivo);
                             $resultado["num_rows"]=$controlador->ctrGetData();
@@ -177,9 +182,9 @@ if (isset($_GET['ruta'])) {
                                 $resultado["estado"]=$controlador->ctrUploadData();
                                 
                                 if ($resultado["estado"]) {
-                                    $resultado["contenido"]='Datos subidos exitosamente';
+                                    $resultado["contenido"]="Datos subidos exitosamente";
                                 }else {
-                                    $resultado["contenido"]='Error al subir los datos';
+                                    $resultado["contenido"]="Error al subir los datos";
                                 }
                             }
                             
@@ -197,7 +202,7 @@ if (isset($_GET['ruta'])) {
         /* ============================================================================================================================
                                                 MUESTRA PUNTOS DE VENTA
         ============================================================================================================================*/
-        case 'salir':
+        case "salir":
             $res=session_destroy();
             $_SESSION = array();
             print json_encode($res);
@@ -205,7 +210,7 @@ if (isset($_GET['ruta'])) {
         /* ============================================================================================================================
                                                     MUESTRA SEDES
         ============================================================================================================================*/   
-        case 'sedes':
+        case "sedes":
 
             // $perfil=$_SESSION["usuario"]["perfil"];
             // $perfil=$_REQUEST["perfil"];
@@ -229,10 +234,10 @@ if (isset($_GET['ruta'])) {
         /* ============================================================================================================================
                                                 MUESTRA PUNTOS DE VENTA
         ============================================================================================================================*/
-        case 'transferencia':
+        case "transferencia":
 
             // crea transferencia
-            if ($_SERVER['REQUEST_METHOD']==='POST') {
+            if ($_SERVER["REQUEST_METHOD"]==="POST") {
 
                 if (!isset($_POST["update"])) {
                     $items=json_decode($_POST["items"]);
@@ -260,7 +265,7 @@ if (isset($_GET['ruta'])) {
                 
 
             // muestra transferencias
-            }elseif ($_SERVER['REQUEST_METHOD']==='GET') {
+            }elseif ($_SERVER["REQUEST_METHOD"]==="GET") {
                 // $perfil=$_SESSION["usuario"]["sede"];
                 // $encargado=$_SESSION["usuario"]["id"];
                 // $sede=$_POST["sede"];
@@ -278,7 +283,7 @@ if (isset($_GET['ruta'])) {
         /* ============================================================================================================================
                                                     MUESTRA USUARIOS
         ============================================================================================================================*/   
-        case 'usuarios':
+        case "usuarios":
 
             // $perfil=$_SESSION["usuario"]["perfil"];
             $perfil=$_REQUEST["perfil"];

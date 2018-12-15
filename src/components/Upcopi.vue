@@ -78,6 +78,7 @@ export default class Upcopi extends App {
         this.valid=true;
         let formData = new FormData();
         formData.append("archivo", this.file);
+        formData.append("sede", localStorage.sede);
 
         const path = this.path+"copiupload";
 
@@ -86,7 +87,7 @@ export default class Upcopi extends App {
             headers: { "Content-Type": "multipart/form-data" }
           })
           .then(res => {
-
+            console.log(res.data )
             if (res.data) {
               if(res.data.estado){
                 this.$router.replace({ name: 'Tabla', params: { id: res.data.contenido }});

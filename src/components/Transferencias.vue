@@ -1,42 +1,44 @@
 <template>
   <v-container grid-list-md>
 
-      <v-form v-if="show_form" @submit="submit" class="form" ref="form" v-model="valid" lazy-validation>
-        <v-card row wrap  v-for="(itemsede,index) in items" :key="index">
+      <v-form v-if="show_form" @submit="submit"  ref="form" v-model="valid" lazy-validation>
+        <div class="form">
+          <v-card row wrap  v-for="(itemsede,index) in items" :key="index">
 
-          <v-card-title>
-            Transferencia {{itemsede.items[0].origensede}}
-            <v-spacer></v-spacer>
-            <v-text-field
-              label="Numero de Transferencia"
-              v-model="itemsede.no_transferencia"
-              :rules="[(v) => !!v || 'Por favor digite el número de transferencia',(v) => ValNoTrans(itemsede.no_transferencia,index) || 'Numero de transferencia Repetido']"
-              required
-            ></v-text-field>
-          </v-card-title>
-          <v-data-table
-            :headers="headers"
-            :items="itemsede.items"
-            class="elevation-1">
+            <v-card-title>
+              Transferencia {{itemsede.items[0].origensede}}
+              <v-spacer></v-spacer>
+              <v-text-field
+                label="Numero de Transferencia"
+                v-model="itemsede.no_transferencia"
+                :rules="[(v) => !!v || 'Por favor digite el número de transferencia',(v) => ValNoTrans(itemsede.no_transferencia,index) || 'Numero de transferencia Repetido']"
+                required
+              ></v-text-field>
+            </v-card-title>
+            <v-data-table
+              :headers="headers"
+              :items="itemsede.items"
+              class="elevation-1">
+              
+              <template slot="items" slot-scope="props">
+                <td class="text-xs-left">{{props.item.item}}</td>
+                <td class="text-xs-left">{{props.item.sobrante}}</td>
+                <td class="text-xs-left">{{props.item.solicitado}}</td>
+                <td class="text-xs-left">
+                  <v-text-field
+                    v-model="props.item.pedido"
+                    label="Pedidos"
+                    :rules="[(v) => !!v || 'Por favor digite el una cantidad',v => (v && v <=props.item.sobrante ) || 'Cantidad maxima = '+props.item.sobrante]"
+                    required
+                  ></v-text-field>
+                </td>
+              </template>
+            </v-data-table>
+
             
-            <template slot="items" slot-scope="props">
-              <td class="text-xs-left">{{props.item.item}}</td>
-              <td class="text-xs-left">{{props.item.sobrante}}</td>
-              <td class="text-xs-left">{{props.item.solicitado}}</td>
-              <td class="text-xs-left">
-                <v-text-field
-                  v-model="props.item.pedido"
-                  label="Pedidos"
-                  :rules="[(v) => !!v || 'Por favor digite el una cantidad',v => (v && v <=props.item.sobrante ) || 'Cantidad maxima = '+props.item.sobrante]"
-                  required
-                ></v-text-field>
-              </td>
-            </template>
-          </v-data-table>
-
-          
-        </v-card >
-
+          </v-card >
+        </div>
+        
         <div class="text-xs-right pt-2" >
 
           <v-btn type="submit" color="secondary"  >
@@ -47,7 +49,7 @@
           </v-btn>
 
         </div>
-
+        
       </v-form>
 
   </v-container>
@@ -156,7 +158,11 @@ export default class Transferencia extends App {
           headers: { 'Content-Type': 'multipart/form-data' }
         })
         .then(res => {
-          console.log(res.data);
+          if(res.data){
+            this.$router.replace({ name: 'Remisiones' });
+          }else{
+            alert("Error al generar solicitud de transferencia")
+          }
         })
         .catch(error => {
           console.error(error);

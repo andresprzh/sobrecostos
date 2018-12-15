@@ -33,12 +33,13 @@ class ModeloCopi extends Conexion {
 
     }
 
-    function mdlUploadPLaRemi($items)
+    function mdlUploadPLaRemi($sede,$items)
     {
         $stmt= $this->link->prepare(
-        "INSERT INTO plaremi(factura,fecha) VALUES(:factura,now()) ");
+        "INSERT INTO plaremi(factura,fecha,sede) VALUES(:factura,now(),:sede) ");
         
         $stmt->bindParam(":factura",$items[0]['factura'],PDO::PARAM_STR);     
+        $stmt->bindParam(":sede",$sede,PDO::PARAM_STR);
         
         $res=$stmt->execute();
         
@@ -93,6 +94,7 @@ class ModeloCopi extends Conexion {
         INNER JOIN sedes ON sedes.codigo=sobrantes.sede
         WHERE factura=:factura
         AND sobrante>0
+        AND sobrantes.estado=0
         ORDER BY DESCRIPCION ASC;");
 
         $stmt->bindParam(":factura",$factura,PDO::PARAM_STR);     

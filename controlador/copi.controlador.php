@@ -65,13 +65,13 @@ class ControladorCopi{
         return $this->items;
     }
 
-    public function ctrUploadPlaRemi($items=null)
+    public function ctrUploadPlaRemi($sede,$items=null)
     {
         if (!$items) {
             $items=$this->items;
         }
-
-        $res=$this->modelo->mdlUploadPLaRemi($items); 
+        
+        $res=$this->modelo->mdlUploadPLaRemi($sede,$items); 
         
         if ($res===true) {
             $resultado["estado"]=true;
@@ -103,7 +103,11 @@ class ControladorCopi{
                     ];
                     
                 }
+            }else {
+                $resultado["contenido"]="Error Remision no encontrada";
             }
+        }else {
+            $resultado["contenido"]="Error";
         }
         return $resultado;
     }

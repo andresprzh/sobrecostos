@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `sobrantes`(
   INDEX(`sobrante`)
 ) ENGINE=InnoDB DEFAULT CHARSET=LATIN1;
 
-CREATE TABLE IF NOT EXISTS perfiles(
+CREATE TABLE IF NOT EXISTS `perfiles`(
 	`id_perfil` 		INT(1) NOT NULL AUTO_INCREMENT,
 	`des_perfil` 		CHAR(20),
 
@@ -99,8 +99,14 @@ CREATE TABLE IF NOT EXISTS `usuarios`(
 CREATE TABLE IF NOT EXISTS `plaremi`(
 	`factura` CHAR(20) NOT NULL,
 	`fecha` DATETIME,
+	`sede` CHAR(6) NOT NULL,
 	
-	PRIMARY KEY(`factura`)
+	PRIMARY KEY(`factura`),
+	
+	CONSTRAINT plaremi_sede
+	FOREIGN KEY(`sede`) 
+	REFERENCES `sedes`(`codigo`)
+
 
 ) ENGINE=InnoDB DEFAULT CHARSET=LATIN1;
 

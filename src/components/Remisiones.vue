@@ -58,10 +58,11 @@ export default class Remisiones extends App {
     this.axios
       .get(path, {
         params: {
-          dato: 'all'
+          sede: localStorage.sede
         }
       })
       .then(res => {
+        
         if(res.data){
           
           this.plaremi.items=res.data;

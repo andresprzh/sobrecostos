@@ -147,7 +147,7 @@ export default class Tabla extends App {
             if(res.data.estado){
               this.items = res.data.contenido;       
             }else{
-              alert(res.data);
+              alert(res.data.contenido);
             }
         } else {
             // alert("error al subir el arcivo");
