@@ -94,6 +94,7 @@ class ModeloCopi extends Conexion {
         INNER JOIN sedes ON sedes.codigo=sobrantes.sede
         WHERE factura=:factura
         AND sobrante>0
+        AND plaremi_det.estado=0
         AND sobrantes.estado=0
         ORDER BY DESCRIPCION ASC;");
 

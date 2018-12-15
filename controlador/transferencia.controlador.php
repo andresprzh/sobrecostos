@@ -76,18 +76,18 @@ class ControladorTransferencia{
     }
 
     
-    public function ctrBuscarItemsTransferencia($plaremi,$encargado)
+    public function ctrBuscarItemsSolicitados($plaremi,$encargado)
     {
-        $busqueda=$this->modelo->mdlMostrarItemsTransferencia($plaremi,$encargado);
+        $busqueda=$this->modelo->mdlMostrarItemsSolicitados($plaremi,$encargado);
         // return $busqueda->fetchAll();
         if ($busqueda) {
             if ($busqueda->rowCount()>0) {
                 while($row = $busqueda->fetch()){
 
-                    $resultado[$row["origen"]]["id_transferencia"]=$row["id_transferencia"];
-                    $resultado[$row["origen"]]["no_transferencia"]="";
-                    $resultado[$row["origen"]]["plaremi"]=$row["plaremi"];
-                    $resultado[$row["origen"]]["items"][]=$row;
+                    $resultado[intval($row["origen"])]["id_transferencia"]=$row["id_transferencia"];
+                    $resultado[intval($row["origen"])]["no_transferencia"]="";
+                    $resultado[intval($row["origen"])]["plaremi"]=$row["plaremi"];
+                    $resultado[intval($row["origen"])]["items"][]=$row;
 
                 }
             }else {
@@ -98,5 +98,36 @@ class ControladorTransferencia{
         }
         return $resultado;
         
+    }
+
+    public function ctrBuscarTransferencias($plaremi)
+    {
+        $busqueda=$this->modelo->mdlMostrarTransferencias($plaremi);
+
+        if ($busqueda) {
+            if ($busqueda->rowCount()>0) {
+                while($row = $busqueda->fetch()){
+
+                    $resultado[$row["id_transferencia"]]["id_transferencia"]=$row["id_transferencia"];
+                    $resultado[$row["id_transferencia"]]["no_transferencia"]=$row["no_transferencia"];
+                    $resultado[$row["id_transferencia"]]["destino"]=$row["destino"];
+                    $resultado[$row["id_transferencia"]]["origen"]=$row["origen"];
+                    $resultado[$row["id_transferencia"]]["origensede"]=$row["origensede"];
+                    $resultado[$row["id_transferencia"]]["destinosede"]=$row["destinosede"];
+                    // $resultado[$row["id_transferencia"]]["items"][]=$row;
+                    $resultado[$row["id_transferencia"]]["items"][]=[
+                    'item'=> trim($row['item']),
+                    'descripcion'=> trim($row['descripcion']),
+                    'pedido'=> trim($row['pedido'])
+                    ];
+
+                }
+            }else {
+                $resultado=false;
+            }
+        }else {
+            $resultado=false;
+        }
+        return $resultado;
     }
 }

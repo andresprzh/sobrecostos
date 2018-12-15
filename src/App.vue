@@ -107,6 +107,7 @@ export default class App extends Vue {
     { icono: 'fa-file-upload', titulo: 'Subir Acrhivo', ruta: '/upfile'},
     { icono: 'fa-file-invoice', titulo: 'archivo copi', ruta: '/upcopi'},
     { icono: 'fa-clipboard-list', titulo: 'Remisiones', ruta: '/remisiones'},
+    { icono: 'fa-truck', titulo: 'Solicitudes', ruta: '/transferencias'},
   ];
   public fondoNav = require('@/assets/fondos/logo2.svg');
   private session:boolean= false;
@@ -212,5 +213,7 @@ h1 {
   max-height:55vh;
   overflow-y:scroll;
 }
+
+
 
 </style>

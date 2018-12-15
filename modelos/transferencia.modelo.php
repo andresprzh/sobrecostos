@@ -95,7 +95,7 @@ class ModeloTransferencia extends Conexion {
 
     }
 
-    function mdlMostrarItemsTransferencia($plaremi,$encargado){
+    function mdlMostrarItemsSolicitados($plaremi,$encargado){
 
         $stmt= $this->link->prepare("CALL BuscarItemsTransferencia(:plaremi,:encargado);");
 
@@ -108,4 +108,29 @@ class ModeloTransferencia extends Conexion {
             return false;
         }
     } 
+
+
+    function mdlMostrarTransferencias($plaremi)
+    {
+        $stmt= $this->link->prepare(
+        "SELECT transferencias_det.id_transferencia,transferencias.no_transferencia,
+        origen,destino,origen.descripcion AS origensede,destino.descripcion AS destinosede,
+        transferencias_det.item,items.DESCRIPCION AS descripcion,transferencias_det.pedido
+        FROM transferencias_det
+        INNER JOIN transferencias ON transferencias.id_transferencia=transferencias_det.id_transferencia
+        INNER JOIN items  ON items.ID_ITEM=transferencias_det.item
+        INNER JOIN sedes AS origen ON  origen.codigo=transferencias.origen
+        INNER JOIN sedes AS destino ON  destino.codigo=transferencias.destino
+        WHERE plaremi=:plaremi
+        AND no_transferencia IS NOT NULL
+        ORDER BY id_transferencia ASC;");
+
+        $stmt->bindParam(":plaremi",$plaremi,PDO::PARAM_STR);
+
+        if($stmt->execute()){
+            return $stmt;
+        }else {
+            return false;
+        }
+    }
 }

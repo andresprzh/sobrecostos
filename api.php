@@ -234,7 +234,7 @@ if (isset($_GET["ruta"])) {
         /* ============================================================================================================================
                                                 MUESTRA PUNTOS DE VENTA
         ============================================================================================================================*/
-        case "transferencia":
+        case "solicitudes":
 
             // crea transferencia
             if ($_SERVER["REQUEST_METHOD"]==="POST") {
@@ -273,13 +273,31 @@ if (isset($_GET["ruta"])) {
                 $plaremi=$_GET["plaremi"];
 
                 $controlador = new ControladorTransferencia();
-                $resultado = $controlador->ctrBuscarItemsTransferencia($plaremi,$encargado);
+                $resultado = $controlador->ctrBuscarItemsSolicitados($plaremi,$encargado);
                 print json_encode($resultado);
                 return 1;
             }
 
             break;
        
+        /* ============================================================================================================================
+                                                MUESTRA PUNTOS DE VENTA
+        ============================================================================================================================*/
+        case "transferencia":
+            if ($_SERVER["REQUEST_METHOD"]==="GET") {
+                // $perfil=$_SESSION["usuario"]["sede"];
+                // $encargado=$_SESSION["usuario"]["id"];
+                // $sede=$_POST["sede"];
+                $encargado=$_GET["encargado"];
+                $plaremi=$_GET["plaremi"];
+
+                $controlador = new ControladorTransferencia();
+                $resultado = $controlador->ctrBuscarTransferencias($plaremi);
+                print json_encode($resultado);
+                return 1;
+            }
+
+            break;
         /* ============================================================================================================================
                                                     MUESTRA USUARIOS
         ============================================================================================================================*/   

@@ -78,7 +78,7 @@ export default class Remisiones extends App {
 
   protected selplaremi(){
 
-    const path = this.path+'transferencia';
+    const path = this.path+'solicitudes';
     this.axios
       .get(path, {
         params: {
@@ -88,7 +88,7 @@ export default class Remisiones extends App {
       })
       .then(res => {
         if(res.data){
-          this.$router.push({ name: 'Transferencias', params: { id: this.plaremi.dato }});
+          this.$router.push({ name: 'Solicitudes', params: { id: this.plaremi.dato }});
         }else{
           this.$router.push({ name: 'Tabla', params: { id: this.plaremi.dato }});
         }

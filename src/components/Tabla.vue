@@ -143,6 +143,7 @@ export default class Tabla extends App {
     }
     })
     .then(res => {
+      
         if (res.data) {
             if(res.data.estado){
               this.items = res.data.contenido;       
@@ -199,7 +200,7 @@ export default class Tabla extends App {
     formData.append('sede', localStorage.sede);
     formData.append('encargado', localStorage.id);
 
-    const path = this.path+'transferencia';
+    const path = this.path+'solicitudes';
     this.axios
       .post(path, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
@@ -207,7 +208,7 @@ export default class Tabla extends App {
       .then(res => {
         
         if (res.data) {
-          this.$router.push({ name: 'Transferencias', params: { id: this.id }});
+          this.$router.push({ name: 'Solicitudes', params: { id: this.id }});
         } else {
           alert('error al crear la transferencia');
         }
