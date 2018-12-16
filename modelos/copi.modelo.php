@@ -36,21 +36,22 @@ class ModeloCopi extends Conexion {
     function mdlUploadPLaRemi($sede,$items)
     {
         $stmt= $this->link->prepare(
-        "INSERT INTO plaremi(factura,fecha,sede) VALUES(:factura,now(),:sede) ");
+        "INSERT INTO plaremi(factura,cod_drog,fecha,sede) VALUES(:factura,:cod_drog,now(),:sede) ");
         
         $stmt->bindParam(":factura",$items[0]['factura'],PDO::PARAM_STR);     
+        $stmt->bindParam(":cod_drog",$items[0]['cod_drog'],PDO::PARAM_STR);     
         $stmt->bindParam(":sede",$sede,PDO::PARAM_STR);
         
         $res=$stmt->execute();
-        
+       
         if($res){
             
             $stmt=null;
 
-            $sql="INSERT INTO plaremi_det(item,factura,pedido) VALUES";
+            $sql="INSERT INTO plaremi_det(item,factura,pedido,costo_desc,costo_full,iva,descuento1,cod_barras,cod_fab,descuento2,unidad,algo1,algo2) VALUES";
 
             for ($i=0; $i <count($items) ; $i++) { 
-                $sql.="(:item$i,:factura$i,:pedido$i),";
+                $sql.="(:item$i,:factura$i,:pedido$i,:costo_desc$i,:costo_full$i,:iva$i,:descuento1$i,:cod_barras$i,:cod_fab$i,:descuento2$i,:unidad$i,:algo1$i,:algo2$i),";
             }
             
             $sql=substr($sql,0,-1).";";
@@ -61,9 +62,19 @@ class ModeloCopi extends Conexion {
                 $stmt->bindParam(":item$i",$row['item'],PDO::PARAM_STR);
                 $stmt->bindParam(":factura$i",$row['factura'],PDO::PARAM_STR);
                 $stmt->bindParam(":pedido$i",$row['pedido'],PDO::PARAM_STR);  
+                $stmt->bindParam(":costo_desc$i",$row['costo_desc'],PDO::PARAM_STR);  
+                $stmt->bindParam(":costo_full$i",$row['costo_full'],PDO::PARAM_STR); 
+                $stmt->bindParam(":iva$i",$row['iva'],PDO::PARAM_STR);
+                $stmt->bindParam(":descuento1$i",$row['descuento1'],PDO::PARAM_STR);
+                $stmt->bindParam(":cod_barras$i",$row['cod_barras'],PDO::PARAM_STR);
+                $stmt->bindParam(":cod_fab$i",$row['cod_fab'],PDO::PARAM_STR);
+                $stmt->bindParam(":descuento2$i",$row['descuento2'],PDO::PARAM_STR);
+                $stmt->bindParam(":unidad$i",$row['unidad'],PDO::PARAM_STR);
+                $stmt->bindParam(":algo1$i",$row['algo1'],PDO::PARAM_STR);
+                $stmt->bindParam(":algo2$i",$row['algo2'],PDO::PARAM_STR);
             }
             $res=$stmt->execute();
-
+            
             $stmt=null;
 
             // elimina registro de  plaremi si no se pueden subir los items
@@ -72,6 +83,7 @@ class ModeloCopi extends Conexion {
                 $stmt->bindParam(":factura",$items[0]['factura'],PDO::PARAM_STR);
                 $stmt->execute();
             }
+            
 
         }
         if($res==false) {

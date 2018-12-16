@@ -31,7 +31,7 @@
 
         </v-flex >
 
-        <v-btn block color="secondary"@click="submit_file">Subir</v-btn>
+        <v-btn block color="secondary" @click="submit_file">Subir</v-btn>
 
       </v-layout>
 
@@ -88,6 +88,7 @@ export default class Upcopi extends App {
           })
           .then(res => {
             console.log(res.data )
+
             if (res.data) {
               if(res.data.estado){
                 this.$router.replace({ name: 'Tabla', params: { id: res.data.contenido }});

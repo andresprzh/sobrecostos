@@ -98,6 +98,7 @@ CREATE TABLE IF NOT EXISTS `usuarios`(
 
 CREATE TABLE IF NOT EXISTS `plaremi`(
 	`factura` CHAR(20) NOT NULL,
+	`cod_drog` CHAR(5) ,
 	`fecha` DATETIME,
 	`sede` CHAR(6) NOT NULL,
 	
@@ -113,8 +114,18 @@ CREATE TABLE IF NOT EXISTS `plaremi`(
 CREATE TABLE IF NOT EXISTS `plaremi_det`(
 	`item` CHAR(6) NOT NULL,
    `factura` CHAR(20) NOT NULL,
-	`pedido` FLOAT(4,2) NOT NULL,
-	`estado` INT(1)	 DEFAULT 0,
+	`pedido` FLOAT(7,2) NOT NULL,
+	`costo_desc` FLOAT(8,2) NOT NULL,
+	`costo_full` FLOAT(8,2) NOT NULL,
+	`iva` FLOAT(4,2) NOT NULL,
+	`descuento1` FLOAT(7,2) NOT NULL,
+	`cod_barras` CHAR(13) NOT NULL,
+	`cod_fab` CHAR(5) NOT NULL,
+	`descuento2` FLOAT(7,2) NOT NULL,
+	`unidad` CHAR(4) NOT NULL,
+	`algo1` INT(10) NOT NULL,
+	`algo2` INT(8) NOT NULL,
+	`estado` INT(1) DEFAULT 0,
 
 	
 	PRIMARY KEY(`item`,`factura`),
