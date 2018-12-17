@@ -135,6 +135,39 @@ class ControladorCopi{
         return $resultado;
     }
 
-    
+    public function ctrGenerarPlaremi($factura)
+    {
+        $busqueda=$this->modelo->mdlBuscarDatosPlaremi($factura);
+        // return $busqueda->fetchAll();
+        $resultado["documento"]="";
+        $resultado["plaremi"]=$factura;        
+        
+        while($row = $busqueda->fetch()){
+            $cantidad=round($row["total"]);
+            $valor_desc=round($row["costo_desc"]);
+            
+            $resultado["documento"].=str_pad(trim($row["cod_drog"]), 5, " ", STR_PAD_RIGHT).",";
+            $resultado["documento"].=str_replace("-","",substr($row["fecha"],0,10)).",";
+            $resultado["documento"].=str_pad($factura, 20, " ", STR_PAD_RIGHT).",";//factura
+            $resultado["documento"].=str_pad($row["refcopi"], 15, " ", STR_PAD_RIGHT).",";//referencia copi
+            $resultado["documento"].=str_pad($row["descripcion"], 60, " ", STR_PAD_RIGHT).",";
+            $resultado["documento"].=str_pad($cantidad, 7, "0", STR_PAD_LEFT).",";
+            $resultado["documento"].=str_pad($valor_desc, 10, "0", STR_PAD_LEFT).",";
+            $resultado["documento"].=str_pad(round($row["costo_full"]), 10, "0", STR_PAD_LEFT).",";
+            $resultado["documento"].=str_pad($row["iva"], 5, "0", STR_PAD_LEFT).",";
+            $resultado["documento"].=str_pad($row["descuento1"]*100, 8, " ", STR_PAD_RIGHT).",";
+            $resultado["documento"].=str_pad($row["cod_barras"], 13, " ", STR_PAD_LEFT).",";// codigo de fabricante
+            $resultado["documento"].=str_pad($row["cod_fab"], 5, " ", STR_PAD_LEFT).",";// codigo de fabricante
+            $resultado["documento"].="0000000000".",";
+            $resultado["documento"].=str_pad($row["descuento2"]*100, 8, " ", STR_PAD_RIGHT).",";
+            $resultado["documento"].=str_pad($row["unidad"], 4, " ", STR_PAD_RIGHT).",";
+            $resultado["documento"].=str_pad($row["algo1"], 1, " ", STR_PAD_RIGHT).",";
+            $resultado["documento"].=str_pad($row["algo2"], 2, "0", STR_PAD_LEFT);
+
+            $resultado["documento"].="\r\n";
+
+        }
+        return $resultado;
+    }
 
 }

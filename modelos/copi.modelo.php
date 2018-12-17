@@ -48,10 +48,10 @@ class ModeloCopi extends Conexion {
             
             $stmt=null;
 
-            $sql="INSERT INTO plaremi_det(item,factura,pedido,costo_desc,costo_full,iva,descuento1,cod_barras,cod_fab,descuento2,unidad,algo1,algo2) VALUES";
+            $sql="INSERT INTO plaremi_det(item,factura,refcopi,pedido,costo_desc,costo_full,iva,descuento1,cod_barras,cod_fab,descuento2,unidad,algo1,algo2) VALUES";
 
             for ($i=0; $i <count($items) ; $i++) { 
-                $sql.="(:item$i,:factura$i,:pedido$i,:costo_desc$i,:costo_full$i,:iva$i,:descuento1$i,:cod_barras$i,:cod_fab$i,:descuento2$i,:unidad$i,:algo1$i,:algo2$i),";
+                $sql.="(:item$i,:factura$i,:refcopi$i,:pedido$i,:costo_desc$i,:costo_full$i,:iva$i,:descuento1$i,:cod_barras$i,:cod_fab$i,:descuento2$i,:unidad$i,:algo1$i,:algo2$i),";
             }
             
             $sql=substr($sql,0,-1).";";
@@ -61,6 +61,7 @@ class ModeloCopi extends Conexion {
             foreach ($items as $i => $row) {
                 $stmt->bindParam(":item$i",$row['item'],PDO::PARAM_STR);
                 $stmt->bindParam(":factura$i",$row['factura'],PDO::PARAM_STR);
+                $stmt->bindParam(":refcopi$i",$row['refcopi'],PDO::PARAM_STR);
                 $stmt->bindParam(":pedido$i",$row['pedido'],PDO::PARAM_STR);  
                 $stmt->bindParam(":costo_desc$i",$row['costo_desc'],PDO::PARAM_STR);  
                 $stmt->bindParam(":costo_full$i",$row['costo_full'],PDO::PARAM_STR); 
@@ -122,7 +123,30 @@ class ModeloCopi extends Conexion {
         }
         $stmt=null;
 
-        
+    }
 
+    public function mdlBuscarDatosPlaremi($factura)
+    {
+        $stmt= $this->link->prepare(
+        "SELECT plaremi.cod_drog,DATE_FORMAT(plaremi.fecha, '%Y%m%d') AS fecha,plaremi.factura,refcopi,items.DESCRIPCION AS descripcion,
+        plaremi_det.pedido,costo_desc,costo_full,plaremi_det.iva,descuento1,cod_barras,cod_fab,descuento2,unidad,algo1,algo2
+        ,total
+        FROM plaremi_det
+        INNER JOIN plaremi ON plaremi.factura=plaremi_det.factura
+        INNER JOIN items ON items.ID_ITEM=plaremi_det.item
+        WHERE plaremi.factura=:factura
+        AND total>0;");
+    
+        $stmt->bindParam(":factura",$factura,PDO::PARAM_STR);     
+
+        
+        if($stmt->execute()){
+            return $stmt;
+        }else{
+            
+            $stmt=null;
+            return false;
+        }
+        $stmt=null;
     }
 }

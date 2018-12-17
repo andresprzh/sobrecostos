@@ -114,17 +114,19 @@ CREATE TABLE IF NOT EXISTS `plaremi`(
 CREATE TABLE IF NOT EXISTS `plaremi_det`(
 	`item` CHAR(6) NOT NULL,
    `factura` CHAR(20) NOT NULL,
+   `refcopi` CHAR(15)NOT NULL,
 	`pedido` FLOAT(7,2) NOT NULL,
 	`costo_desc` FLOAT(8,2) NOT NULL,
 	`costo_full` FLOAT(8,2) NOT NULL,
 	`iva` FLOAT(4,2) NOT NULL,
-	`descuento1` FLOAT(7,2) NOT NULL,
+	`descuento1` FLOAT(5,4) NOT NULL,
 	`cod_barras` CHAR(13) NOT NULL,
 	`cod_fab` CHAR(5) NOT NULL,
-	`descuento2` FLOAT(7,2) NOT NULL,
+	`descuento2` FLOAT(5,4) NOT NULL,
 	`unidad` CHAR(4) NOT NULL,
 	`algo1` INT(10) NOT NULL,
 	`algo2` INT(8) NOT NULL,
+	`total` FLOAT(7,2) NOT NULL,
 	`estado` INT(1) DEFAULT 0,
 
 	
@@ -242,6 +244,7 @@ REPLACE INTO `sedes` VALUES
 											PROCEDIMIENTOS FUNCIONES Y TRIGGERS BASE DE DATOS
 ********************************************************************************************************************************/
 DROP PROCEDURE IF EXISTS BuscarItemsTransferencia;
+DROP TRIGGER IF EXISTS SetTotalPlaremi;
 DROP TRIGGER IF EXISTS CambiarEstadpPlaremi;
 DROP TRIGGER IF EXISTS CambiarSobrantes;
 
@@ -267,8 +270,20 @@ DELIMITER $$
 	END 
 $$
 
+-- asigna total al insertar registro en la remision
+DELIMITER $$
+	CREATE TRIGGER SetTotalPlaremi
+	BEFORE INSERT ON plaremi_det
+	FOR EACH ROW 
+	BEGIN
+
+		SET new.total=new.pedido;
+				
+	END 
+$$
 
 
+-- cambia el estado de los items de la remision
 DELIMITER $$
 	CREATE TRIGGER CambiarEstadpPlaremi
 	AFTER INSERT ON transferencias_det
@@ -288,17 +303,24 @@ DELIMITER $$
 	END 
 $$
 
--- trigger que modifica la cantidad sobrante al crear ransferencia
+-- trigger que modifica la cantidad sobrante al crear transferencia
 DELIMITER $$
 	CREATE TRIGGER CambiarSobrantes
 	AFTER UPDATE ON transferencias_det
 	FOR EACH ROW 
 	BEGIN
-
+		
+		UPDATE plaremi_det
+		SET estado=2,total=total-new.pedido
+		WHERE plaremi_det.item=new.item
+    	AND plaremi_det.factura=new.plaremi;
+    	
 		UPDATE sobrantes
 		SET sobrante=sobrante-new.pedido,estado=0
 		WHERE sobrantes.item=new.item
     	AND sobrantes.sede=(SELECT origen FROM transferencias WHERE id_transferencia=new.id_transferencia LIMIT 1);
+    	
+    	
 				
 	END 
 $$

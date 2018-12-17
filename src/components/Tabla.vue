@@ -75,12 +75,8 @@
 
         
         <v-btn color="secondary" @click="transladar">
-        
-        
-
           <v-icon>fa-save</v-icon>
           <span>Guardar</span>
-
         </v-btn>
 
       </div>
@@ -143,7 +139,7 @@ export default class Tabla extends App {
     }
     })
     .then(res => {
-      
+        
         if (res.data) {
             if(res.data.estado){
               this.items = res.data.contenido;       
@@ -169,7 +165,7 @@ export default class Tabla extends App {
       if(element.selected){
         itemssend.push({
           'item': element.item,
-          'pedido': element.pedido,
+          'pedido': element.solicitado,
           'sede':element.sede,
         });
       }
@@ -192,9 +188,10 @@ export default class Tabla extends App {
 
 
   private submit_items(){
-        
+    
     let formData = new FormData();
     let itemssend:string=JSON.stringify(this.itemssend);
+    
     formData.append('items', itemssend);
     formData.append('plaremi', this.id);
     formData.append('sede', localStorage.sede);

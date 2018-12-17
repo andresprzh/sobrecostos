@@ -87,7 +87,6 @@ export default class Upcopi extends App {
             headers: { "Content-Type": "multipart/form-data" }
           })
           .then(res => {
-            console.log(res.data )
 
             if (res.data) {
               if(res.data.estado){

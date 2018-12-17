@@ -109,7 +109,6 @@ class ModeloTransferencia extends Conexion {
         }
     } 
 
-
     function mdlMostrarTransferencias($plaremi)
     {
         $stmt= $this->link->prepare(
