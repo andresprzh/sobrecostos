@@ -227,12 +227,13 @@ export default class Transferencia extends App {
     this.$swal({
       title:'¿Eliminar solicitud?',
       type:'warning',
+      showCancelButton: true,
       confirmButtonColor: String(this.$vuetify.theme.primary),
       cancelButtonColor: String(this.$vuetify.theme.error),
       confirmButtonText: 'Si',
-      cancelButtonText: 'No'
+      cancelButtonText: 'No',
     }).then((result)=>{
-      if (result) {
+      if (result.value) {
 
         let formData=new FormData();
         formData.append('delete','true');
@@ -261,12 +262,13 @@ export default class Transferencia extends App {
     this.$swal({
       title:'¿Eliminar item de la solicitud?',
       type:'warning',
+      showCancelButton: true,
       confirmButtonColor: String(this.$vuetify.theme.primary),
       cancelButtonColor: String(this.$vuetify.theme.error),
       confirmButtonText: 'Si',
       cancelButtonText: 'No'
     }).then((result)=>{
-      if (result) {
+      if (result.value) {
 
         let formData=new FormData();
         formData.append('delete','true');

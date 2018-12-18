@@ -1,7 +1,7 @@
 <template>
   <v-container grid-list-md>
     
-    <h1 class="font-weight-black font-italic text-xs-center" >Titulo</h1>
+    <h1 class="font-weight-black font-italic text-xs-center" >Subir archivo plaremi</h1>
     <!-- **************************************************************************************************************** 
                                             INPUTS FORMULARIO
     **************************************************************************************************************** -->
