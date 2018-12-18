@@ -68,11 +68,21 @@ export const router = new Router({
 
 router.beforeEach((to, from, next) => {
   const publicPages = ['/login'];
+  const admin=['/usuarios'];
+  const autorizado=['/upfile'];
   const authRequired = !publicPages.includes(to.path);
   const loggedIn = localStorage.getItem('session');
 
   if (authRequired && !loggedIn) {
     return next('/login');
+  }
+
+  if (admin.includes(to.path) && localStorage.perfil!=1) {
+    alert(1);
+    return next('/');  
+  }
+  if (autorizado.includes(to.path) &&  ![1,2].includes(parseInt(localStorage.perfil))) {
+    return next('/');  
   }
   next();
 });

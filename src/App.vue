@@ -101,10 +101,9 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class App extends Vue {
-  protected path:string='http://localhost/sobrecostos/api/';
+  protected path:string='http://localhost/sobrecostos-2/api/';
   public sideNav: boolean = false;
   public menuItems = [
-    { icono: 'fa-file-upload', titulo: 'Subir Acrhivo', ruta: '/upfile'},
     { icono: 'fa-file-invoice', titulo: 'archivo copi', ruta: '/upcopi'},
     { icono: 'fa-clipboard-list', titulo: 'Remisiones', ruta: '/remisiones'},
     { icono: 'fa-truck', titulo: 'Solicitudes', ruta: '/transferencias'},
@@ -119,9 +118,14 @@ export default class App extends Vue {
     }
     
     if(localStorage.perfil==1){
-      this.menuItems.push(
-        {icono: 'fa-users', titulo: 'Usuarios', ruta: '/usuarios'}
-        );
+      this.menuItems.unshift(
+        {icono: 'fa-users', titulo: 'Usuarios', ruta: '/usuarios'},
+        {icono: 'fa-file-upload', titulo: 'Subir Acrhivo', ruta: '/upfile'},
+      );
+    }else if(localStorage.perfil=2){
+      this.menuItems.unshift(
+        {icono: 'fa-file-upload', titulo: 'Subir Acrhivo', ruta: '/upfile'},
+      );
     }
 
   }

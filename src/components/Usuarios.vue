@@ -82,8 +82,7 @@
 
       <v-data-table
         :headers="headers"
-        :items="usuarios"
-        :search="search"
+        :items="filtered"
         class="elevation-1">
         
         <template slot="items" slot-scope="props">
@@ -109,9 +108,6 @@
             <v-icon>fas fa-sync-alt</v-icon>
           </v-btn>
         </template>
-        <v-alert slot="no-results" :value="true" color="error" icon="warning">
-          No se contraron resultador para "{{ search }}".
-        </v-alert>
       </v-data-table>
 
       <v-snackbar v-model="snack.show" :timeout="3000" :color="snack.color">
@@ -136,7 +132,7 @@ export default class Tabla extends Vue {
                                           ATRIBUTOS
   =============================================================================================================*/
   private path:string='http://localhost/sobrecostos/api/';
-  private search:string=' ';
+  private search:string='';
   private valid_dialog:boolean=true;
   private usuarios: object[] = [];
   
@@ -260,8 +256,24 @@ export default class Tabla extends Vue {
     return this.id_usuario === 0 ? 'Nuevo Usuario' : 'Editar Usuario'
   }
 
+  get filtered(){
+    let filtereddata:object[]=[];
+    let search=this.search.toLowerCase();
+    this.usuarios.forEach(function(element:any){
+      
+      for(let i in element){
+        if(String(element[i]).toLowerCase().search(search)!=-1){
+            filtereddata.push(element);
+            break;
+        }
+      }
+
+    });
+    return filtereddata;
+  }
+
   private loadUsers(){
-   
+    this.search='';
     this.axios
       .get(this.path+'usuarios', {
         params: {

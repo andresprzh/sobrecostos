@@ -2,7 +2,6 @@
   <v-container grid-list-md>
     
     <v-card row wrap >
-
       <v-card-title>
         Remision {{id}}
         <v-spacer></v-spacer>
@@ -18,8 +17,7 @@
     
       <v-data-table
         :headers="headers"
-        :items="items"
-        :search="search"
+        :items="filtered"
         select-all
         item-key="name"
         class="elevation-1"
@@ -59,13 +57,10 @@
 
           </td>
           <td class="text-xs-left">{{ props.item.sedesobrante }}</td>
-
-        
         </template>
-         <v-alert slot="no-results" :value="true" color="error" icon="warning">
-          No se contraron resultador para "{{ search }}".
-        </v-alert>
+
       </v-data-table>
+
       <v-snackbar v-model="snack.show" :timeout="3000" :color="snack.color">
         {{ snack.text }}
         <v-btn flat @click="snack.show = false">Close</v-btn>
@@ -97,10 +92,10 @@ export default class Tabla extends App {
                                           ATRIBUTOS
   =============================================================================================================*/
 
-  private search:string=' ';
+  private search:string='';
   private id:string='';
   private items: object[] = [];
-  
+  private filternodata=false;
   private itemssend=new Array;
   
   private snack={
@@ -156,6 +151,21 @@ export default class Tabla extends App {
     });
   }
 
+  get filtered(){
+    let filtereddata:object[]=[];
+    let search=this.search.toLowerCase();
+    this.items.forEach(function(element:any){
+      
+      for(let i in element){
+        if(String(element[i]).toLowerCase().search(search)!=-1){
+            filtereddata.push(element);
+            break;
+        }
+      }
+
+    });
+    return filtereddata;
+  }
 
   private transladar(event: any){
     let itemssend=new Array;
@@ -188,7 +198,6 @@ export default class Tabla extends App {
 
 
   private submit_items(){
-    console.log(this.$vuetify.theme.primary);
 
     this.$swal({
       title: 'Crear Solicitud de transferencia?',
