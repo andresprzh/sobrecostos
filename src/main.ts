@@ -3,9 +3,11 @@ import './plugins/vuetify';
 import App from './App.vue';
 import {router} from './router';
 import VeeValidate from 'vee-validate';
+import VueSweetalert2 from 'vue-sweetalert2';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 
+Vue.use(VueSweetalert2);
 
 Vue.use(VeeValidate);
 

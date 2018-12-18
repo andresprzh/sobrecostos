@@ -100,13 +100,14 @@ class ModeloCopi extends Conexion {
     {
         $stmt= $this->link->prepare(
         "SELECT ID_ITEM AS item,items.DESCRIPCION AS descripcion,1 AS solicitado,
-        true AS selected,pedido,sobrante,sede,sedes.descripcion AS sedesobrante
+        true AS selected,plaremi_det.total AS pedido,sobrante,sede,sedes.descripcion AS sedesobrante
         FROM plaremi_det
         INNER JOIN sobrantes ON sobrantes.item=plaremi_det.item
         INNER JOIN items ON items.ID_ITEM=plaremi_det.item
         INNER JOIN sedes ON sedes.codigo=sobrantes.sede
         WHERE factura=:factura
         AND sobrante>0
+        AND plaremi_det.total>0
         AND plaremi_det.estado=0
         AND sobrantes.estado=0
         ORDER BY DESCRIPCION ASC;");

@@ -25,10 +25,11 @@ if (isset($_SERVER['HTTP_ORIGIN'])) {
 
 // Access-Control headers are received during OPTIONS requests
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-    // header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+    header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
     if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
         // may also be using PUT, PATCH, HEAD etc
-        header("Access-Control-Allow-Methods: GET, POST, OPTIONS");         
+        header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');      
+        header("Allow: GET, POST, OPTIONS, PUT, DELETE");
 
     if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
         header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");

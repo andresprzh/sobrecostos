@@ -9,7 +9,7 @@ class ModeloTransferencia extends Conexion {
 
     }
 
-    function mdlCrearTransferencia($origen,$destino,$encargado)
+    public function mdlCrearTransferencia($origen,$destino,$encargado)
     {
 
         $stmt= $this->link->prepare(
@@ -29,7 +29,7 @@ class ModeloTransferencia extends Conexion {
 
     }
 
-    function mdlAddItemsTransferencia($items,$transferencia,$plaremi)
+    public function mdlAddItemsTransferencia($items,$transferencia,$plaremi)
     {
 
         $sql="INSERT INTO transferencias_det(item,id_transferencia,plaremi,pedido) VALUES ";
@@ -56,7 +56,7 @@ class ModeloTransferencia extends Conexion {
 
     }
 
-    function mdlCerrarTransferencia($id_transferencia,$no_transferencia)
+    public function mdlCerrarTransferencia($id_transferencia,$no_transferencia)
     {
 
         $stmt= $this->link->prepare(
@@ -74,7 +74,7 @@ class ModeloTransferencia extends Conexion {
 
     }
 
-    function mdlCerrarItemTransferencia($item)
+    public function mdlCerrarItemTransferencia($item)
     {
 
         
@@ -95,7 +95,53 @@ class ModeloTransferencia extends Conexion {
 
     }
 
-    function mdlMostrarItemsSolicitados($plaremi,$encargado){
+    public function mdlEliminarItemTrans($item,$id_transferencia)
+    {
+        $stmt=$this->link->prepare("DELETE FROM transferencias_det WHERE item=:item AND id_transferencia=:id_transferencia;");
+
+        $stmt->bindParam(":item",$item,PDO::PARAM_STR);
+        $stmt->bindParam(":id_transferencia",$id_transferencia,PDO::PARAM_INT);
+
+        $res=$stmt->execute();
+        
+        $stmt=null;
+        // elimina la transferencia si no tiene items
+        if ($res) {
+            $stmt=$this->link->prepare("DELETE t  FROM transferencias t
+            LEFT JOIN transferencias_det td ON td.id_transferencia=t.id_transferencia
+            WHERE t.id_transferencia=:id_transferencia
+            AND td.item IS NULL;");
+            $stmt->bindParam(":id_transferencia",$id_transferencia,PDO::PARAM_INT);
+            
+            $res=$stmt->execute();
+            
+            $stmt=null;
+        }
+        return $res;
+    }
+
+    public function mdlEliminarTransferencia($id_transferencia)
+    {
+        $stmt=$this->link->prepare("DELETE FROM transferencias_det WHERE id_transferencia=:id_transferencia;");
+
+        $stmt->bindParam(":id_transferencia",$id_transferencia,PDO::PARAM_INT);
+
+        $res=$stmt->execute();
+
+        $stmt=null;
+        if($res){
+            $stmt=$this->link->prepare("DELETE FROM transferencias WHERE id_transferencia=:id_transferencia;");
+
+            $stmt->bindParam(":id_transferencia",$id_transferencia,PDO::PARAM_INT);
+
+            $res=$stmt->execute();
+
+            $stmt=null;
+        }
+        return $res;
+    }
+
+    public function mdlMostrarItemsSolicitados($plaremi,$encargado){
 
         $stmt= $this->link->prepare("CALL BuscarItemsTransferencia(:plaremi,:encargado);");
 
@@ -109,7 +155,7 @@ class ModeloTransferencia extends Conexion {
         }
     } 
 
-    function mdlMostrarTransferencias($plaremi)
+    public function mdlMostrarTransferencias($plaremi)
     {
         $stmt= $this->link->prepare(
         "SELECT transferencias_det.id_transferencia,transferencias.no_transferencia,

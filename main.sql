@@ -245,7 +245,8 @@ REPLACE INTO `sedes` VALUES
 ********************************************************************************************************************************/
 DROP PROCEDURE IF EXISTS BuscarItemsTransferencia;
 DROP TRIGGER IF EXISTS SetTotalPlaremi;
-DROP TRIGGER IF EXISTS CambiarEstadpPlaremi;
+DROP TRIGGER IF EXISTS CambiarEstadoPlaremi;
+DROP TRIGGER IF EXISTS RestablecerEstadoPlaremi;
 DROP TRIGGER IF EXISTS CambiarSobrantes;
 
 
@@ -255,8 +256,8 @@ DELIMITER $$
 	BEGIN
 	
 		SELECT 
-		transferencias_det.item,transferencias.id_transferencia,plaremi,transferencias.origen,sedes.descripcion AS origensede,
-		plaremi_det.pedido AS solicitado, transferencias_det.pedido,sobrantes.sobrante
+		transferencias_det.item,items.DESCRIPCION AS descripcion,transferencias.id_transferencia,plaremi,transferencias.origen,
+		sedes.descripcion AS origensede,plaremi_det.pedido AS solicitado, transferencias_det.pedido,sobrantes.sobrante
 		FROM transferencias_det
 		INNER JOIN plaremi_det ON (plaremi_det.item=transferencias_det.item AND plaremi_det.factura=transferencias_det.plaremi)
 		INNER JOIN transferencias ON transferencias.id_transferencia=transferencias_det.id_transferencia
@@ -285,7 +286,7 @@ $$
 
 -- cambia el estado de los items de la remision
 DELIMITER $$
-	CREATE TRIGGER CambiarEstadpPlaremi
+	CREATE TRIGGER CambiarEstadoPlaremi
 	AFTER INSERT ON transferencias_det
 	FOR EACH ROW 
 	BEGIN
@@ -303,6 +304,26 @@ DELIMITER $$
 	END 
 $$
 
+-- cambia el estado de los items de la remision
+DELIMITER $$
+	CREATE TRIGGER RestablecerEstadoPlaremi
+	BEFORE DELETE ON transferencias_det
+	FOR EACH ROW 
+	BEGIN
+
+		UPDATE plaremi_det
+		SET estado=0
+		WHERE plaremi_det.item=old.item
+    	AND plaremi_det.factura=old.plaremi;
+    	
+    	UPDATE sobrantes
+		SET estado=0
+		WHERE sobrantes.item=old.item
+    	AND sobrantes.sede=(SELECT origen FROM transferencias WHERE id_transferencia=old.id_transferencia LIMIT 1);
+
+	END 
+$$
+
 -- trigger que modifica la cantidad sobrante al crear transferencia
 DELIMITER $$
 	CREATE TRIGGER CambiarSobrantes
@@ -311,7 +332,7 @@ DELIMITER $$
 	BEGIN
 		
 		UPDATE plaremi_det
-		SET estado=2,total=total-new.pedido
+		SET estado=0,total=total-new.pedido
 		WHERE plaremi_det.item=new.item
     	AND plaremi_det.factura=new.plaremi;
     	

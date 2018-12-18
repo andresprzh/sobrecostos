@@ -254,14 +254,44 @@ if (isset($_GET["ruta"])) {
             
             break;
         /* ============================================================================================================================
-                                                MUESTRA PUNTOS DE VENTA
+                                                CREA SOLICITUD DE TRANSFERENCIA
         ============================================================================================================================*/
         case "solicitudes":
 
             // crea transferencia
             if ($_SERVER["REQUEST_METHOD"]==="POST") {
 
-                if (!isset($_POST["update"])) {
+                if (isset($_POST["update"])) {
+                    $items=json_decode($_POST["items"]);
+                    // $perfil=$_SESSION["usuario"]["sede"];
+                    // $encargado=$_SESSION["usuario"]["id"];
+                    $encargado=$_POST["encargado"];
+
+                    $controlador = new ControladorTransferencia();
+                    $transferencias=$controlador->ctrCerrarTransferencia($items,$encargado);
+                    print json_encode($transferencias);
+
+                    return 1;
+
+                }elseif(isset($_POST["delete"])){
+                    
+                    $id_transferencia=$_POST["id_transferencia"];
+                    $modelo = new ModeloTransferencia();
+
+                    if (isset($_POST["item"])) {
+                        
+                        $resultado=$modelo->mdlEliminarItemTrans($_POST["item"],$id_transferencia);
+
+                    }else {
+
+                        $resultado=$modelo->mdlEliminarTransferencia($id_transferencia);
+
+                    }
+
+                    print json_encode($resultado);
+
+                    return 1;
+                }else {
                     $items=json_decode($_POST["items"]);
                     // $perfil=$_SESSION["usuario"]["sede"];
                     // $encargado=$_SESSION["usuario"]["id"];
@@ -273,16 +303,6 @@ if (isset($_GET["ruta"])) {
                     $transferencias=$controlador->ctrCrearTransferencia($items,$encargado,$sede,$plaremi);
                     print json_encode($transferencias);
                     return 1;
-                }else {
-                    $items=json_decode($_POST["items"]);
-                    // $perfil=$_SESSION["usuario"]["sede"];
-                    // $encargado=$_SESSION["usuario"]["id"];
-                    $encargado=$_POST["encargado"];
-                    // print json_encode($items);
-                    // return 0;
-                    $controlador = new ControladorTransferencia();
-                    $transferencias=$controlador->ctrCerrarTransferencia($items,$encargado);
-                    print json_encode($transferencias);
                 }
                 
 
@@ -303,7 +323,7 @@ if (isset($_GET["ruta"])) {
             break;
        
         /* ============================================================================================================================
-                                                MUESTRA PUNTOS DE VENTA
+                                                MUESTRA TRANSFERENCIA
         ============================================================================================================================*/
         case "transferencia":
             if ($_SERVER["REQUEST_METHOD"]==="GET") {

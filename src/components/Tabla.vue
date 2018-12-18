@@ -75,7 +75,7 @@
 
         
         <v-btn color="secondary" @click="transladar">
-          <v-icon>fa-save</v-icon>
+          <v-icon class="mx-2"  >fa-save</v-icon>
           <span>Guardar</span>
         </v-btn>
 
@@ -188,31 +188,53 @@ export default class Tabla extends App {
 
 
   private submit_items(){
-    
-    let formData = new FormData();
-    let itemssend:string=JSON.stringify(this.itemssend);
-    
-    formData.append('items', itemssend);
-    formData.append('plaremi', this.id);
-    formData.append('sede', localStorage.sede);
-    formData.append('encargado', localStorage.id);
+    console.log(this.$vuetify.theme.primary);
 
-    const path = this.path+'solicitudes';
-    this.axios
-      .post(path, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      })
-      .then(res => {
+    this.$swal({
+      title: 'Crear Solicitud de transferencia?',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: String(this.$vuetify.theme.primary),
+      cancelButtonColor: String(this.$vuetify.theme.error),
+      confirmButtonText: 'Si',
+      cancelButtonText: 'No'
+    }).then((result) => {
+      if (result.value) {
+        let formData = new FormData();
+        let itemssend:string=JSON.stringify(this.itemssend);
         
-        if (res.data) {
-          this.$router.push({ name: 'Solicitudes', params: { id: this.id }});
-        } else {
-          alert('error al crear la transferencia');
-        }
-      })
-      .catch(error => {
-        console.error(error);
-    });
+        formData.append('items', itemssend);
+        formData.append('plaremi', this.id);
+        formData.append('sede', localStorage.sede);
+        formData.append('encargado', localStorage.id);
+
+        const path = this.path+'solicitudes';
+        this.axios
+          .post(path, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+          })
+          .then(res => {
+            
+            if (res.data) {
+              this.$swal({
+                type: 'success',
+                title: 'Solicitud de transferencia creada',
+              }).then((result)=>{
+                this.$router.push({ name: 'Solicitudes', params: { id: this.id }});
+              });
+            } else {
+              this.$swal({
+                type: 'error',
+                title: 'Error al crear la solicitud de transferencia',
+              });
+            }
+          })
+          .catch(error => {
+            console.error(error);
+        });
+      }
+    })
+    
         
      
   }
