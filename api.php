@@ -37,7 +37,10 @@ if (isset($_GET["ruta"])) {
                             $sede=$_POST["sede"];
 
                             $controlador = new ControladorCopi($archivo);
+                            
                             $resultado["contenido"]=$controlador->ctrGetData();
+                            print json_encode($resultado);
+                            return 0;
                             if ($resultado["contenido"]) {
                                 $resultado=$controlador->ctrUploadPlaRemi($sede);
                             }else{

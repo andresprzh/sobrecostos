@@ -12,12 +12,9 @@ class ModeloCopi extends Conexion {
     function mdlBuscarItem($cod){
 
         $stmt= $this->link->prepare(
-        "SELECT item,sobrante,sede,items.DESCRIPCION AS descripcion, 
-        sedes.descripcion AS nomsede
-        FROM sobrantes
-        INNER JOIN items ON items.ID_ITEM=item
+        "SELECT ID_ITEMS AS item,items.DESCRIPCION AS descripcion 
+        FROM items
         INNER JOIN cod_barras ON cod_barras.ID_ITEMS=ID_item
-        INNER JOIN sedes ON codigo=sede
         WHERE cod_barras.ID_CODBAR=:codigo");
 
         $stmt->bindParam(":codigo",$cod,PDO::PARAM_STR);    
