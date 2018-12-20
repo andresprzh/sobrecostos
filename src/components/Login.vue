@@ -13,18 +13,28 @@
                         >
                     </div>
                     <v-card class="elevation-12" style="height:250px;">
-                    <v-form v-on:submit.prevent="login()">  
-                    <v-card-text >
-                        
-                        <v-text-field prepend-icon="fa-user" name="login" label="Ingrese Usuario" type="text" v-model="input.username"></v-text-field>
-                        <v-text-field prepend-icon="fa-lock" name="password" label="Contraseña" id="password" type="password" v-model="input.password"></v-text-field>
-                        
-                    </v-card-text>
-                    <v-card-actions>
+                      <v-form v-on:submit.prevent="login()">  
+                        <v-card-text >
+                            
+                            <v-text-field
+                             prepend-icon="fa-user" name="login" label="Ingrese Usuario" type="text" 
+                             :rules="[(v) => !!v || 'Por favor digite el usuario',]"
+                             v-model="input.username">
+                            </v-text-field>
+                            <v-text-field 
+                            prepend-icon="fa-lock" name="password" label="Contraseña" id="password" type="password"
+                            :rules="[(v) => !!v || 'Por favor digite una contraseña',]"
+                            v-model="input.password">
+                            </v-text-field>
+                            
+                        </v-card-text>
+                        <v-card-actions>
 
-                        <v-btn  id="submit" type="submit" color="primary">ingresar</v-btn>      
-                    </v-card-actions>
-                    </v-form>
+                            <v-btn  id="submit" type="submit" color="primary">ingresar</v-btn>      
+                        </v-card-actions>
+                      
+                      </v-form>
+                    
                     </v-card>
                 </v-flex>
                 </v-layout>
@@ -48,8 +58,13 @@ export default class Login extends App {
 
   private imagenrc: any = require("@/assets/fondos/logo2.svg");
 
+  get computedForm ():any {
+    return this.$refs.form as Vue
+  }
+
   // metodo que valida el usurio
   private login() {
+    // if (this.computedForm.validate()) {
     if (this.input.username !== '' && this.input.password !== '') {
       const path:string = this.path+'login';
       const formData = new FormData();
@@ -80,6 +95,7 @@ export default class Login extends App {
           // console.error(error);
         });
     }
+    // }
   }
 }
 </script>
@@ -92,7 +108,8 @@ export default class Login extends App {
 }
 #submit {
   width: 100%;
-}#logo {
+}
+#logo {
   display: flex;
   justify-content: center;
   padding-bottom: 5px;

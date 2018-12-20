@@ -1,7 +1,7 @@
 <template>
   <v-container grid-list-md>
 
-      <v-form v-if="show_form" @submit="submit"  ref="form" v-model="valid" lazy-validation>
+      <v-form v-if="show_form" @submit.prevent="submit"  ref="form" v-model="valid" lazy-validation>
         <div class="form">
           <v-card row wrap  v-for="(itemsede,index) in items" :key="index">
 
@@ -185,7 +185,7 @@ export default class Transferencia extends App {
       cancelButtonColor: String(this.$vuetify.theme.error),
       confirmButtonText: 'Si',
       cancelButtonText: 'No'
-    }).then((result) => {
+      }).then((result) => {
         if (result.value) {
           let formData = new FormData();
           let items:string=JSON.stringify(this.items);

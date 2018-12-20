@@ -12,7 +12,7 @@
           <v-btn slot="activator" color="primary" dark class="mb-2"><v-icon>fas fa-user-plus</v-icon></v-btn>
           <v-card>
 
-            <v-form ref="form_modal"  :v-model="valid_dialog" @submit="save">
+            <v-form ref="form_modal"  :v-model="valid_dialog" @submit.prevent="save">
 
               <v-card-title>
                 <span class="headline">{{ formTitle }}</span>
@@ -123,15 +123,15 @@
 
 <script lang="ts">
 import { Component, Vue ,Watch} from 'vue-property-decorator';
+import App from '@/App.vue';
 
 
 @Component
-export default class Tabla extends Vue {
+export default class Tabla extends App {
   
   /*===========================================================================================================
                                           ATRIBUTOS
   =============================================================================================================*/
-  private path:string='http://localhost/sobrecostos/api/';
   private search:string='';
   private valid_dialog:boolean=true;
   private usuarios: object[] = [];
@@ -235,6 +235,7 @@ export default class Tabla extends Vue {
     this.loadUsers();
     this.loadProfiles();
     this.loadSedes();
+    this.$validator.localize("es", this.dictionary);
   }
 
   @Watch('dialog')
@@ -246,10 +247,6 @@ export default class Tabla extends Vue {
         theArray[index].dato = "";
       });
     }
-  }
-
-  private mounted() {
-    this.$validator.localize("es", this.dictionary);
   }
 
   get formTitle () {

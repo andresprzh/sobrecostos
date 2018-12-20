@@ -54,7 +54,7 @@
         <v-toolbar-side-icon class="hidden-md-and-up " @click.stop="sideNav=!sideNav"></v-toolbar-side-icon>
         
         <v-toolbar-title  >
-          <router-link class="title  " to="/" tag="span" style="cursor:pointer">Nombre pagina</router-link>
+          <router-link class="title  " to="/" tag="span" style="cursor:pointer">Redistribución de stock</router-link>
         </v-toolbar-title>
         
         
@@ -101,7 +101,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class App extends Vue {
-  protected path:string='http://localhost/sobrecostos/api/';
+  protected path:string='http://localhost/redistribucionstock/api/';
   public sideNav: boolean = false;
   public menuItems = [
     { icono: 'fa-file-invoice', titulo: 'archivo copi', ruta: '/upcopi'},
