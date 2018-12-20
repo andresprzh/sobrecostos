@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuetify from 'vuetify';
 import 'vuetify/dist/vuetify.min.css';
 import '@fortawesome/fontawesome-free/css/all.css';
+import es from 'vuetify/src/locale/es'
 
 Vue.use(Vuetify, {
    theme: {
@@ -14,4 +15,8 @@ Vue.use(Vuetify, {
    success: '#4caf50',
    },
    iconfont: 'fa',
+   lang: {
+      locales: { 'es': es},
+      current: 'es'
+   }
 });

@@ -21,7 +21,7 @@
               <v-card-text>
                 <v-container grid-list-md>
                   <v-layout wrap>
-                    <v-flex xs12 v-for="(card,index) in editUser" :key="card.id"> 
+                    <v-flex xs12 v-for="(card,index) in editUser" :key="index"> 
                       
                       <v-select v-if="card.tipo==='select'"
                         ref="menu"
@@ -361,8 +361,7 @@ export default class Tabla extends Vue {
 
   private save () {
 
-    // const accion=(this.editedIndex === -1 ? 'nuevo' : 'editar');
-    
+    const accion=(this.id_usuario < 1 ? 'Creado' : 'Modificado');
     this.$validator.validateAll().then(result => {
       
       if(result){
@@ -382,12 +381,19 @@ export default class Tabla extends Vue {
             headers: { 'Content-Type': 'multipart/form-data' },
         })
         .then((res) => {
-          this.dialog = false;
-          this.loadUsers();
+          this.$swal({
+            title:`Usuario ${accion}`,
+            type:'success',
+          }).then((result) => {
+            this.dialog = false;
+            this.loadUsers();
+          });
         })
         .catch((error) => {
-          // eslint-disable-next-line
-          console.error(error);
+          this.$swal({
+                type: 'error',
+                title: `Usuario no ${accion}`,
+            });
         });
 
       }
