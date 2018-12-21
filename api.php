@@ -39,15 +39,14 @@ if (isset($_GET["ruta"])) {
                             $controlador = new ControladorCopi($archivo);
                             
                             $resultado["contenido"]=$controlador->ctrGetData();
-                            print json_encode($resultado);
-                            return 0;
+                            
                             if ($resultado["contenido"]) {
                                 $resultado=$controlador->ctrUploadPlaRemi($sede);
                             }else{
                                 $resultado["estado"]=false;
                                 $resultado["contenido"]="Error al subir documento";
                             }
-                            // $resultado=$controlador->ctrUploadData();
+                            
                             
                         }
 

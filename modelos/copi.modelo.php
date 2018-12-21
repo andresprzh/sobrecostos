@@ -9,15 +9,18 @@ class ModeloCopi extends Conexion {
 
     }
 
-    function mdlBuscarItem($cod){
+    function mdlBuscarItem($cod,$ref){
 
         $stmt= $this->link->prepare(
         "SELECT ID_ITEMS AS item,items.DESCRIPCION AS descripcion 
         FROM items
         INNER JOIN cod_barras ON cod_barras.ID_ITEMS=ID_item
-        WHERE cod_barras.ID_CODBAR=:codigo");
+        WHERE cod_barras.ID_CODBAR=:codigo
+        OR ID_REFERENCIA=:referencia
+        LIMIT 1;");
 
         $stmt->bindParam(":codigo",$cod,PDO::PARAM_STR);    
+        $stmt->bindParam(":referencia",$ref,PDO::PARAM_STR); 
 
         if($stmt->execute()){
             return $stmt;

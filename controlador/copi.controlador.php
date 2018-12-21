@@ -20,7 +20,7 @@ class ControladorCopi{
         $items;
 
                 
-        for ($i=1; $i <count($this->file); $i++) {
+        for ($i=0; $i <count($this->file); $i++) {
             
                $csv=str_getcsv($this->file[$i], ";");
                if (count($csv)<=3) {
@@ -34,8 +34,8 @@ class ControladorCopi{
                $fecha = substr($fecha,0,4).'-'.substr($fecha,4,6).'-'.substr($fecha,6);
       
                
-               $busqueda=$this->modelo->mdlBuscarItem(trim($csv[10]));
-               
+               $busqueda=$this->modelo->mdlBuscarItem(trim($csv[10]),trim($csv[3]));
+            
                if ($busqueda) {
                    if ($busqueda->rowCount()>0) {
                        $busres=$busqueda->fetch();
@@ -46,7 +46,7 @@ class ControladorCopi{
                         "fecha"=> $fecha,
                         "factura"=> trim($csv[2]), 
                         "refcopi"=> trim($csv[3]), 
-                        "descripcion"=> trim($busres["descripcion"]),
+                        "descripcion"=> trim($csv[4]),
                         "pedido"=> intval(trim($csv[5])),
                         "costo_desc"=> floatval(trim($csv[6])), 
                         "costo_full"=> floatval(trim($csv[7])), 
@@ -59,24 +59,6 @@ class ControladorCopi{
                         "algo1"=> intval(trim($csv[15])),
                         "algo2"=> intval(trim($csv[16])),
                        ];
-                        // $this->items[]=['item'=> trim($busres['item']),
-                        // 'cod_drog'=>trim($csv[0]),
-                        // 'fecha'=>$fecha,
-                        // 'cod_barras'=> trim($csv[10]),
-                        // 'unidad'=> trim($csv[14]),
-                        // 'cantidad'=> intval(trim($csv[5])),
-                        // 'sobrantes'=>intval(trim($busres['sobrante'])),
-                        // 'sede'=>trim($busres['sede']),
-                        // 'sedesobrante'=>trim($busres['nomsede']),
-                        // 'precio_unidad'=> intval(trim($csv[6])),
-                        // 'descuento1'=> floatval(trim($csv[9])/100),
-                        // 'descuento2'=> floatval(trim($csv[13])/100),
-                        // 'iva'=> floatval(trim($csv[8])),
-                        // 'factura'=> trim($csv[2]),
-                        // 'descripcion'=> trim($busres['descripcion']),
-                        // "pedido"=>1,
-                        // "selected"=>false
-                        // ];
                     
                    }
                }
