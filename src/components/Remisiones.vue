@@ -1,7 +1,7 @@
 <template>
   <v-container grid-list-md>
     
-    <h1 class="font-weight-black font-italic text-xs-center" >Solicitud de transferencias</h1>
+    <h1 class="display-3 text-xs-center" >Solicitud de transferencias</h1>
     <v-form >
 
       <v-layout row wrap>

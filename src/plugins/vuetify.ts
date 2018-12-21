@@ -6,13 +6,20 @@ import es from 'vuetify/src/locale/es'
 
 Vue.use(Vuetify, {
    theme: {
-   primary: '#388e43',
-   secondary: '#1B5E20',
-   accent: '#00838F',
-   error: '#f44336',
-   warning: '#ffeb3b',
-   info: '#2196f3',
-   success: '#4caf50',
+   // primary: '#388e43',
+   // secondary: '#1B5E20',
+   // accent: '#00838F',
+   // error: '#f44336',
+   // warning: '#ffeb3b',
+   // info: '#2196f3',
+   // success: '#4caf50',
+   primary: "#0277BD",
+   secondary: "#006064",
+   accent: "#00838F",
+   error: "#D50000",
+   warning: "#ffeb3b",
+   info: "#2196f3",
+   success: "#1B5E20"
    },
    iconfont: 'fa',
    lang: {

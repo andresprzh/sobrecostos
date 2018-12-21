@@ -60,7 +60,7 @@ export default class Login extends App {
     password: '',
   };
   
-  private imagenrc: any = require("@/assets/fondos/logo.svg");
+  private imagenrc: any = require("@/assets/fondos/logo_azul.svg");
 
   get computedForm ():any {
     return this.$refs.form as Vue

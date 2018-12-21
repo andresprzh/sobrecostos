@@ -101,7 +101,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class App extends Vue {
-  protected path:string='http://localhost/redistribucionstock/api/';
+  protected path:string='http://192.168.0.7/redistribucionstock/api/';
   public sideNav: boolean = false;
   public menuItems = [
     { icono: 'fa-file-invoice', titulo: 'archivo copi', ruta: '/upcopi'},

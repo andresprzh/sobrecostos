@@ -1,7 +1,7 @@
 <template>
   <v-container grid-list-md>
     
-    <h1 class="font-weight-black font-italic text-xs-center" >Subir archivo plaremi</h1>
+    <h1 class="display-3 text-xs-center" >Subir archivo de remisión</h1>
     <!-- **************************************************************************************************************** 
                                             INPUTS FORMULARIO
     **************************************************************************************************************** -->
