@@ -1,6 +1,7 @@
 <template>
     <div id="login">
         <v-app id="inspire">
+          
             <v-content>
             <v-container fluid fill-height>
                 <v-layout align-center justify-center>  
@@ -13,7 +14,7 @@
                         >
                     </div>
                     <v-card class="elevation-12" style="height:250px;">
-                      <v-form v-on:submit.prevent="login()">  
+                      <v-form v-on:submit.prevent="login()" ref="form" v-model="valid" lazy-validation>  
                         <v-card-text >
                             
                             <v-text-field
@@ -40,23 +41,26 @@
                 </v-layout>
             </v-container>
             </v-content>
+            <a class="text-xs-right" href="http://www.freepik.com">Background Designed by creativeart / Freepik</a>
         </v-app>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import App from '@/App.vue'; // @ is an alias to /src
+import App from '@/App.vue'; 
 
 @Component
 export default class Login extends App {
+  
+  private valid:boolean=true;
   // variable que almacena los datos de inicio de sesion
   private input = {
     username: '',
     password: '',
   };
-
-  private imagenrc: any = require("@/assets/fondos/logo2.svg");
+  
+  private imagenrc: any = require("@/assets/fondos/logo.svg");
 
   get computedForm ():any {
     return this.$refs.form as Vue
@@ -64,38 +68,37 @@ export default class Login extends App {
 
   // metodo que valida el usurio
   private login() {
-    // if (this.computedForm.validate()) {
-    if (this.input.username !== '' && this.input.password !== '') {
-      const path:string = this.path+'login';
-      const formData = new FormData();
-      formData.append('username', this.input.username);
-      formData.append('password', this.input.password);
-      this.axios
-        .post(path, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        })
-        .then((res) => {
-          console.log(res.data);
-          if (res.data) {
-            // this.$emit('authenticated', true);
-            localStorage.session=true;
-            localStorage.id=res.data.id;
-            localStorage.nombre=res.data.nombre;
-            localStorage.usuario=res.data.usuario;
-            localStorage.perfil=res.data.perfil;
-            localStorage.sede=res.data.sede;
+    
+    if (this.computedForm.validate()) {
+        const path:string = this.path+'login';
+        const formData = new FormData();
+        formData.append('username', this.input.username);
+        formData.append('password', this.input.password);
+        this.axios
+          .post(path, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          })
+          .then((res) => {
+            
+            if (res.data) {
 
-            location.reload();
-            this.$router.replace({ name: 'home' });
-          } else {
-            alert('Usuario o contraseña incorrectos');
-          }
-        })
-        .catch((error) => {
-          // console.error(error);
-        });
+              localStorage.session=true;
+              localStorage.id=res.data.id;
+              localStorage.nombre=res.data.nombre;
+              localStorage.usuario=res.data.usuario;
+              localStorage.perfil=res.data.perfil;
+              localStorage.sede=res.data.sede;
+
+              location.reload();
+              this.$router.replace({ name: 'home' });
+            } else {
+              alert('Usuario o contraseña incorrectos');
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
     }
-    // }
   }
 }
 </script>
