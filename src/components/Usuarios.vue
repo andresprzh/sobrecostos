@@ -112,7 +112,7 @@
 
       <v-snackbar v-model="snack.show" :timeout="3000" :color="snack.color">
         {{ snack.text }}
-        <v-btn flat @click="snack.show = false">Close</v-btn>
+        <v-btn flat @click="snack.show = false">Cerrar</v-btn>
       </v-snackbar>
       
     </v-card> 

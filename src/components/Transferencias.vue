@@ -1,6 +1,6 @@
 <template >
     <v-container fluid grid-list-md>
-      <h2 class="display-3 text-xs-center">Solicitudes de transferencia</h2>
+      <h2 class="display-3 text-xs-center">Transferencias solicitadas</h2>
       <v-layout row wrap>
 
         <v-flex xs12 > 
@@ -22,7 +22,7 @@
     
     <div v-show="showdata">
       <v-btn  block color="secondary" @click="generardoc" >
-        <span class="mx-2">Generar archivo</span>
+        <span class="mx-2">Generar archivo plaremi modificado</span>
         <v-icon left>fa-file-alt</v-icon>
       </v-btn>
       <v-data-iterator 
@@ -82,7 +82,7 @@ export default class Solicitudes extends App {
     private showdata:boolean=false;
     protected plaremi={
     id: 'plaremi',
-    titulo: 'Remision',
+    titulo: 'Numero de factura copidrogas',
     dato: '',
     items: [],
     };

@@ -1,7 +1,8 @@
 <template>
   <v-container grid-list-md>
     
-    <h1 class="display-3 text-xs-center" >Subir archivo de remisión</h1>
+    <h1 class="display-3 text-xs-center" >Cargar plano copidrogas</h1>
+    <p>*Una ves cargado el archivo se mostraran los productos que tienen sobrestock en otras sedes</p>
     <!-- **************************************************************************************************************** 
                                             INPUTS FORMULARIO
     **************************************************************************************************************** -->

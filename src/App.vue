@@ -1,7 +1,7 @@
 <template>
   <v-app >
     <div v-if="session">
-      <v-navigation-drawer class="hidden-md-and-up" fixed app left v-model="sideNav">
+      <v-navigation-drawer class="hidden-xl-and-up" absolute temporary app left v-model="sideNav">
         <v-card>
           
           <v-img
@@ -51,16 +51,16 @@
 
       <v-toolbar dark class="primary">
 
-        <v-toolbar-side-icon class="hidden-md-and-up " @click.stop="sideNav=!sideNav"></v-toolbar-side-icon>
+        <v-toolbar-side-icon class="hidden-xl-and-up " @click.stop="sideNav=!sideNav"></v-toolbar-side-icon>
         
         <v-toolbar-title  >
-          <router-link class="title  " to="/" tag="span" style="cursor:pointer">Redistribución de stock</router-link>
+          <router-link class="title  " to="/" tag="span" style="cursor:pointer">Redistribución de stocks</router-link>
         </v-toolbar-title>
         
         
         <v-spacer></v-spacer>
 
-        <v-toolbar-items  class="hidden-sm-and-down" >
+        <v-toolbar-items  class="hidden-lg-and-down" >
 
           <v-btn flat 
             v-for="item in menuItems" 
@@ -101,12 +101,12 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class App extends Vue {
-  protected path:string='http://192.168.0.7/redistribucionstock/api/';
+  protected path:string='http://localhost/sobrecostos-2/api/';
   public sideNav: boolean = false;
   public menuItems = [
-    { icono: 'fa-file-invoice', titulo: 'archivo copi', ruta: '/upcopi'},
-    { icono: 'fa-clipboard-list', titulo: 'Remisiones', ruta: '/remisiones'},
-    { icono: 'fa-truck', titulo: 'Solicitudes', ruta: '/transferencias'},
+    { icono: 'fa-file-invoice', titulo: 'Cargar pla_remi copidrogas', ruta: '/upcopi'},
+    { icono: 'fa-clipboard-list', titulo: 'Redistribucion de stocks', ruta: '/remisiones'},
+    { icono: 'fa-truck', titulo: 'Verificar transferencias', ruta: '/transferencias'},
   ];
   public fondoNav = require('@/assets/fondos/logo2.svg');
   private session:boolean= false;
@@ -120,11 +120,11 @@ export default class App extends Vue {
     if(localStorage.perfil==1){
       this.menuItems.unshift(
         {icono: 'fa-users', titulo: 'Usuarios', ruta: '/usuarios'},
-        {icono: 'fa-file-upload', titulo: 'Subir Acrhivo', ruta: '/upfile'},
+        {icono: 'fa-file-upload', titulo: 'Subir consolidado', ruta: '/upfile'},
       );
     }else if(localStorage.perfil=2){
       this.menuItems.unshift(
-        {icono: 'fa-file-upload', titulo: 'Subir Acrhivo', ruta: '/upfile'},
+        {icono: 'fa-file-upload', titulo: 'Subir consolidado', ruta: '/upfile'},
       );
     }
 

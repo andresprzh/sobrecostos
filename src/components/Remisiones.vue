@@ -44,7 +44,7 @@ export default class Remisiones extends App {
   
   protected plaremi={
     id: 'plaremi',
-    titulo: 'Remision',
+    titulo: 'Numero de factura copidrogas',
     dato: '',
     items: [],
   };

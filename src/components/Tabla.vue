@@ -3,12 +3,12 @@
     
     <v-card row wrap >
       <v-card-title>
-        Remision {{id}}
+        Factura {{id}}
         <v-spacer></v-spacer>
         <v-text-field
           v-model="search"
           append-icon="search"
-          label="search"
+          label="Buscar"
           single-line
           hide-details
           
@@ -71,7 +71,7 @@
         
         <v-btn color="secondary" @click="transladar">
           <v-icon class="mx-2"  >fa-save</v-icon>
-          <span>Guardar</span>
+          <span>Siguiente</span>
         </v-btn>
 
       </div>
@@ -113,10 +113,10 @@ export default class Tabla extends App {
   
   private headers = [
     { text: 'Descripcion', value: 'desc' },
-    { text: 'Cantidad ', value: 'unidad' },
-    { text: 'cantidad sobrante', value: 'sobrante' },
-    { text: 'cantidad a pedir', value: 'pedir' },
-    { text: 'sede', value: 'sede' },
+    { text: 'Solicitados en plano ', value: 'unidad' },
+    { text: 'Sobrante en punto', value: 'sobrante' },
+    { text: 'cantidad a solicitar al punto', value: 'pedir' },
+    { text: 'Sede con sobrestock', value: 'sede' },
   ];
   /*===========================================================================================================
                                           METODOS
@@ -200,7 +200,7 @@ export default class Tabla extends App {
   private submit_items(){
 
     this.$swal({
-      title: 'Crear Solicitud de transferencia?',
+      title: 'Solicitar transferencia?',
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: String(this.$vuetify.theme.primary),
@@ -225,12 +225,7 @@ export default class Tabla extends App {
           .then(res => {
             
             if (res.data) {
-              this.$swal({
-                type: 'success',
-                title: 'Solicitud de transferencia creada',
-              }).then((result)=>{
                 this.$router.push({ name: 'Solicitudes', params: { id: this.id }});
-              });
             } else {
               this.$swal({
                 type: 'error',

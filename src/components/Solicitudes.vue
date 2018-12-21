@@ -6,7 +6,7 @@
           <v-card row wrap  v-for="(itemsede,index) in items" :key="index">
 
             <v-card-title>
-              Transferencia {{itemsede.items[0].origensede}}
+              Transferencia desde {{itemsede.items[0].origensede}}
               <v-spacer></v-spacer>
               <v-text-field
                 label="Numero de Transferencia"
@@ -27,7 +27,8 @@
               class="elevation-1">
               
               <template slot="items" slot-scope="props">
-                <td class="text-xs-left">{{props.item.descripcion}}</td>
+                <td class="text-xs-left">{{props.item.item}}</td>
+                <td class="text-xs-left">{{props.item.item}}{{props.item.descripcion}}</td>
                 <td class="text-xs-left">{{props.item.sobrante}}</td>
                 <td class="text-xs-left">{{props.item.solicitado}}</td>
                 <td class="text-xs-left">
@@ -57,7 +58,7 @@
           <v-btn type="submit" color="secondary"  >
           
             <v-icon class="mx-2">fa-save</v-icon>
-            <span>Guardar</span>
+            <span>Registrar transferencia</span>
 
           </v-btn>
 
@@ -95,6 +96,7 @@ export default class Transferencia extends App {
   
   private headers = [ 
     { text: 'Item', value: 'item' },
+    { text: 'Descripcicon', value: 'item' },
     { text: 'Sobrantes ', value: 'sob' },
     { text: 'Solicitados', value: 'col' },
     { text: 'Pedido', value: 'perfil' },
@@ -179,6 +181,7 @@ export default class Transferencia extends App {
     if (this.computedForm.validate()) {
       this.$swal({
       title: '¿Crear transferencia?',
+      text: 'total productos',
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: String(this.$vuetify.theme.primary),
