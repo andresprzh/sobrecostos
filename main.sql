@@ -114,6 +114,7 @@ CREATE TABLE IF NOT EXISTS `plaremi`(
 CREATE TABLE IF NOT EXISTS `plaremi_det`(
 	`item` CHAR(6) NOT NULL,
    `factura` CHAR(20) NOT NULL,
+  	`descripcion` CHAR(40),
    `refcopi` CHAR(15)NOT NULL,
 	`pedido` FLOAT(7,2) NOT NULL,
 	`costo_desc` FLOAT(8,2) NOT NULL,
@@ -128,7 +129,7 @@ CREATE TABLE IF NOT EXISTS `plaremi_det`(
 	`algo2` INT(8) NOT NULL,
 	`total` FLOAT(7,2) NOT NULL,
 	`estado` INT(1) DEFAULT 0,
-
+    
 	
 	PRIMARY KEY(`item`,`factura`),
 	
@@ -136,9 +137,39 @@ CREATE TABLE IF NOT EXISTS `plaremi_det`(
 	FOREIGN KEY(`factura`) 
 	REFERENCES `plaremi`(`factura`),
 	
+	
 	CONSTRAINT plaremi_det_item
 	FOREIGN KEY(`item`) 
 	REFERENCES `items`(`ID_ITEM`)	
+	
+	
+) ENGINE=InnoDB DEFAULT CHARSET=LATIN1;
+
+CREATE TABLE IF NOT EXISTS `plaremi_det_error`(
+	`id` INT(10) AUTO_INCREMENT NOT NULL,
+   `factura` CHAR(20) NOT NULL,
+  	`descripcion` CHAR(40),
+   `refcopi` CHAR(15)NOT NULL,
+	`pedido` FLOAT(7,2) NOT NULL,
+	`costo_desc` FLOAT(8,2) NOT NULL,
+	`costo_full` FLOAT(8,2) NOT NULL,
+	`iva` FLOAT(4,2) NOT NULL,
+	`descuento1` FLOAT(5,4) NOT NULL,
+	`cod_barras` CHAR(13) NOT NULL,
+	`cod_fab` CHAR(5) NOT NULL,
+	`descuento2` FLOAT(5,4) NOT NULL,
+	`unidad` CHAR(4) NOT NULL,
+	`algo1` INT(10) NOT NULL,
+	`algo2` INT(8) NOT NULL,
+	`total` FLOAT(7,2) NOT NULL,
+	`estado` INT(1) DEFAULT 0,
+    
+	
+	PRIMARY KEY(`id`,`factura`),
+	
+	CONSTRAINT plaremi_det_error_plaremi
+	FOREIGN KEY(`factura`) 
+	REFERENCES `plaremi`(`factura`)
 	
 ) ENGINE=InnoDB DEFAULT CHARSET=LATIN1;
 

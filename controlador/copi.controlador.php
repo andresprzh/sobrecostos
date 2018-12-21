@@ -6,6 +6,7 @@ class ControladorCopi{
     private $sede;
     private $modelo;
     private $items;
+    private $items_error=null;
 
     function __construct($file=null)
     {
@@ -35,13 +36,54 @@ class ControladorCopi{
       
                
                $busqueda=$this->modelo->mdlBuscarItem(trim($csv[10]),trim($csv[3]));
-            
-               if ($busqueda) {
-                   if ($busqueda->rowCount()>0) {
-                       $busres=$busqueda->fetch();
-                       
-                       $this->items[]=[
-                        "item"=> trim($busres["item"]),
+               if(strpos(strtolower($csv[4]),"obsequio")===false){
+                               
+                    if ($busqueda) {
+                        if ($busqueda->rowCount()>0) {
+                            $busres=$busqueda->fetch();
+                            $this->items[]=[
+                                "item"=> trim($busres["item"]),
+                                "cod_drog"=> trim($csv[0]),
+                                "fecha"=> $fecha,
+                                "factura"=> trim($csv[2]), 
+                                "refcopi"=> trim($csv[3]), 
+                                "descripcion"=> trim($csv[4]),
+                                "pedido"=> intval(trim($csv[5])),
+                                "costo_desc"=> floatval(trim($csv[6])), 
+                                "costo_full"=> floatval(trim($csv[7])), 
+                                "iva"=> floatval(trim($csv[8])), 
+                                "descuento1"=> floatval(trim($csv[9])/100),
+                                "cod_barras"=> trim($csv[10]), 
+                                "cod_fab"=> trim($csv[11]),
+                                "descuento2"=> floatval(trim($csv[13])/100),
+                                "unidad"=> trim($csv[14]),
+                                "algo1"=> intval(trim($csv[15])),
+                                "algo2"=> intval(trim($csv[16])),
+                            ];
+                            
+                        }else {
+                            $this->items_error[]=[
+                                "cod_drog"=> trim($csv[0]),
+                                "fecha"=> $fecha,
+                                "factura"=> trim($csv[2]), 
+                                "refcopi"=> trim($csv[3]), 
+                                "descripcion"=> trim($csv[4]),
+                                "pedido"=> intval(trim($csv[5])),
+                                "costo_desc"=> floatval(trim($csv[6])), 
+                                "costo_full"=> floatval(trim($csv[7])), 
+                                "iva"=> floatval(trim($csv[8])), 
+                                "descuento1"=> floatval(trim($csv[9])/100),
+                                "cod_barras"=> trim($csv[10]), 
+                                "cod_fab"=> trim($csv[11]),
+                                "descuento2"=> floatval(trim($csv[13])/100),
+                                "unidad"=> trim($csv[14]),
+                                "algo1"=> intval(trim($csv[15])),
+                                "algo2"=> intval(trim($csv[16])),
+                            ];
+                        }
+                    }
+               } else {
+                    $this->items_error[]=[
                         "cod_drog"=> trim($csv[0]),
                         "fecha"=> $fecha,
                         "factura"=> trim($csv[2]), 
@@ -58,11 +100,8 @@ class ControladorCopi{
                         "unidad"=> trim($csv[14]),
                         "algo1"=> intval(trim($csv[15])),
                         "algo2"=> intval(trim($csv[16])),
-                       ];
-                    
-                   }
+                    ];
                }
-                
 
         }
         return $this->items;
@@ -74,9 +113,10 @@ class ControladorCopi{
             $items=$this->items;
         }
         $resultado["estado"]=false;
-
-        $res=$this->modelo->mdlUploadPLaRemi($sede,$items); 
         
+        
+        $res=$this->modelo->mdlUploadPLaRemi($sede,$items,$this->items_error); 
+
         if ($res===true) {
             $resultado["estado"]=true;
             $resultado["contenido"]=$items[0]['factura'];

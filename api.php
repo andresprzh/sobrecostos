@@ -14,7 +14,7 @@ if (isset($_GET["ruta"])) {
                 if (isset($_FILES["archivo"]["tmp_name"])) {
                     
                     if (0 != $_FILES["archivo"]["error"]) {
-                        
+                        print json_encode($_FILES["archivo"]["error"]);
                         $resultado["estado"]=false;
                         $resultado["contenido"]="¡Error al subir el acrhivo¡";
                         
@@ -39,7 +39,8 @@ if (isset($_GET["ruta"])) {
                             $controlador = new ControladorCopi($archivo);
                             
                             $resultado["contenido"]=$controlador->ctrGetData();
-                            
+                            // print json_encode(($resultado["contenido"]));
+                            // return  0;
                             if ($resultado["contenido"]) {
                                 $resultado=$controlador->ctrUploadPlaRemi($sede);
                             }else{
