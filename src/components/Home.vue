@@ -106,10 +106,29 @@
                 max-width="720px"
               ></v-img>
               
-              <p>- para cargar items en una solicitud  de transferencia hay que marcar el item que se quiere pedir de la tabla</p>
+              <p>- para cargar items en una solicitud  de transferencia hay que marcar el item que se quiere pedir de la tabla
               <small class="font-italic">* Al asignar una cantidad solicitada del item este se marca autonamticaente</small>
+              </p>
               <v-img
                 :src="imagenes.PV[3]"
+                max-width="720px"
+              ></v-img>
+
+              <p>- Cuando ya se tengan marcados todos los items a los que  se le quiere realizra transferencia, se da click en el boton siguiente, que abrira una pagina dondes se puede verificar,eliminar, modificar y asignar el numero de transferencia
+              </br>
+              <small class="font-italic">* solo puede haber 1 transferencia por sede</small>
+              </p>
+              <v-img
+                :src="imagenes.PV[4]"
+                max-width="720px"
+              ></v-img>
+
+              <p>- Cuando se llenen correcctamnte todos los datos es posible registrar la transferencia con el boboton  registrar transferecnia </p>
+              </br>
+              <small class="font-italic">* el numero de de transferencia no puede repetirse, no se pueden solicitra mas  items de los sobrantes</small>
+              </p>
+              <v-img
+                :src="imagenes.PV[5]"
                 max-width="720px"
               ></v-img>
             </div>
@@ -145,6 +164,7 @@ export default class Home extends Vue {
        require("@/assets/instrucciones/PV1.png"),
        require("@/assets/instrucciones/PV2.png"),
        require("@/assets/instrucciones/PV3.png"),
+       require("@/assets/instrucciones/PV4.png"),,
       ],  
     };
 
