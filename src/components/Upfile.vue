@@ -2,6 +2,7 @@
   <v-container grid-list-md>
     
     <h1 class="display-3 text-xs-center" >Subir archivo sobrecostos</h1>
+    <small class="font-italic">* El proceso puede tardar varios segundos dependiendo del tamaño del archivo</small>
     <v-form  >
 
       <v-layout row wrap class="file-upload"  >

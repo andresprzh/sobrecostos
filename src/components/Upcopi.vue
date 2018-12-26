@@ -2,7 +2,7 @@
   <v-container grid-list-md>
     
     <h1 class="display-3 text-xs-center" >Cargar plano copidrogas</h1>
-    <p>*Una ves cargado el archivo se mostraran los productos que tienen sobrestock en otras sedes</p>
+    <small class="font-italic">*Una ves cargado el archivo se mostraran los productos que tienen sobrestock en otras sedes</small>
     <!-- **************************************************************************************************************** 
                                             INPUTS FORMULARIO
     **************************************************************************************************************** -->

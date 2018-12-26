@@ -101,7 +101,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class App extends Vue {
-  protected path:string='http://localhost/sobrecostos-2/api/';
+  protected path:string='http://192.168.0.49/sobrecostos-2/api/';
   // protected path:string='api/';
   public sideNav: boolean = false;
   public menuItems = [
