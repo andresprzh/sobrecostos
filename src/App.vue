@@ -102,6 +102,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 @Component
 export default class App extends Vue {
   protected path:string='http://localhost/sobrecostos-2/api/';
+  // protected path:string='api/';
   public sideNav: boolean = false;
   public menuItems = [
     { icono: 'fa-file-invoice', titulo: 'Cargar pla_remi copidrogas', ruta: '/upcopi'},

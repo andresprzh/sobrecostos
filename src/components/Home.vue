@@ -1,11 +1,8 @@
 <template>
-  <v-container grid-list-md>
+  <div style="padding:10px;">
     
     <h1 class="display-3 text-xs-center">Instrucciones de uso</h1>
     <!-- INPUTS FORMULARIO -->
-    <v-layout row>
-      <v-flex xs12 sm6 offset-sm3>
-        <v-card>
 
           <v-list>
             <v-list-group
@@ -38,13 +35,9 @@
                 </v-list-tile-action>
               </v-list-tile>
             </v-list-group>
-          </v-list>
-        </v-card>
-      </v-flex>
-    </v-layout> 
-    
+          </v-list>    
 
-  </v-container>
+  </div >
 </template>
 
 <script lang="ts">
