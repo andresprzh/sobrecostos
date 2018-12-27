@@ -333,12 +333,24 @@ if (isset($_GET["ruta"])) {
                 // $perfil=$_SESSION["usuario"]["sede"];
                 // $encargado=$_SESSION["usuario"]["id"];
                 // $sede=$_POST["sede"];
-                $encargado=$_GET["encargado"];
-                $plaremi=$_GET["plaremi"];
+                if (!isset($_GET["no_transferencia"])) {
+                    $encargado=$_GET["encargado"];
+                    $plaremi=$_GET["plaremi"];
 
-                $controlador = new ControladorTransferencia();
-                $resultado = $controlador->ctrBuscarTransferencias($plaremi);
-                print json_encode($resultado);
+                    $controlador = new ControladorTransferencia();
+                    $resultado = $controlador->ctrBuscarTransferencias($plaremi);
+                    print json_encode($resultado);
+                }else {
+                    $modelo=new ModeloTransferencia();
+                    $resultado=$modelo->buscaritem("transferencias","no_transferencia",$_GET["no_transferencia"]);
+                    
+                    if ($resultado->rowCount()>0) {
+                        print json_encode($resultado->fetchAll());
+                    }else {
+                        print json_encode(false);
+                    }
+                }
+                
                 return 1;
             }
 

@@ -14,6 +14,7 @@
                 :rules="[(v) => !!v || 'Por favor digite el número de transferencia',(v) => ValNoTrans(itemsede.no_transferencia,index) || 'Numero de transferencia Repetido']"
                 required
               ></v-text-field>
+             
               <v-btn color="error"  flat icon title="Eliminar" @click="eliminartrans(itemsede.id_transferencia)">
           
                 <v-icon>fa-times</v-icon>
@@ -21,6 +22,7 @@
               </v-btn>
 
             </v-card-title>
+                           
             <v-data-table
               :headers="headers"
               :items="itemsede.items"
@@ -83,7 +85,11 @@ export default class Transferencia extends App {
   /*===========================================================================================================
                                           ATRIBUTOS
   =============================================================================================================*/
-  private items: object[] = []; 
+  
+  private items: { [key: string]: { [key: string]: any } } = {};
+  // { [key: string]: any[] } = {}
+  // private items: object[] = [];
+  private asyncval:boolean=true; 
   private id:string='';
   private show_form:boolean=false;
   private valid:boolean=true;
@@ -151,7 +157,7 @@ export default class Transferencia extends App {
           this.show_form=true;
 
         }else{
-          this.items=[];
+          // this.items=[];
           this.show_form=false;
           this.snack.text="no hay solicitudes de transferencia";
           this.snack.color= String(this.$vuetify.theme.error);
@@ -167,14 +173,39 @@ export default class Transferencia extends App {
   // verifica si el numero de transferencia es unico en todas las entradas
   private ValNoTrans(val:string,index:string):boolean{
     let key:string;
+    let respuesta:boolean=true;
     let items:any = this.items;
     for (key in items) {
       if(key!=index && items[key]['no_transferencia']==val){
         return false;
       }
     }
+    // const path = this.path+'transferencia';
+    // this.axios
+    //   .get(path, {
+    //     params: {
+    //       no_transferencia: val,
+    //     }
+    //   })
+    //   .then(res => {
+        
+    //     if(res.data){
+          
+    //       this.asyncval=false;
+
+    //     }else{
+          
+    //       this.asyncval=true;
+    //     }
+
+    //   })
+    //   .catch(error => {
+    //     console.error(error);
+    // });
+    console.log(this.asyncval);
     return true;
   }
+
 
   private submit(){
     
