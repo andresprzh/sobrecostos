@@ -1,7 +1,7 @@
 <template>
   <v-app >
     <div v-if="session">
-      <v-navigation-drawer class="hidden-xl-and-up" absolute temporary app left v-model="sideNav">
+      <v-navigation-drawer class="hidden-lg-and-up" absolute temporary app left v-model="sideNav">
         <v-card>
           
           <v-img
@@ -51,7 +51,7 @@
 
       <v-toolbar dark class="primary">
 
-        <v-toolbar-side-icon class="hidden-xl-and-up " @click.stop="sideNav=!sideNav"></v-toolbar-side-icon>
+        <v-toolbar-side-icon class="hidden-lg-and-up " @click.stop="sideNav=!sideNav"></v-toolbar-side-icon>
         
         <v-toolbar-title  >
           <router-link class="title  " to="/" tag="span" style="cursor:pointer">Redistribución de stocks</router-link>
@@ -101,7 +101,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class App extends Vue {
-  protected path:string='http://192.168.0.49/sobrecostos-2/api/';
+  protected path:string='http://localhost/redistribucionstock/api/';
   // protected path:string='api/';
   public sideNav: boolean = false;
   public menuItems = [

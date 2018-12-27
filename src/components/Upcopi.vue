@@ -15,11 +15,14 @@
           <v-flex xs12 v-show="true" class="file-upload-main"  justify-center>
 
               <input type="file" name="file" id="file"  @change="processFile($event)"/>
+              
               <label for="file" >
-
-                <v-icon v-if="file.name==null">fa-upload</v-icon>
-                {{file.name}}
-
+                <v-icon v-if="!file.name">fa-upload</v-icon>
+                <v-progress-circular v-else-if="loading"
+                  indeterminate
+                  color="primary"
+                ></v-progress-circular>
+                <span v-else>{{file.name}}</span>
               </label>
 
           </v-flex>
@@ -32,8 +35,13 @@
 
         </v-flex >
 
-        <v-btn block color="secondary" @click="submit_file">Subir</v-btn>
-
+        
+        <v-btn block color="secondary"
+        :disabled="!valid || loading"
+        @click="submit_file"
+        >
+          submit
+        </v-btn>
       </v-layout>
 
     </v-form> 
@@ -77,6 +85,7 @@ export default class Upcopi extends App {
      
     if (this.file.name) {
         this.valid=true;
+        this.loading = true;
         let formData = new FormData();
         formData.append("archivo", this.file);
         formData.append("sede", localStorage.sede);
@@ -88,7 +97,7 @@ export default class Upcopi extends App {
             headers: { "Content-Type": "multipart/form-data" }
           })
           .then(res => {
-
+            this.loading = false;
             if (res.data) {
               if(res.data.estado){
                 this.$router.replace({ name: 'Tabla', params: { id: res.data.contenido }});
@@ -100,6 +109,7 @@ export default class Upcopi extends App {
             }
           })
           .catch(error => {
+            this.loading = false;
             console.error(error);
           });
     }else{
