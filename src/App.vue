@@ -1,7 +1,7 @@
 <template>
   <v-app >
     <div v-if="session">
-      <v-navigation-drawer class="hidden-lg-and-up" absolute temporary app left v-model="sideNav">
+      <v-navigation-drawer class="hidden-xl-and-up" absolute temporary app left v-model="sideNav">
         <v-card>
           
           <v-img
@@ -51,7 +51,7 @@
 
       <v-toolbar dark class="primary">
 
-        <v-toolbar-side-icon class="hidden-lg-and-up " @click.stop="sideNav=!sideNav"></v-toolbar-side-icon>
+        <v-toolbar-side-icon class="hidden-xl-and-up " @click.stop="sideNav=!sideNav"></v-toolbar-side-icon>
         
         <v-toolbar-title  >
           <router-link class="title  " to="/" tag="span" style="cursor:pointer">Redistribución de stocks</router-link>
@@ -101,17 +101,20 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class App extends Vue {
-  protected path:string='http://localhost/redistribucionstock/api/';
-  // protected path:string='api/';
+  // protected path:string='http://localhost/redistribucionstock/api/';
+  protected path:string='api/';
   public sideNav: boolean = false;
   public menuItems = [
     { icono: 'fa-file-invoice', titulo: 'Cargar pla_remi copidrogas', ruta: '/upcopi'},
-    { icono: 'fa-clipboard-list', titulo: 'Redistribucion de stocks', ruta: '/remisiones'},
+    { icono: 'fa-clipboard-list', titulo: 'Redistribución de stocks', ruta: '/remisiones'},
     { icono: 'fa-truck', titulo: 'Verificar transferencias', ruta: '/transferencias'},
   ];
   public fondoNav = require('@/assets/fondos/logo2.svg');
   private session:boolean= false;
 
+  /*===========================================================================================================
+                                          METODOS
+  =============================================================================================================*/
   private mounted() {
 
     if (localStorage.session) {

@@ -6,7 +6,7 @@
             <v-container fluid fill-height>
                 <v-layout align-center justify-center>  
                 <v-flex xs12 sm8 md4  >
-                    <div id=logo>
+                    <div id="logo">
                         <img 
                         class="responsive-img"
                         id="logo"
